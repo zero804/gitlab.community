@@ -211,15 +211,11 @@ Response:
 [{
   "name": "Example User",
   "email": "example@example.com",
-  "commits": 117,
-  "additions": 2097,
-  "deletions": 517
+  "commits": 117
 }, {
   "name": "Sample User",
   "email": "sample@example.com",
-  "commits": 33,
-  "additions": 338,
-  "deletions": 244
+  "commits": 33
 }]
 ```
 

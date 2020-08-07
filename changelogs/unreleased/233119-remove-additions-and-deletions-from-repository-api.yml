@@ -1,0 +1,5 @@
+---
+title: Remove disabled contributor additions/deletions fields from Repository API
+merge_request: 38920
+author:
+type: changed
