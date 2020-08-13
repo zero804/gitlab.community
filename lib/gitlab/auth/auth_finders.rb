@@ -233,6 +233,17 @@ module Gitlab
         PersonalAccessToken.find_by_token(password)
       end
 
+      def find_from_namespace_inheritable_authenticate
+        authenticate_settings = try(:namespace_inheritable, :authenticate)
+        from = authenticate_settings&.fetch(:from)
+        with = authenticate_settings&.fetch(:with)
+
+        return unless from && with
+
+        API::Auth::RequestAuthenticator.new(from: from, with: with)
+                                       .authenticate
+      end
+
       def parsed_oauth_token
         Doorkeeper::OAuth::Token.from_request(current_request, *Doorkeeper.configuration.access_token_methods)
       end

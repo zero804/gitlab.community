@@ -7,7 +7,7 @@
 # like `nuget install` or `nuget push`.
 module API
   class NugetPackages < Grape::API::Instance
-    helpers ::API::Helpers::PackagesManagerClientsHelpers
+    helpers ::API::Helpers::PackagesHelpers
     helpers ::API::Helpers::Packages::BasicAuthHelpers
 
     POSITIVE_INTEGER_REGEX = %r{\A[1-9]\d*\z}.freeze
@@ -55,13 +55,13 @@ module API
       requires :id, type: String, desc: 'The ID of a project', regexp: POSITIVE_INTEGER_REGEX
     end
 
-    route_setting :authentication, deploy_token_allowed: true, job_token_allowed: :basic_auth, basic_auth_personal_access_token: true
-
+    namespace_inheritable :authenticate, from: :http_basic_auth, with: :personal_access_token
     resource :projects, requirements: API::NAMESPACE_OR_PROJECT_REQUIREMENTS do
       before do
         authorized_user_project
       end
 
+      route_setting :bananas, foo: 'root'
       namespace ':id/packages/nuget' do
         # https://docs.microsoft.com/en-us/nuget/api/service-index
         desc 'The NuGet Service Index' do
@@ -129,6 +129,7 @@ module API
         params do
           requires :package_name, type: String, desc: 'The NuGet package name', regexp: API::NO_SLASH_URL_PART_REGEX
         end
+
         namespace '/metadata/*package_name' do
           before do
             authorize_read_package!(authorized_user_project)
@@ -154,6 +155,7 @@ module API
           end
 
           route_setting :authentication, deploy_token_allowed: true, job_token_allowed: :basic_auth, basic_auth_personal_access_token: true
+          route_setting :bananas, foo: 'endpoint_level'
 
           get '*package_version', format: :json do
             present ::Packages::Nuget::PackageMetadataPresenter.new(find_package),

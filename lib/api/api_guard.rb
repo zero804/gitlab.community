@@ -66,10 +66,15 @@ module API
 
       def find_user_from_sources
         strong_memoize(:find_user_from_sources) do
-          deploy_token_from_request ||
-            find_user_from_bearer_token ||
-            find_user_from_job_token ||
-            find_user_from_warden
+          if try(:namespace_inheritable, :authenticate)
+            find_from_namespace_inheritable_authenticate ||
+              find_user_from_warden
+          else
+            deploy_token_from_request ||
+              find_user_from_bearer_token ||
+              find_user_from_job_token ||
+              find_user_from_warden
+          end
         end
       end
 
