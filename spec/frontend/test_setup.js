@@ -6,6 +6,7 @@ import { initializeTestTimeout } from './helpers/timeout';
 import { getJSONFixture, loadHTMLFixture, setHTMLFixture } from './helpers/fixtures';
 import { setupManualMocks } from './mocks/mocks_helper';
 import customMatchers from './matchers';
+import { useFakeDate } from './helpers/fake_date';
 
 import './helpers/dom_shims';
 import './helpers/jquery';
@@ -15,6 +16,8 @@ import '~/commons/bootstrap';
 process.on('unhandledRejection', global.promiseRejectionHandler);
 
 setupManualMocks();
+
+useFakeDate();
 
 afterEach(() =>
   // give Promises a bit more time so they fail the right test
