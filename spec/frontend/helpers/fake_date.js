@@ -3,23 +3,32 @@ export const DEFAULT_ARGS = [2020, 6, 6];
 
 const RealDate = Date;
 
+const isMocked = val => Boolean(val.mock);
+
 export const createFakeDateClass = ctorDefault => {
   const defaultDate = new RealDate(...ctorDefault);
   const defaultApplyDate = RealDate(...ctorDefault);
 
-  const FakeDate = new Proxy(Date, {
+  const FakeDate = new Proxy(RealDate, {
     construct: (target, argArray) => {
       return argArray.length ? new RealDate(...argArray) : defaultDate;
     },
     apply: (target, thisArg, argArray) => {
       return argArray.length ? RealDate(...argArray) : defaultApplyDate;
     },
+    // We want to overwrite the default 'now', but only if it's not already mocked
     get: (target, prop) => {
-      if (prop === 'now') {
+      if (prop === 'now' && !isMocked(target[prop])) {
         return () => defaultDate.getTime();
       }
 
-      return RealDate[prop];
+      return target[prop];
+    },
+    // We need to be able to set props so that `jest.spyOn` will work.
+    set: (target, prop, value) => {
+      // eslint-disable-next-line no-param-reassign
+      target[prop] = value;
+      return true;
     },
   });
 
@@ -27,16 +36,8 @@ export const createFakeDateClass = ctorDefault => {
 };
 
 export const useFakeDate = (...args) => {
-  const prevDate = global.Date;
-
   const FakeDate = createFakeDateClass(args.length ? args : DEFAULT_ARGS);
   global.Date = FakeDate;
-
-  const dispose = () => {
-    global.Date = prevDate;
-  };
-
-  return dispose;
 };
 
 export const useRealDate = () => {
