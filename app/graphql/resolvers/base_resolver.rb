@@ -118,7 +118,7 @@ module Resolvers
     end
 
     def offset_pagination(relation)
-      ::Gitlab::Graphql::Pagination::OffsetActiveRecordRelationConnection.new(relation)
+      ::Gitlab::Graphql::Pagination::OffsetPaginatedRelation.new(relation)
     end
 
     override :object
@@ -150,6 +150,14 @@ module Resolvers
     # Overridden in sub-classes (see .single, .last)
     def select_result(results)
       results
+    end
+
+    def self.authorization
+      @authorization ||= ::Gitlab::Graphql::Authorize::ObjectAuthorization.new(try(:required_permissions))
+    end
+
+    def self.authorized?(object, context)
+      authorization.ok?(object, context[:current_user])
     end
   end
 end
