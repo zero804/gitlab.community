@@ -4,6 +4,7 @@ import MRWidgetStore from 'ee_else_ce/vue_merge_request_widget/stores/mr_widget_
 import MRWidgetService from 'ee_else_ce/vue_merge_request_widget/services/mr_widget_service';
 import MrWidgetApprovals from 'ee_else_ce/vue_merge_request_widget/components/approvals/approvals.vue';
 import stateMaps from 'ee_else_ce/vue_merge_request_widget/stores/state_maps';
+import GroupedSecurityReportsApp from 'ee_else_ce/vue_shared/security_reports/grouped_security_reports_app.vue';
 import { sprintf, s__, __ } from '~/locale';
 import Project from '~/pages/projects/project';
 import SmartInterval from '~/smart_interval';
@@ -83,6 +84,7 @@ export default {
     SourceBranchRemovalStatus,
     GroupedCodequalityReportsApp,
     GroupedTestReportsApp,
+    GroupedSecurityReportsApp,
     TerraformPlan,
     GroupedAccessibilityReportsApp,
     MrWidgetApprovals,
@@ -178,6 +180,9 @@ export default {
       return Boolean(
         this.mr.mergePipelinesEnabled && this.mr.sourceProjectId !== this.mr.targetProjectId,
       );
+    },
+    shouldRenderSecurityReport() {
+      return Boolean(window.gon?.features?.coreSecurityMrWidget && this.mr.pipeline.id);
     },
     mergeError() {
       let { mergeError } = this.mr;
@@ -454,6 +459,13 @@ export default {
         :head-blob-path="mr.headBlobPath"
         :base-blob-path="mr.baseBlobPath"
         :codequality-help-path="mr.codequalityHelpPath"
+      />
+
+      <grouped-security-reports-app
+        v-if="shouldRenderSecurityReport"
+        :pipeline-id="mr.pipeline.id"
+        :project-id="mr.targetProjectId"
+        :security-reports-docs-path="mr.securityReportsDocsPath"
       />
 
       <grouped-test-reports-app
