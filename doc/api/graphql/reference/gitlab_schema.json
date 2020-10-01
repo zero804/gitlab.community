@@ -55694,7 +55694,11 @@
             },
             {
               "name": "spam",
+<<<<<<< HEAD
               "description": "Indicates whether the operation returns a record detected as spam",
+=======
+              "description": "Indicates whether the operation returns a snippet detected as spam",
+>>>>>>> de75893d265... Add spam flag to snippet mutations
               "args": [
 
               ],
