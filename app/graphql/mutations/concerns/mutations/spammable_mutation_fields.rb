@@ -9,6 +9,11 @@ module Mutations
             GraphQL::BOOLEAN_TYPE,
             null: true,
             description: 'Indicates whether the operation returns a record detected as spam'
+
+      field :needs_captcha,
+            GraphQL::BOOLEAN_TYPE,
+            null: true,
+            description: 'Indicates whether the operation returns a record that needs the captcha'
     end
 
     def with_spam_params(&block)
