@@ -12,7 +12,9 @@ module Mutations
     end
 
     def with_spam_params(&block)
-      yield.merge({ api: true, request: context[:request] })
+      request = Feature.enabled?(:snippet_spam) ? context[:request] : nil
+
+      yield.merge({ api: true, request: request })
     end
 
     def with_spam_fields(spammable, &block)
