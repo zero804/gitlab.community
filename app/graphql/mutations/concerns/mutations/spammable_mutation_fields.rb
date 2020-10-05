@@ -23,7 +23,13 @@ module Mutations
     end
 
     def with_spam_fields(spammable, &block)
-      { spam: spammable.spam? }.merge!(yield)
+      { spam: spammable.spam?, needs_captcha: needs_captcha?(spammable) }.merge!(yield)
+    end
+
+    private
+
+    def needs_captcha?(spammable)
+      spammable.needs_recaptcha? && Gitlab::Recaptcha.enabled? && spammable.errors.count <= 1
     end
   end
 end

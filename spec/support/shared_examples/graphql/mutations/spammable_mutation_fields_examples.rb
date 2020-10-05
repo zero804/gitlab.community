@@ -80,19 +80,6 @@ RSpec.shared_examples 'can raise spam flags' do
 end
 
 RSpec.shared_examples 'spammable fields with validation errors' do
-  it 'spam flag is not raised' do
-    allow_next_instance_of(service) do |instance|
-      allow(instance).to receive(:spam_check) do |snippet, user, _|
-        snippet.spam!
-      end
-    end
-
-    subject
-
-    expect(mutation_response['spam']).to be false
-    expect(mutation_response['errors']).to eq(["Title can't be blank", "Your snippet has been recognized as spam and has been discarded."])
-  end
-
   it 'needs_recaptcha flag is not raised' do
     stub_application_setting(recaptcha_enabled: true)
 
