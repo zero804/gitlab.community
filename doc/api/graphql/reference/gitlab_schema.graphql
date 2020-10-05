@@ -3496,7 +3496,7 @@ type CreateSnippetPayload {
   errors: [String!]!
 
   """
-  Indicates whether the operation returns a snippet that needs the captcha
+  Indicates whether the operation returns a record that needs the captcha
   """
   needsCaptcha: Boolean
 
@@ -19117,7 +19117,7 @@ type UpdateSnippetPayload {
   errors: [String!]!
 
   """
-  Indicates whether the operation returns a snippet that needs the captcha
+  Indicates whether the operation returns a record that needs the captcha
   """
   needsCaptcha: Boolean
 

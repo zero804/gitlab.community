@@ -9417,7 +9417,7 @@
             },
             {
               "name": "needsCaptcha",
-              "description": "Indicates whether the operation returns a snippet that needs the captcha",
+              "description": "Indicates whether the operation returns a record that needs the captcha",
               "args": [
 
               ],
@@ -55694,7 +55694,7 @@
             },
             {
               "name": "needsCaptcha",
-              "description": "Indicates whether the operation returns a snippet that needs the captcha",
+              "description": "Indicates whether the operation returns a record that needs the captcha",
               "args": [
 
               ],
@@ -55722,11 +55722,7 @@
             },
             {
               "name": "spam",
-<<<<<<< HEAD
               "description": "Indicates whether the operation returns a record detected as spam",
-=======
-              "description": "Indicates whether the operation returns a snippet detected as spam",
->>>>>>> de75893d265... Add spam flag to snippet mutations
               "args": [
 
               ],
