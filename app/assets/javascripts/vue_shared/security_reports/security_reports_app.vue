@@ -59,7 +59,6 @@ export default {
         ),
       );
     },
-    // TODO: Remove as part of XXX
     activatePipelinesTab() {
       if (window.mrTabs) {
         window.mrTabs.tabShown('pipelines');
