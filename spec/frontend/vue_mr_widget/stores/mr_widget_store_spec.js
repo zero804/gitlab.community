@@ -141,10 +141,10 @@ describe('MergeRequestStore', () => {
       expect(store.newPipelinePath).toBe('/group2/project2/pipelines/new');
     });
 
-    it('should set downloadArtifactsDocsPath', () => {
+    it('should set securityReportsDocsPath', () => {
       store.setPaths({ ...mockData });
 
-      expect(store.downloadArtifactsDocsPath).toBe('download-artifacts-docs-path');
+      expect(store.securityReportsDocsPath).toBe('security-reports-docs-path');
     });
   });
 });
