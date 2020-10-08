@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import Api from '~/api';
 import Flash from '~/flash';
-import GroupedSecurityReportsApp from '~/vue_shared/security_reports/grouped_security_reports_app.vue';
+import SecurityReportsApp from '~/vue_shared/security_reports/security_reports_app.vue';
 
 jest.mock('~/flash');
 
@@ -16,7 +16,7 @@ describe('Grouped security reports app', () => {
   };
 
   const createComponent = () => {
-    wrapper = mount(GroupedSecurityReportsApp, {
+    wrapper = mount(SecurityReportsApp, {
       propsData: { ...props },
     });
   };
@@ -38,7 +38,7 @@ describe('Grouped security reports app', () => {
     delete window.mrTabs;
   });
 
-  describe.each(GroupedSecurityReportsApp.reportTypes)('given a report type %p', reportType => {
+  describe.each(SecurityReportsApp.reportTypes)('given a report type %p', reportType => {
     beforeEach(() => {
       window.mrTabs = { tabShown: jest.fn() };
       setupMockJobArtifact(reportType);
@@ -50,7 +50,7 @@ describe('Grouped security reports app', () => {
     });
 
     it('renders the expected message', () => {
-      expect(wrapper.text()).toMatchInterpolatedText(GroupedSecurityReportsApp.i18n.scansHaveRun);
+      expect(wrapper.text()).toMatchInterpolatedText(SecurityReportsApp.i18n.scansHaveRun);
     });
 
     describe('clicking the anchor to the pipelines tab', () => {
@@ -107,7 +107,7 @@ describe('Grouped security reports app', () => {
       expect(Flash.mock.calls).toEqual([
         [
           {
-            message: GroupedSecurityReportsApp.i18n.apiError,
+            message: SecurityReportsApp.i18n.apiError,
             captureError: true,
             error,
           },

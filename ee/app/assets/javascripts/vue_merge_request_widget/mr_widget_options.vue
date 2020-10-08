@@ -1,4 +1,5 @@
 <script>
+import GroupedSecurityReportsApp from 'ee/vue_shared/security_reports/grouped_security_reports_app.vue';
 import GroupedMetricsReportsApp from 'ee/vue_shared/metrics_reports/grouped_metrics_reports_app.vue';
 import reportsMixin from 'ee/vue_shared/security_reports/mixins/reports_mixin';
 import { componentNames } from 'ee/reports/components/issue_body';
@@ -17,6 +18,7 @@ export default {
     MrWidgetGeoSecondaryNode,
     MrWidgetPolicyViolation,
     BlockingMergeRequestsReport,
+    GroupedSecurityReportsApp,
     GroupedMetricsReportsApp,
     ReportSection,
   },
