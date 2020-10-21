@@ -31,7 +31,12 @@ module Security
       return @auto_fix_enabled_types if @auto_fix_enabled_types
 
       setting ||= ProjectSecuritySetting.safe_find_or_create_for(project)
-      @auto_fix_enabled_types = setting.auto_fix_enabled
+
+      #this is a temp solution and it shouldn't go to master
+      @auto_fix_enabled_types = [ ]
+      @auto_fix_enabled_types.push(:dependency_scanning) if setting.auto_fix_dependency_scanning
+      @auto_fix_enabled_types.push(:container_scanning) if setting.auto_fix_container_scanning
+      @auto_fix_enabled_types
     end
 
     def service_params(vulnerability)
