@@ -42,3 +42,5 @@ module Types
     end
   end
 end
+
+Types::Terraform::StateType.prepend_if_ee('EE::Types::Terraform::StateType')
