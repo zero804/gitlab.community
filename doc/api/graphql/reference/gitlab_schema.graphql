@@ -19321,6 +19321,11 @@ type Query {
   """
   users(
     """
+    Return only admin users
+    """
+    admins: Boolean
+
+    """
     Returns the elements in the list that come after the specified cursor.
     """
     after: String
@@ -24535,6 +24540,11 @@ type UpdateSnippetPayload {
 scalar Upload
 
 type User {
+  """
+  Whether this user is an admin
+  """
+  admin: Boolean!
+
   """
   Merge Requests assigned to the user
   """
