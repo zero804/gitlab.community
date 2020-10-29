@@ -11,23 +11,18 @@ RSpec.describe Resolvers::Terraform::StatesResolver do
   describe '#resolve' do
     let_it_be(:project) { create(:project) }
 
-    let_it_be(:production_state) { create(:terraform_state, project: project) }
-    let_it_be(:staging_state) { create(:terraform_state, project: project) }
-    let_it_be(:other_state) { create(:terraform_state) }
-
+    let(:finder) { double(execute: relation) }
+    let(:relation) { double }
     let(:ctx) { Hash(current_user: user) }
     let(:user) { create(:user, developer_projects: [project]) }
 
     subject { resolve(described_class, obj: project, ctx: ctx) }
 
-    it 'returns states associated with the agent' do
-      expect(subject).to contain_exactly(production_state, staging_state)
-    end
+    it 'calls the states finder' do
+      expect(Terraform::StatesFinder).to receive(:new)
+        .with(project, user).and_return(finder)
 
-    context 'user does not have permission' do
-      let(:user) { create(:user) }
-
-      it { is_expected.to be_empty }
+      expect(subject).to eq(relation)
     end
   end
 end
