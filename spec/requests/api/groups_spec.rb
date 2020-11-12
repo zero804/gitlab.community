@@ -661,6 +661,7 @@ RSpec.describe API::Groups do
 
   describe 'PUT /groups/:id' do
     let(:new_group_name) { 'New Group'}
+    let(:file_path) { 'spec/fixtures/banana_sample.gif' }
 
     it_behaves_like 'group avatar upload' do
       def make_upload_request
@@ -678,7 +679,8 @@ RSpec.describe API::Groups do
           request_access_enabled: true,
           project_creation_level: "noone",
           subgroup_creation_level: "maintainer",
-          default_branch_protection: ::Gitlab::Access::MAINTAINER_PROJECT_ACCESS
+          default_branch_protection: ::Gitlab::Access::MAINTAINER_PROJECT_ACCESS,
+          avatar: fixture_file_upload(file_path)
         }
 
         expect(response).to have_gitlab_http_status(:ok)
@@ -701,6 +703,7 @@ RSpec.describe API::Groups do
         expect(json_response['shared_projects']).to be_an Array
         expect(json_response['shared_projects'].length).to eq(0)
         expect(json_response['default_branch_protection']).to eq(::Gitlab::Access::MAINTAINER_PROJECT_ACCESS)
+        expect(json_response['avatar_url']).to include(group1.avatar_path)
       end
 
       context 'updating the `default_branch_protection` attribute' do
