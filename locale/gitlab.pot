@@ -31505,6 +31505,9 @@ msgstr ""
 msgid "cannot be modified"
 msgstr ""
 
+msgid "cannot be the same as an existing Namespace or Group"
+msgstr ""
+
 msgid "cannot block others"
 msgstr ""
 
