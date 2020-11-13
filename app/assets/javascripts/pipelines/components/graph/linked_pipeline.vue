@@ -2,6 +2,7 @@
 import { GlTooltipDirective, GlButton, GlLink, GlLoadingIcon } from '@gitlab/ui';
 import CiStatus from '~/vue_shared/components/ci_icon.vue';
 import { __, sprintf } from '~/locale';
+import { UPSTREAM, DOWNSTREAM } from './constants';
 
 export default {
   directives: {
@@ -14,6 +15,10 @@ export default {
     GlLoadingIcon,
   },
   props: {
+    columnTitle: {
+      type: String,
+      required: true,
+    },
     pipeline: {
       type: Object,
       required: true,
@@ -22,7 +27,7 @@ export default {
       type: Number,
       required: true,
     },
-    columnTitle: {
+    type: {
       type: String,
       required: true,
     },
@@ -50,12 +55,10 @@ export default {
       return this.childPipeline ? __('child-pipeline') : this.pipeline.project.name;
     },
     parentPipeline() {
-      // Refactor string match when BE returns Upstream/Downstream indicators
-      return this.projectId === this.pipeline.project.id && this.columnTitle === __('Upstream');
+      return this.type === UPSTREAM;
     },
     childPipeline() {
-      // Refactor string match when BE returns Upstream/Downstream indicators
-      return this.projectId === this.pipeline.project.id && this.isDownstream;
+      return this.isDownstream && this.projectId === this.pipeline.project.id;
     },
     label() {
       if (this.parentPipeline) {
@@ -66,7 +69,7 @@ export default {
       return __('Multi-project');
     },
     isDownstream() {
-      return this.columnTitle === __('Downstream');
+      return this.type === DOWNSTREAM;
     },
     sourceJobInfo() {
       return this.isDownstream

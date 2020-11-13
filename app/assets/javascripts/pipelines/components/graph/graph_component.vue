@@ -5,6 +5,7 @@ import StageColumnComponent from './stage_column_component.vue';
 import GraphWidthMixin from '../../mixins/graph_width_mixin';
 import LinkedPipelinesColumn from './linked_pipelines_column.vue';
 import GraphBundleMixin from '../../mixins/graph_pipeline_bundle_mixin';
+import { UPSTREAM, DOWNSTREAM, MAIN } from './constants';
 
 export default {
   name: 'PipelineGraph',
@@ -35,11 +36,11 @@ export default {
     type: {
       type: String,
       required: false,
-      default: 'main',
+      default: MAIN,
     },
   },
-  upstream: 'upstream',
-  downstream: 'downstream',
+  upstream: UPSTREAM,
+  downstream: DOWNSTREAM,
   data() {
     return {
       downstreamMarginTop: null,
@@ -88,7 +89,7 @@ export default {
       return this.type !== this.$options.downstream && this.expandedTriggeredBy;
     },
     pipelineTypeDownstream() {
-      return this.type !== this.$options.upstream && this.expandedTriggered;
+       return this.type !== this.$options.upstream && this.expandedTriggered;
     },
     pipelineProjectId() {
       return this.pipeline.project.id;
@@ -192,7 +193,7 @@ export default {
 
         <pipeline-graph
           v-if="pipelineTypeUpstream"
-          type="upstream"
+          :type="$options.upstream"
           class="d-inline-block upstream-pipeline"
           :class="`js-upstream-pipeline-${expandedTriggeredBy.id}`"
           :is-loading="false"
@@ -205,10 +206,10 @@ export default {
 
         <linked-pipelines-column
           v-if="hasTriggeredBy"
+          :type="$options.upstream"
           :linked-pipelines="triggeredByPipelines"
           :column-title="__('Upstream')"
           :project-id="pipelineProjectId"
-          graph-position="left"
           @linkedPipelineClick="$emit('onClickTriggeredBy', $event)"
         />
 
@@ -241,10 +242,10 @@ export default {
 
         <linked-pipelines-column
           v-if="hasTriggered"
+          :type="$options.downstream"
           :linked-pipelines="triggeredPipelines"
           :column-title="__('Downstream')"
           :project-id="pipelineProjectId"
-          graph-position="right"
           @linkedPipelineClick="handleClickedDownstream"
           @downstreamHovered="setJob"
           @pipelineExpandToggle="setPipelineExpanded"
@@ -252,7 +253,7 @@ export default {
 
         <pipeline-graph
           v-if="pipelineTypeDownstream"
-          type="downstream"
+          :type="$options.downstream"
           class="d-inline-block"
           :class="`js-downstream-pipeline-${expandedTriggered.id}`"
           :is-loading="false"
