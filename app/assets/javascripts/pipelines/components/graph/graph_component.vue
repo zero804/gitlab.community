@@ -15,10 +15,15 @@ export default {
     LinkedPipelinesColumn,
   },
   mixins: [GraphWidthMixin, GraphBundleMixin],
+  inject: {
+    mediator: {
+      default: () => ({})
+    }
+  },
   props: {
     isLoading: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     pipeline: {
       type: Object,
@@ -28,10 +33,6 @@ export default {
       type: Boolean,
       required: false,
       default: false,
-    },
-    mediator: {
-      type: Object,
-      required: true,
     },
     type: {
       type: String,
@@ -94,6 +95,9 @@ export default {
     pipelineProjectId() {
       return this.pipeline.project.id;
     },
+    showBigSpinner(){
+      return this.type === MAIN && this.isLoading;
+    }
   },
   methods: {
     capitalizeStageName(name) {
@@ -190,7 +194,7 @@ export default {
         }"
         class="gl-display-flex"
       >
-        <gl-loading-icon v-if="isLoading" class="m-auto" size="lg" />
+        <gl-loading-icon v-if="showBigSpinner" size="lg" />
 
         <linked-pipelines-column
           v-if="hasUpstream"

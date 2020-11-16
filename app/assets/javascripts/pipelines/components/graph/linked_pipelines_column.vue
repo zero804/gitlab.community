@@ -9,6 +9,11 @@ export default {
     LinkedPipeline,
     PipelineGraph: () => import('./graph_component.vue'),
   },
+  inject: {
+    mediator: {
+      default: () => ({})
+    }
+  },
   props: {
     columnTitle: {
       type: String,
@@ -87,13 +92,14 @@ export default {
             @downstreamHovered="onDownstreamHovered"
             @pipelineExpandToggle="onPipelineExpandToggle"
           />
-          <div v-if="pipeline.isExpanded" class="gl-display-inline-block" :style="{ width: 'max-content', background: 'mistyrose'}">
+          <div v-if="pipeline.isExpanded" class="gl-display-inline-block gl-px-2 gl-mt-n6">
             <pipeline-graph
-              v-if="currentPipeline"
+              v-if="pipeline.isExpanded"
               :type="type"
               class="d-inline-block"
               :pipeline="pipeline"
               :is-linked-pipeline="true"
+              :is-loading="pipeline.isLoading"
             />
           </div>
         </li>

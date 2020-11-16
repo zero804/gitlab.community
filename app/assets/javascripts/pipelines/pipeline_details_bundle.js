@@ -32,6 +32,9 @@ const createPipelinesDetailApp = mediator => {
     components: {
       pipelineGraph,
     },
+    provide: {
+      mediator,
+    },
     mixins: [GraphBundleMixin],
     data() {
       return {
