@@ -4,7 +4,7 @@ import LinkedPipeline from './linked_pipeline.vue';
 import { UPSTREAM, DOWNSTREAM } from './constants';
 
 export default {
-  name: 'LinkedPipeline',
+  name: 'LinkedPipelinesColumn',
   components: {
     LinkedPipeline,
     PipelineGraph: () => import('./graph_component.vue'),
@@ -87,12 +87,12 @@ export default {
             @downstreamHovered="onDownstreamHovered"
             @pipelineExpandToggle="onPipelineExpandToggle"
           />
-          <div v-if="(isExpanded(pipeline.id))" class="gl-display-inline-block" :style="{ width: 'max-content', background: 'mistyrose'}">
+          <div v-if="pipeline.isExpanded" class="gl-display-inline-block" :style="{ width: 'max-content', background: 'mistyrose'}">
             <pipeline-graph
               v-if="currentPipeline"
               :type="type"
               class="d-inline-block"
-              :pipeline="currentPipeline"
+              :pipeline="pipeline"
               :is-linked-pipeline="true"
             />
           </div>

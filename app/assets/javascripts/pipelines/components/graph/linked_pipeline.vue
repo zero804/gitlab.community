@@ -100,14 +100,14 @@ export default {
       if (!this.isDownstream){
         return
       }
-      
+
       this.$emit('downstreamHovered', this.pipeline.source_job.name);
     },
     onHoverLeave() {
       if (!this.isDownstream){
         return
       }
-      
+
       this.$emit('downstreamHovered', '');
     },
   },
