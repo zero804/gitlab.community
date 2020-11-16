@@ -188,6 +188,7 @@ export default {
           paddingLeft: `${graphLeftPadding}px`,
           paddingRight: `${graphRightPadding}px`,
         }"
+        class="gl-display-flex"
       >
         <gl-loading-icon v-if="isLoading" class="m-auto" size="lg" />
 
