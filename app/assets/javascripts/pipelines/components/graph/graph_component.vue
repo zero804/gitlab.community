@@ -55,41 +55,41 @@ export default {
     graph() {
       return this.pipeline.details?.stages;
     },
-    hasTriggeredBy() {
+    hasUpstream() {
       return (
         this.type !== this.$options.downstream &&
-        this.triggeredByPipelines &&
+        this.upstreamPipelines &&
         this.pipeline.triggered_by !== null
       );
     },
-    triggeredByPipelines() {
+    upstreamPipelines() {
       return this.pipeline.triggered_by;
     },
-    hasTriggered() {
+    hasDownstream() {
       return (
         this.type !== this.$options.upstream &&
-        this.triggeredPipelines &&
+        this.downstreamPipelines &&
         this.pipeline.triggered.length > 0
       );
     },
-    triggeredPipelines() {
+    downstreamPipelines() {
       return this.pipeline.triggered;
     },
-    expandedTriggeredBy() {
+    expandedUpstream() {
       return (
         this.pipeline.triggered_by &&
         Array.isArray(this.pipeline.triggered_by) &&
         this.pipeline.triggered_by.find(el => el.isExpanded)
       );
     },
-    expandedTriggered() {
+    expandedDownstream() {
       return this.pipeline.triggered && this.pipeline.triggered.find(el => el.isExpanded);
     },
     pipelineTypeUpstream() {
-      return this.type !== this.$options.downstream && this.expandedTriggeredBy;
+      return this.type !== this.$options.downstream && this.expandedUpstream;
     },
     pipelineTypeDownstream() {
-       return this.type !== this.$options.upstream && this.expandedTriggered;
+      return this.type !== this.$options.upstream && this.expandedDownstream;
     },
     pipelineProjectId() {
       return this.pipeline.project.id;
@@ -143,11 +143,11 @@ export default {
        * and we want to reset the pipeline store. Triggering the reset without
        * this condition would mean not allowing downstreams of downstreams to expand
        */
-      if (this.expandedTriggered?.id !== pipeline.id) {
-        this.$emit('onResetTriggered', this.pipeline, pipeline);
+      if (this.expandedDownstream?.id !== pipeline.id) {
+        this.$emit('onResetDownstream', this.pipeline, pipeline);
       }
 
-      this.$emit('onClickTriggered', pipeline);
+      this.$emit('onClickDownstreamPipeline', pipeline);
     },
     calculateMarginTop(downstreamNode, pixelDiff) {
       return `${downstreamNode.offsetTop - downstreamNode.offsetParent.offsetTop - pixelDiff}px`;
@@ -155,8 +155,8 @@ export default {
     hasOnlyOneJob(stage) {
       return stage.groups.length === 1;
     },
-    hasUpstream(index) {
-      return index === 0 && this.hasTriggeredBy;
+    hasUpstreamColumn(index) {
+      return index === 0 && this.hasUpstream;
     },
     setJob(jobName) {
       this.jobName = jobName;
@@ -195,28 +195,28 @@ export default {
           v-if="pipelineTypeUpstream"
           :type="$options.upstream"
           class="d-inline-block upstream-pipeline"
-          :class="`js-upstream-pipeline-${expandedTriggeredBy.id}`"
+          :class="`js-upstream-pipeline-${expandedUpstream.id}`"
           :is-loading="false"
-          :pipeline="expandedTriggeredBy"
+          :pipeline="expandedUpstream"
           :is-linked-pipeline="true"
           :mediator="mediator"
-          @onClickTriggeredBy="clickTriggeredByPipeline"
+          @onClickUpstreamPipeline="clickUpstreamPipeline"
           @refreshPipelineGraph="requestRefreshPipelineGraph"
         />
 
         <linked-pipelines-column
-          v-if="hasTriggeredBy"
+          v-if="hasUpstream"
           :type="$options.upstream"
-          :linked-pipelines="triggeredByPipelines"
+          :linked-pipelines="upstreamPipelines"
           :column-title="__('Upstream')"
           :project-id="pipelineProjectId"
-          @linkedPipelineClick="$emit('onClickTriggeredBy', $event)"
+          @linkedPipelineClick="$emit('onClickUpstreamPipeline', $event)"
         />
 
         <ul
           v-if="!isLoading"
           :class="{
-            'inline js-has-linked-pipelines': hasTriggered || hasTriggeredBy,
+            'inline js-has-linked-pipelines': hasDownstream || hasUpstream,
           }"
           class="stage-column-list align-top"
         >
@@ -224,7 +224,7 @@ export default {
             v-for="(stage, index) in graph"
             :key="stage.name"
             :class="{
-              'has-upstream gl-ml-11': hasUpstream(index),
+              'has-upstream gl-ml-11': hasUpstreamColumn(index),
               'has-only-one-job': hasOnlyOneJob(stage),
               'gl-mr-26': shouldAddRightMargin(index),
             }"
@@ -232,7 +232,7 @@ export default {
             :groups="stage.groups"
             :stage-connector-class="stageConnectorClass(index, stage)"
             :is-first-column="isFirstColumn(index)"
-            :has-triggered-by="hasTriggeredBy"
+            :has-upstream="hasUpstream"
             :action="stage.status.action"
             :job-hovered="jobName"
             :pipeline-expanded="pipelineExpanded"
@@ -241,9 +241,9 @@ export default {
         </ul>
 
         <linked-pipelines-column
-          v-if="hasTriggered"
+          v-if="hasDownstream"
           :type="$options.downstream"
-          :linked-pipelines="triggeredPipelines"
+          :linked-pipelines="downstreamPipelines"
           :column-title="__('Downstream')"
           :project-id="pipelineProjectId"
           @linkedPipelineClick="handleClickedDownstream"
@@ -255,13 +255,13 @@ export default {
           v-if="pipelineTypeDownstream"
           :type="$options.downstream"
           class="d-inline-block"
-          :class="`js-downstream-pipeline-${expandedTriggered.id}`"
+          :class="`js-downstream-pipeline-${expandedDownstream.id}`"
           :is-loading="false"
-          :pipeline="expandedTriggered"
+          :pipeline="expandedDownstream"
           :is-linked-pipeline="true"
           :style="{ 'margin-top': downstreamMarginTop }"
           :mediator="mediator"
-          @onClickTriggered="clickTriggeredPipeline"
+          @onClickDownstreamPipeline="clickDownstreamPipeline"
           @refreshPipelineGraph="requestRefreshPipelineGraph"
         />
       </div>
