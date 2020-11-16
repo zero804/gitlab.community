@@ -96,10 +96,18 @@ export default {
     hideTooltips() {
       this.$root.$emit('bv::hide::tooltip');
     },
-    onDownstreamHovered() {
+    onHover() {
+      if (!this.isDownstream){
+        return
+      }
+      
       this.$emit('downstreamHovered', this.pipeline.source_job.name);
     },
-    onDownstreamHoverLeave() {
+    onHoverLeave() {
+      if (!this.isDownstream){
+        return
+      }
+      
       this.$emit('downstreamHovered', '');
     },
   },
@@ -107,15 +115,15 @@ export default {
 </script>
 
 <template>
-  <li
+  <div
     ref="linkedPipeline"
     v-gl-tooltip
     class="linked-pipeline build"
     :title="tooltipText"
     :class="{ 'downstream-pipeline': isDownstream }"
     data-qa-selector="child_pipeline"
-    @mouseover="onDownstreamHovered"
-    @mouseleave="onDownstreamHoverLeave"
+    @mouseover="onHover"
+    @mouseleave="onHoverLeave"
   >
     <div
       class="gl-relative gl-bg-white gl-p-3 gl-border-solid gl-border-gray-100 gl-border-1"
@@ -152,5 +160,5 @@ export default {
         @click="onClickLinkedPipeline"
       />
     </div>
-  </li>
+  </div>
 </template>

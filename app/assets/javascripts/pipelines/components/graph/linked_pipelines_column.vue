@@ -4,8 +4,10 @@ import LinkedPipeline from './linked_pipeline.vue';
 import { UPSTREAM, DOWNSTREAM } from './constants';
 
 export default {
+  name: 'LinkedPipeline',
   components: {
     LinkedPipeline,
+    PipelineGraph: () => import('./graph_component.vue'),
   },
   props: {
     columnTitle: {
@@ -16,12 +18,12 @@ export default {
       type: Array,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-    },
     projectId: {
       type: Number,
+      required: true,
+    },
+    type: {
+      type: String,
       required: true,
     },
   },
@@ -61,25 +63,41 @@ export default {
 </script>
 
 <template>
-  <div :class="columnClass" class="stage-column linked-pipelines-column">
-    <div class="stage-name linked-pipelines-column-title">{{ columnTitle }}</div>
-    <div v-if="isUpstream" class="cross-project-triangle"></div>
-    <ul>
-      <linked-pipeline
-        v-for="(pipeline, index) in linkedPipelines"
-        :key="pipeline.id"
-        :class="{
-          active: pipeline.isExpanded,
-          'left-connector': pipeline.isExpanded && graphPosition === 'left',
-        }"
-        :pipeline="pipeline"
-        :column-title="columnTitle"
-        :project-id="projectId"
-        :type="type"
-        @pipelineClicked="onPipelineClick($event, pipeline, index)"
-        @downstreamHovered="onDownstreamHovered"
-        @pipelineExpandToggle="onPipelineExpandToggle"
-      />
-    </ul>
+  <div class="gl-display-flex">
+    <div :class="columnClass" class="stage-column linked-pipelines-column">
+      <div class="stage-name linked-pipelines-column-title">{{ columnTitle }}</div>
+      <div v-if="isUpstream" class="cross-project-triangle"></div>
+      <ul>
+        <li
+          v-for="(pipeline, index) in linkedPipelines"
+          class="gl-display-flex"
+          :class="{'gl-flex-direction-row-reverse': isUpstream}"
+        >
+          <linked-pipeline
+            :key="pipeline.id"
+            :class="{
+              active: pipeline.isExpanded,
+              'left-connector': pipeline.isExpanded && graphPosition === 'left',
+            }"
+            :pipeline="pipeline"
+            :column-title="columnTitle"
+            :project-id="projectId"
+            :type="type"
+            @pipelineClicked="onPipelineClick($event, pipeline, index)"
+            @downstreamHovered="onDownstreamHovered"
+            @pipelineExpandToggle="onPipelineExpandToggle"
+          />
+          <div v-if="(isExpanded(pipeline.id))" class="gl-display-inline-block" :style="{ width: 'max-content', background: 'mistyrose'}">
+            <pipeline-graph
+              v-if="currentPipeline"
+              :type="type"
+              class="d-inline-block"
+              :pipeline="currentPipeline"
+              :is-linked-pipeline="true"
+            />
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>

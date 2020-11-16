@@ -191,19 +191,6 @@ export default {
       >
         <gl-loading-icon v-if="isLoading" class="m-auto" size="lg" />
 
-        <pipeline-graph
-          v-if="pipelineTypeUpstream"
-          :type="$options.upstream"
-          class="d-inline-block upstream-pipeline"
-          :class="`js-upstream-pipeline-${expandedUpstream.id}`"
-          :is-loading="false"
-          :pipeline="expandedUpstream"
-          :is-linked-pipeline="true"
-          :mediator="mediator"
-          @onClickUpstreamPipeline="clickUpstreamPipeline"
-          @refreshPipelineGraph="requestRefreshPipelineGraph"
-        />
-
         <linked-pipelines-column
           v-if="hasUpstream"
           :type="$options.upstream"
@@ -249,20 +236,6 @@ export default {
           @linkedPipelineClick="handleClickedDownstream"
           @downstreamHovered="setJob"
           @pipelineExpandToggle="setPipelineExpanded"
-        />
-
-        <pipeline-graph
-          v-if="pipelineTypeDownstream"
-          :type="$options.downstream"
-          class="d-inline-block"
-          :class="`js-downstream-pipeline-${expandedDownstream.id}`"
-          :is-loading="false"
-          :pipeline="expandedDownstream"
-          :is-linked-pipeline="true"
-          :style="{ 'margin-top': downstreamMarginTop }"
-          :mediator="mediator"
-          @onClickDownstreamPipeline="clickDownstreamPipeline"
-          @refreshPipelineGraph="requestRefreshPipelineGraph"
         />
       </div>
     </div>
