@@ -159,8 +159,11 @@ export default {
     hasOnlyOneJob(stage) {
       return stage.groups.length === 1;
     },
+    hasDownstreamColumn(index) {
+      return index === 0;
+    },
     hasUpstreamColumn(index) {
-      return index === 0 && this.hasUpstream;
+      return (index === 0 && this.hasUpstream) || this.type === DOWNSTREAM;
     },
     setJob(jobName) {
       this.jobName = jobName;
@@ -224,7 +227,7 @@ export default {
             :groups="stage.groups"
             :stage-connector-class="stageConnectorClass(index, stage)"
             :is-first-column="isFirstColumn(index)"
-            :has-upstream="hasUpstream"
+            :has-upstream="hasUpstream || type === $options.downstream"
             :action="stage.status.action"
             :job-hovered="jobName"
             :pipeline-expanded="pipelineExpanded"

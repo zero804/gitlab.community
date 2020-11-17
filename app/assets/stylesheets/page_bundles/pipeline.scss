@@ -16,6 +16,18 @@
  * - ...
  */
 
+.stage-column:first-child:not(.has-upstream) {
+  outline: solid 0.25rem red;
+}
+
+.pipeline-graph .stage-column:last-child:not(.has-downstream) {
+  outline: dashed 0.15rem cyan;
+}
+
+.pipeline-graph .stage-column:last-child:not(.has-downstream) .build:nth-of-type(2) {
+  outline: dotted 0.15rem green;
+}
+
 .tab-pane {
   .ci-table {
     thead th {

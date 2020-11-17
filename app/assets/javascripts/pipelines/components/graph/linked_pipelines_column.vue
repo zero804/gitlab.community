@@ -92,7 +92,7 @@ export default {
             @downstreamHovered="onDownstreamHovered"
             @pipelineExpandToggle="onPipelineExpandToggle"
           />
-          <div v-if="pipeline.isExpanded" class="gl-display-inline-block gl-px-2 gl-mt-n6">
+          <div v-if="pipeline.isExpanded" class="gl-display-inline-block gl-mt-n6">
             <pipeline-graph
               v-if="pipeline.isExpanded"
               :type="type"
