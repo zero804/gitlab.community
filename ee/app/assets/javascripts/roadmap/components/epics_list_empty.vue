@@ -1,14 +1,14 @@
 <script>
 /* eslint-disable vue/no-v-html */
+import { GlButton } from '@gitlab/ui';
 import { s__, sprintf } from '~/locale';
 import { dateInWords } from '~/lib/utils/datetime_utility';
 
 import CommonMixin from '../mixins/common_mixin';
 import { emptyStateDefault, emptyStateWithFilters } from '../constants';
 
-import initEpicCreate from '../../epic/epic_bundle';
-
 export default {
+  components: { GlButton },
   mixins: [CommonMixin],
   props: {
     presetType: {
@@ -27,10 +27,6 @@ export default {
       type: Boolean,
       required: true,
     },
-    newEpicEndpoint: {
-      type: String,
-      required: true,
-    },
     emptyStateIllustrationPath: {
       type: String,
       required: true,
@@ -41,6 +37,7 @@ export default {
       default: false,
     },
   },
+  inject: ['newEpicPath', 'listEpicsPath'],
   computed: {
     timeframeRange() {
       let startDate;
@@ -112,15 +109,6 @@ export default {
       });
     },
   },
-  mounted() {
-    // If filters are not applied and yet user
-    // is seeing empty state, we need to show
-    // `New epic` button, so boot-up Epic app
-    // in create mode.
-    if (!this.hasFiltersApplied) {
-      initEpicCreate(true);
-    }
-  },
 };
 </script>
 
@@ -133,15 +121,20 @@ export default {
       <div class="text-content">
         <h4>{{ message }}</h4>
         <p v-html="subMessage"></p>
-        <div class="text-center">
-          <div
-            v-if="!hasFiltersApplied"
-            id="epic-create-root"
-            :data-endpoint="newEpicEndpoint"
-          ></div>
-          <a :title="__('List')" :href="newEpicEndpoint" class="btn btn-default">
-            <span>{{ s__('View epics list') }}</span>
-          </a>
+        <div class="gl-text-center">
+          <gl-button
+            :href="newEpicPath"
+            variant="success"
+            class="gl-mt-3 gl-sm-mt-0! gl-w-full gl-sm-w-auto!"
+          >
+            {{ __('New epic') }}
+          </gl-button>
+          <gl-button
+            :href="listEpicsPath"
+            class="gl-mt-3 gl-sm-mt-0! gl-sm-ml-3 gl-w-full gl-sm-w-auto!"
+          >
+            {{ __('View epics list') }}
+          </gl-button>
         </div>
       </div>
     </div>

@@ -23,10 +23,6 @@ export default {
       type: String,
       required: true,
     },
-    newEpicEndpoint: {
-      type: String,
-      required: true,
-    },
     emptyStateIllustrationPath: {
       type: String,
       required: true,
@@ -140,7 +136,6 @@ export default {
         :timeframe-start="timeframeStart"
         :timeframe-end="timeframeEnd"
         :has-filters-applied="hasFiltersApplied"
-        :new-epic-endpoint="newEpicEndpoint"
         :empty-state-illustration-path="emptyStateIllustrationPath"
         :is-child-epics="isChildEpics"
       />
