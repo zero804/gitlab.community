@@ -14,25 +14,13 @@ to them.
 
 ## Create an epic
 
-A paginated list of epics is available in each group from where you can create
-a new epic. The list of epics includes also epics from all subgroups of the
-selected group. From your group page:
-
-### Create an epic from the epic list
-
-To create an epic from the epic list, in a group:
-
-1. Go to **{epic}** **Epics**.
-1. Select **New epic**.
-1. Enter a descriptive title.
-1. Select **Create epic**.
-
 ### Access the New Epic form
 
 > [Introduced](https://gitlab.com/gitlab-org/gitlab/-/issues/211533) in [GitLab Premium](https://about.gitlab.com/pricing/) 13.2.
 
 There are two ways to get to the New Epic form and create an epic in the group you're in:
 
+- From **{epic}** **Epics** list in your group, select **New Epic**.
 - From an epic in your group, select **New Epic**.
 - From anywhere, in the top menu, select **plus** (**{plus-square}**) **> New epic**.
 
