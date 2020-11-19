@@ -9,8 +9,9 @@ import { unwrapPipelineData } from './utils';
 export default {
   name: 'PipelineGraphWrapper',
   components: {
-    PipelineGraph,
+    GlAlert,
     GlLoadingIcon,
+    PipelineGraph,
   },
   inject: {
     pipelineIid: {
