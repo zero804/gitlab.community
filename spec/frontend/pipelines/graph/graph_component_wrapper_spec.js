@@ -8,7 +8,7 @@ import { LOAD_FAILURE } from '~/pipelines/constants';
 import PipelineGraphWrapper from '~/pipelines/components/graph/graph_component_wrapper.vue';
 import PipelineGraph from '~/pipelines/components/graph/graph_component.vue';
 import getPipelineDetails from '~/pipelines/graphql/queries/get_pipeline_details.query.graphql';
-import { mockPipelineResponse } from './mock_data_new';
+import { mockPipelineResponse } from './mock_data';
 
 const defaultProvide = {
   pipelineProjectPath: 'frog/amphibirama',
