@@ -1,5 +1,5 @@
 const unwrapPipelineData = (mainPipelineId, data) => {
-  if (!data.project?.pipeline) {
+  if (!data?.project?.pipeline) {
     return;
   }
 

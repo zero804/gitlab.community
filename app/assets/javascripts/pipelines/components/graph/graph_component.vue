@@ -14,7 +14,7 @@ export default {
     GlLoadingIcon,
     LinkedPipelinesColumn,
   },
-  mixins: [GraphWidthMixin, GraphBundleMixin],
+  mixins: [GraphBundleMixin],
   props: {
     isLinkedPipeline: {
       type: Boolean,
@@ -108,12 +108,7 @@ export default {
       class="pipeline-visualization pipeline-graph"
       :class="{ 'pipeline-tab-content': !isLinkedPipeline }"
     >
-      <div
-        :style="{
-          paddingLeft: `${graphLeftPadding}px`,
-          paddingRight: `${graphRightPadding}px`,
-        }"
-      >
+      <div>
         <ul class="stage-column-list align-top">
           <stage-column-component
             v-for="(stage, index) in graph"
