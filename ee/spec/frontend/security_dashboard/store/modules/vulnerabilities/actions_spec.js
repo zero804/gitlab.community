@@ -80,7 +80,7 @@ describe('vulnerabilities actions', () => {
     state = initialState();
   });
 
-  describe('fetchVulnerabilities', () => {
+  describe('getVulnerabilities', () => {
     let mock;
 
     beforeEach(() => {
@@ -103,7 +103,7 @@ describe('vulnerabilities actions', () => {
 
       it('should dispatch the request and success actions', () => {
         return testAction(
-          actions.fetchVulnerabilities,
+          actions.getVulnerabilities,
           {},
           state,
           [],
@@ -119,7 +119,7 @@ describe('vulnerabilities actions', () => {
 
       it('should pass through the filters', () => {
         return testAction(
-          actions.fetchVulnerabilities,
+          actions.getVulnerabilities,
           params,
           state,
           [],
@@ -143,7 +143,7 @@ describe('vulnerabilities actions', () => {
 
       it('should dispatch the request and error actions', () => {
         return testAction(
-          actions.fetchVulnerabilities,
+          actions.getVulnerabilities,
           {},
           state,
           [],
@@ -161,7 +161,7 @@ describe('vulnerabilities actions', () => {
       });
 
       it('should not do anything', () => {
-        return testAction(actions.fetchVulnerabilities, {}, state);
+        return testAction(actions.getVulnerabilities, {}, state);
       });
     });
   });
@@ -590,7 +590,7 @@ describe('vulnerability dismissal', () => {
         );
       });
 
-      it('should load the previous page if there is no more vulnerabiliy on the current one and page > 1', () => {
+      it('should load the previous page if there is no more vulnerability on the current one and page > 1', () => {
         state.vulnerabilities = [mockDataVulnerabilities[0]];
         state.pageInfo.page = 3;
 
