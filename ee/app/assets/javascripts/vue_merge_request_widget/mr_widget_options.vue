@@ -4,6 +4,8 @@ import GroupedMetricsReportsApp from 'ee/vue_shared/metrics_reports/grouped_metr
 import reportsMixin from 'ee/vue_shared/security_reports/mixins/reports_mixin';
 import { componentNames } from 'ee/reports/components/issue_body';
 import MrWidgetLicenses from 'ee/vue_shared/license_compliance/mr_widget_license_report.vue';
+import { once } from 'lodash';
+import api from '~/api';
 import ReportSection from '~/reports/components/report_section.vue';
 import { s__, __, sprintf } from '~/locale';
 import CEWidgetOptions from '~/vue_merge_request_widget/mr_widget_options.vue';
@@ -159,6 +161,13 @@ export default {
         this.loadingLoadPerformanceFailed,
       );
     },
+
+    handleBrowserPerformanceToggleEvent() {
+      return once(() => {
+        api.trackRedisHllUserEvent('testing_web_performance_widget_total');
+      });
+    },
+
     licensesApiPath() {
       return gl?.mrWidgetData?.license_scanning_comparison_path || null;
     },
@@ -287,7 +296,9 @@ export default {
         :neutral-issues="mr.browserPerformanceMetrics.same"
         :has-issues="hasBrowserPerformanceMetrics"
         :component="$options.componentNames.PerformanceIssueBody"
+        :should-emit-toggle-event="true"
         class="js-browser-performance-widget mr-widget-border-top mr-report"
+        @toggleEvent="handleBrowserPerformanceToggleEvent"
       />
       <report-section
         v-if="hasLoadPerformancePaths"
