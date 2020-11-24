@@ -45,10 +45,17 @@ module Security
         category: vulnerability.report_type,
         project_fingerprint: vulnerability.project_fingerprint,
         vulnerability_data: {
+          severity: vulnerability.severity,
+          confidence: vulnerability.confidence,
+          description: vulnerability.description,
+          solution: vulnerability.solution,
           remediations: vulnerability.remediations,
           category: vulnerability.report_type,
           title: vulnerability.name,
-          name: vulnerability.name
+          name: vulnerability.name,
+          location: vulnerability.location,
+          links: vulnerability.links,
+          identifiers: vulnerability.identifiers.map { |i| i.attributes }
         }
       }
     end

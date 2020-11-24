@@ -7,6 +7,7 @@ RSpec.describe Security::AutoFixService do
     subject { described_class.new(project).execute(ids) }
 
     let(:project) { create(:project, :custom_repo, files: { 'yarn.lock' => yarn_lock_content }) }
+    let(:pipeline) { create(:ee_ci_pipeline) }
     let(:vulnerability_with_rem) { create(:vulnerabilities_finding_with_remediation, :yarn_remediation, report_type: :dependency_scanning, summary: "Test remediation") }
 
     let(:remediations_folder) { Rails.root.join('ee/spec/fixtures/security_reports/remediations') }
@@ -38,6 +39,20 @@ RSpec.describe Security::AutoFixService do
         expect(Vulnerabilities::Feedback.count).to eq(1)
         expect(MergeRequest.count).to eq(1)
         expect(MergeRequest.last.title).to eq('Resolve vulnerability: Cipher with no integrity')
+      end
+
+      context 'when running second time' do
+        it 'does not create secund merge request' do
+          subject
+
+          expect(Vulnerabilities::Feedback.count).to eq(1)
+          expect(MergeRequest.count).to eq(1)
+
+          subject
+
+          expect(Vulnerabilities::Feedback.count).to eq(1)
+          expect(MergeRequest.count).to eq(1)
+        end
       end
     end
   end
