@@ -16,7 +16,7 @@ module API
         Gitlab::Routing.url_helpers.user_url(user)
       end
 
-      expose :status
+      # expose :status
     end
   end
 end
