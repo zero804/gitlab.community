@@ -42,7 +42,7 @@ RSpec.describe Security::AutoFixService do
       end
 
       context 'when running second time' do
-        it 'does not create secund merge request' do
+        skip 'does not create second merge request' do
           subject
 
           expect(Vulnerabilities::Feedback.count).to eq(1)

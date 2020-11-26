@@ -31,8 +31,8 @@ FactoryBot.define do
           raw_metadata['remediations'] = [
             {
               summary: evaluator.summary,
-              diff: Base64.encode64(File.read(
-                File.join(Rails.root.join('ee/spec/fixtures/security_reports/remediations'), "remediation.patch")
+              diff: Base64.encode64(File.read(File.join(
+                Rails.root.join('ee/spec/fixtures/security_reports/remediations'), "remediation.patch")
               ))
             }
           ]

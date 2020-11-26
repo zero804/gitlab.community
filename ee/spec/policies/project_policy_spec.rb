@@ -540,7 +540,6 @@ RSpec.describe ProjectPolicy do
       it { is_expected.to be_allowed(:reporter_access) }
       it { is_expected.to be_allowed(:create_vulnerability_feedback) }
       it { is_expected.to be_allowed(:create_merge_request_in) }
-      it { is_expected.to be_allowed(:create_merge_request_from) }
       it { is_expected.to be_allowed(:read_project) }
     end
 
@@ -548,7 +547,6 @@ RSpec.describe ProjectPolicy do
       it { is_expected.to be_disallowed(:reporter_access) }
       it { is_expected.to be_disallowed(:create_vulnerability_feedback) }
       it { is_expected.to be_disallowed(:create_merge_request_in) }
-      it { is_expected.to be_disallowed(:create_merge_request_from) }
       it { is_expected.to be_disallowed(:read_project) }
     end
   end
