@@ -67,7 +67,6 @@ RSpec.describe Security::AutoFixService do
 
           expect(Vulnerabilities::Feedback.count).to eq(0)
           expect(MergeRequest.count).to eq(0)
-
         end
       end
     end
