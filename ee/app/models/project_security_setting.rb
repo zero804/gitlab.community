@@ -3,6 +3,11 @@
 class ProjectSecuritySetting < ApplicationRecord
   self.primary_key = :project_id
 
+  # Note: Even if we store settings for all types of security scanning
+  # Currently, Auto-fix feature is available only for container_scanning and
+  # dependency_scanning features.
+  AVAILABLE_AUTO_FIX_TYPES = [:dependency_scanning, :container_scanning].freeze
+
   belongs_to :project, inverse_of: :security_setting
 
   def self.safe_find_or_create_for(project)
@@ -11,10 +16,13 @@ class ProjectSecuritySetting < ApplicationRecord
     retry
   end
 
-  # Note: Even if we store settings for all types of security scanning
-  # Currently, Auto-fix feature is available only for container_scanning and
-  # dependency_scanning features.
   def auto_fix_enabled?
-    [auto_fix_container_scanning, auto_fix_dependency_scanning].any?
+    auto_fix_enabled_types.any?
+  end
+
+  def auto_fix_enabled_types
+    AVAILABLE_AUTO_FIX_TYPES.filter_map do |type|
+      type if public_send("auto_fix_#{type}")
+    end
   end
 end

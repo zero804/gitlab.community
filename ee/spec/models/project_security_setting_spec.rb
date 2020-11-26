@@ -61,4 +61,20 @@ RSpec.describe ProjectSecuritySetting do
       end
     end
   end
+
+  describe '#auto_fix_enabled_types' do
+    subject { setting.auto_fix_enabled_types }
+
+    let_it_be(:setting) { build(:project_security_setting) }
+
+    before do
+      setting.auto_fix_container_scanning = false
+      setting.auto_fix_dependency_scanning = true
+      setting.auto_fix_sast = true
+    end
+
+    it 'return status only for available types' do
+      is_expected.to eq([:dependency_scanning])
+    end
+  end
 end
