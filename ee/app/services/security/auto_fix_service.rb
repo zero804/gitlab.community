@@ -17,9 +17,7 @@ module Security
       vulnerabilities.each do |vulnerability|
         next if !!vulnerability.merge_request_feedback.try(:merge_request_iid)
 
-        remediation = vulnerability.remediations.last
-
-        next unless remediation
+        next unless vulnerability.remediations
 
         VulnerabilityFeedback::CreateService.new(project, User.security_bot, service_params(vulnerability)).execute
       end
