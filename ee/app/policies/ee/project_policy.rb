@@ -222,6 +222,8 @@ module EE
       end
 
       rule { security_bot && auto_fix_enabled }.policy do
+        enable :push_code
+        enable :create_merge_request_from
         enable :create_vulnerability_feedback
       end
 

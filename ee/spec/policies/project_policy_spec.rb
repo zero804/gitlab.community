@@ -538,6 +538,8 @@ RSpec.describe ProjectPolicy do
       end
 
       it { is_expected.to be_allowed(:reporter_access) }
+      it { is_expected.to be_allowed(:push_code) }
+      it { is_expected.to be_allowed(:create_merge_request_from) }
       it { is_expected.to be_allowed(:create_vulnerability_feedback) }
       it { is_expected.to be_allowed(:create_merge_request_in) }
       it { is_expected.to be_allowed(:read_project) }
@@ -545,6 +547,8 @@ RSpec.describe ProjectPolicy do
 
     context 'when auto_fix feature is disabled' do
       it { is_expected.to be_disallowed(:reporter_access) }
+      it { is_expected.to be_disallowed(:push_code) }
+      it { is_expected.to be_disallowed(:create_merge_request_from) }
       it { is_expected.to be_disallowed(:create_vulnerability_feedback) }
       it { is_expected.to be_disallowed(:create_merge_request_in) }
       it { is_expected.to be_disallowed(:read_project) }
