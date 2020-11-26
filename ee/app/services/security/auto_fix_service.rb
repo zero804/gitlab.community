@@ -2,21 +2,23 @@
 
 module Security
   class AutoFixService
-    attr_reader :project
+    include Gitlab::Utils::StrongMemoize
 
-    def initialize(project)
+    attr_reader :project, :pipeline
+
+    def initialize(project, pipeline)
       @project = project
+      @pipeline = pipeline
     end
 
-    def execute(vulnerability_ids)
+    def execute
       return if Feature.disabled?(:security_auto_fix)
       return if auto_fix_enabled_types.empty?
 
-      vulnerabilities = Vulnerabilities::Finding.where(id: vulnerability_ids, report_type: auto_fix_enabled_types)
+      vulnerabilities = pipeline.vulnerability_findings.by_report_types(auto_fix_enabled_types)
 
       vulnerabilities.each do |vulnerability|
         next if !!vulnerability.merge_request_feedback.try(:merge_request_iid)
-
         next unless vulnerability.remediations
 
         VulnerabilityFeedback::CreateService.new(project, User.security_bot, service_params(vulnerability)).execute
@@ -26,15 +28,10 @@ module Security
     private
 
     def auto_fix_enabled_types
-      return @auto_fix_enabled_types if @auto_fix_enabled_types
-
-      setting ||= ProjectSecuritySetting.safe_find_or_create_for(project)
-
-      # this is a temp solution and it shouldn't go to master
-      @auto_fix_enabled_types = []
-      @auto_fix_enabled_types.push(:dependency_scanning) if setting.auto_fix_dependency_scanning
-      @auto_fix_enabled_types.push(:container_scanning) if setting.auto_fix_container_scanning
-      @auto_fix_enabled_types
+      strong_memoize(:auto_fix_enabled_types) do
+        setting = ProjectSecuritySetting.safe_find_or_create_for(project)
+        setting.auto_fix_enabled_types
+      end
     end
 
     def service_params(vulnerability)
