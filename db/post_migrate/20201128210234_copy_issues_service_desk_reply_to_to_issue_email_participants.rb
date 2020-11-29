@@ -4,7 +4,7 @@ class CopyIssuesServiceDeskReplyToToIssueEmailParticipants < ActiveRecord::Migra
   DOWNTIME = false
 
   def up
-    gitlab_support_bot_id = execute("SELECT id FROM users WHERE username = 'support-bot'").first["id"]
+    gitlab_support_bot_id = execute("SELECT COALESCE((SELECT id FROM users WHERE username = 'support-bot'), -1) id").first["id"]
 
     execute <<~SQL.squish
       INSERT INTO issue_email_participants (issue_id,
