@@ -6,6 +6,7 @@ class ScheduleRecalculateUuidOnVulnerabilitiesOccurrences < ActiveRecord::Migrat
   DOWNTIME = false
 
   MIGRATION = 'RecalculateVulnerabilitiesOccurrencesUuid'
+  DELAY_INTERVAL = 2.minutes.to_i
   BATCH_SIZE = 2_500
 
   disable_ddl_transaction!
@@ -18,10 +19,10 @@ class ScheduleRecalculateUuidOnVulnerabilitiesOccurrences < ActiveRecord::Migrat
 
   def up
     say "Scheduling #{MIGRATION} jobs"
-
-    bulk_queue_background_migration_jobs_by_range(
+    queue_background_migration_jobs_by_range_at_intervals(
       VulnerabilitiesFinding,
       MIGRATION,
+      DELAY_INTERVAL,
       batch_size: BATCH_SIZE
     )
   end
