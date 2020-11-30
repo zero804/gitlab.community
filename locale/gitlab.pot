@@ -8387,9 +8387,6 @@ msgstr ""
 msgid "Customize icon"
 msgstr ""
 
-msgid "Customize language and region related settings."
-msgstr ""
-
 msgid "Customize name"
 msgstr ""
 
@@ -12305,9 +12302,6 @@ msgstr ""
 msgid "First Seen"
 msgstr ""
 
-msgid "First day of the week"
-msgstr ""
-
 msgid "First name"
 msgstr ""
 
@@ -16066,9 +16060,6 @@ msgid "Labels|Promote Label"
 msgstr ""
 
 msgid "Labels|Promoting %{labelTitle} will make it available for all projects inside %{groupName}. Existing project labels with the same title will be merged. If a group label with the same title exists, it will also be merged. This action cannot be reversed."
-msgstr ""
-
-msgid "Language"
 msgstr ""
 
 msgid "Large File Storage"
@@ -20878,12 +20869,6 @@ msgstr ""
 msgid "Preferences|Customize the appearance of the application header and navigation sidebar."
 msgstr ""
 
-msgid "Preferences|Display time in 24-hour format"
-msgstr ""
-
-msgid "Preferences|For example: 30 mins ago."
-msgstr ""
-
 msgid "Preferences|Homepage content"
 msgstr ""
 
@@ -20917,28 +20902,10 @@ msgstr ""
 msgid "Preferences|Tab width"
 msgstr ""
 
-msgid "Preferences|These settings will update how dates and times are displayed for you."
-msgstr ""
-
-msgid "Preferences|This feature is experimental and translations are not complete yet"
-msgstr ""
-
 msgid "Preferences|This setting allows you to customize the appearance of the syntax."
 msgstr ""
 
 msgid "Preferences|This setting allows you to customize the behavior of the system layout and default views."
-msgstr ""
-
-msgid "Preferences|Time display"
-msgstr ""
-
-msgid "Preferences|Time format"
-msgstr ""
-
-msgid "Preferences|Time preferences"
-msgstr ""
-
-msgid "Preferences|Use relative times"
 msgstr ""
 
 msgid "Press %{key}-C to copy"
@@ -21103,10 +21070,22 @@ msgstr ""
 msgid "ProfilePreferences|Customize integrations with third party services."
 msgstr ""
 
+msgid "ProfilePreferences|Customize language and region related settings."
+msgstr ""
+
+msgid "ProfilePreferences|Display time in 24-hour format"
+msgstr ""
+
 msgid "ProfilePreferences|Enable Gitpod integration"
 msgstr ""
 
 msgid "ProfilePreferences|Enable integrated code intelligence on code views"
+msgstr ""
+
+msgid "ProfilePreferences|First day of the week"
+msgstr ""
+
+msgid "ProfilePreferences|For example: 30 mins ago."
 msgstr ""
 
 msgid "ProfilePreferences|Gitpod"
@@ -21115,7 +21094,28 @@ msgstr ""
 msgid "ProfilePreferences|Integrations"
 msgstr ""
 
+msgid "ProfilePreferences|Language"
+msgstr ""
+
+msgid "ProfilePreferences|Learn more"
+msgstr ""
+
+msgid "ProfilePreferences|Localization"
+msgstr ""
+
 msgid "ProfilePreferences|Sourcegraph"
+msgstr ""
+
+msgid "ProfilePreferences|These settings will update how dates and times are displayed for you."
+msgstr ""
+
+msgid "ProfilePreferences|This feature is experimental and translations are not complete yet"
+msgstr ""
+
+msgid "ProfilePreferences|Time format"
+msgstr ""
+
+msgid "ProfilePreferences|Time preferences"
 msgstr ""
 
 msgid "ProfileSession|on"
