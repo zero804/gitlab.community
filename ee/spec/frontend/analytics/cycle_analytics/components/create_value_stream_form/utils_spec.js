@@ -1,4 +1,8 @@
-import { initializeFormData } from 'ee/analytics/cycle_analytics/components/create_value_stream_form/utils';
+import {
+  initializeFormData,
+  validateStage,
+  validateValueStreamName,
+} from 'ee/analytics/cycle_analytics/components/create_value_stream_form/utils';
 import { emptyErrorsState, emptyState, formInitialData } from './mock_data';
 
 describe('initializeFormData', () => {
@@ -71,3 +75,6 @@ describe('initializeFormData', () => {
     });
   });
 });
+
+describe.skip('validateStage', () => {});
+describe.skip('validateValueStreamName,', () => {});
