@@ -66,16 +66,12 @@ RSpec.describe 'Users' do
         it 'includes all users', :aggregate_failures do
           post_graphql(query)
 
-          expect(graphql_data.dig('users', 'nodes').count).to eq(4)
-
-          # rubocop: disable Lint/DuplicateHashKey
           expect(graphql_data.dig('users', 'nodes')).to include(
-            a_hash_including("id" => user1.to_global_id.to_s,
-                             "id" => user2.to_global_id.to_s,
-                             "id" => user3.to_global_id.to_s,
-                             "id" => current_user.to_global_id.to_s
-                            ))
-          # rubocop: enable Lint/DuplicateHashKey
+            { "id" => user1.to_global_id.to_s },
+            { "id" => user2.to_global_id.to_s },
+            { "id" => user3.to_global_id.to_s },
+            { "id" => current_user.to_global_id.to_s }
+          )
         end
       end
 
@@ -88,13 +84,10 @@ RSpec.describe 'Users' do
         it 'includes only admins', :aggregate_failures do
           post_graphql(query, current_user: admin)
 
-          expect(graphql_data.dig('users', 'nodes').count).to eq(2)
-
-          # rubocop: disable Lint/DuplicateHashKey
           expect(graphql_data.dig('users', 'nodes')).to include(
-            a_hash_including("id" => another_admin.to_global_id.to_s,
-                             "id" => admin.to_global_id.to_s))
-          # rubocop: enable Lint/DuplicateHashKey
+            { "id" => another_admin.to_global_id.to_s },
+            { "id" => admin.to_global_id.to_s }
+          )
         end
       end
     end
