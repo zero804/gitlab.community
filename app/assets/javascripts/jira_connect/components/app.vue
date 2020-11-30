@@ -1,6 +1,11 @@
 <script>
+import { GlAlert } from '@gitlab/ui';
+
 export default {
   name: 'JiraConnectApp',
+  components: {
+    GlAlert,
+  },
   computed: {
     state() {
       return this.$root.$data.state || {};
@@ -12,5 +17,9 @@ export default {
 };
 </script>
 <template>
-  <div></div>
+  <div>
+    <gl-alert v-if="error" variant="danger" :dismissible="false">
+      {{ error }}
+    </gl-alert>
+  </div>
 </template>
