@@ -1,44 +1,32 @@
 <script>
-import { GlForm, GlFormInput, GlFormGroup, GlModal } from '@gitlab/ui';
+import Vue from 'vue';
+import { GlButton, GlForm, GlFormInput, GlFormGroup, GlModal } from '@gitlab/ui';
 import { debounce } from 'lodash';
 import { mapState, mapActions } from 'vuex';
-import { sprintf, __ } from '~/locale';
+import { sprintf } from '~/locale';
+import {
+  DEFAULT_STAGE_CONFIG,
+  STAGE_SORT_DIRECTION,
+  I18N,
+} from './create_value_stream_form/constants';
+import { validateValueStreamName, validateStage } from './create_value_stream_form/utils';
+import DefaultStageFields from './create_value_stream_form/default_stage_fields.vue';
 import { DATA_REFETCH_DELAY } from '../../shared/constants';
 
-const ERRORS = {
-  MIN_LENGTH: __('Name is required'),
-  MAX_LENGTH: __('Maximum length 100 characters'),
-};
-
-const NAME_MAX_LENGTH = 100;
-
-const validate = ({ name }) => {
-  const errors = { name: [] };
-  if (name.length > NAME_MAX_LENGTH) {
-    errors.name.push(ERRORS.MAX_LENGTH);
-  }
-  if (!name.length) {
-    errors.name.push(ERRORS.MIN_LENGTH);
-  }
-  return errors;
-};
-
-const I18N = {
-  CREATE_VALUE_STREAM: __('Create Value Stream'),
-  CREATED: __("'%{name}' Value Stream created"),
-  CANCEL: __('Cancel'),
-  MODAL_TITLE: __('Value Stream Name'),
-  FIELD_NAME_LABEL: __('Name'),
-  FIELD_NAME_PLACEHOLDER: __('Example: My Value Stream'),
+const swapArrayItems = (arr, left, right) => {
+  // TODO: bounds checking
+  return [...arr.slice(0, left), arr[right], arr[left], ...arr.slice(right + 1, arr.length)];
 };
 
 export default {
   name: 'ValueStreamForm',
   components: {
+    GlButton,
     GlForm,
     GlFormInput,
     GlFormGroup,
     GlModal,
+    DefaultStageFields,
   },
   props: {
     initialData: {
@@ -53,10 +41,18 @@ export default {
     },
   },
   data() {
+    const { hasExtendedFormFields, initialData } = this;
+    const additionalFields = hasExtendedFormFields
+      ? {
+          stages: DEFAULT_STAGE_CONFIG,
+          ...initialData,
+        }
+      : { stages: [] };
     return {
-      errors: {},
       name: '',
-      ...this.initialData,
+      nameError: {},
+      stageErrors: [],
+      ...additionalFields,
     };
   },
   computed: {
@@ -64,11 +60,11 @@ export default {
       initialFormErrors: 'createValueStreamErrors',
       isCreating: 'isCreatingValueStream',
     }),
-    isValid() {
-      return !this.errors.name?.length;
+    isValueStreamNameValid() {
+      return !this.nameError.name?.length;
     },
     invalidFeedback() {
-      return this.errors.name?.join('\n');
+      return this.nameError.name?.join('\n');
     },
     hasFormErrors() {
       const { initialFormErrors } = this;
@@ -79,76 +75,167 @@ export default {
     },
     primaryProps() {
       return {
-        text: this.$options.I18N.CREATE_VALUE_STREAM,
+        text: this.$options.I18N.FORM_TITLE,
         attributes: [
           { variant: 'success' },
-          { disabled: !this.isValid },
+          { disabled: !this.NameField },
           { loading: this.isLoading },
         ],
       };
     },
+    hiddenStages() {
+      return this.stages.filter(stage => stage.hidden);
+    },
+    activeStages() {
+      return this.stages.filter(stage => !stage.hidden);
+    },
   },
   watch: {
     initialFormErrors(newErrors = {}) {
-      this.errors = newErrors;
+      this.stageErrors = newErrors;
     },
   },
   mounted() {
     const { initialFormErrors } = this;
     if (this.hasFormErrors) {
-      this.errors = initialFormErrors;
+      this.stageErrors = initialFormErrors;
     } else {
-      this.onHandleInput();
+      this.validate();
     }
   },
   methods: {
     ...mapActions(['createValueStream']),
-    onHandleInput: debounce(function debouncedValidation() {
+    onUpdateValueStreamName: debounce(function debouncedValidation() {
       const { name } = this;
-      this.errors = validate({ name });
+      this.nameError = validateValueStreamName({ name });
     }, DATA_REFETCH_DELAY),
     onSubmit() {
-      const { name } = this;
-      return this.createValueStream({ name }).then(() => {
+      const { name, stages } = this;
+      return this.createValueStream({
+        name,
+        stages: stages.map(({ name: stageName, ...rest }) => ({
+          name: stageName,
+          ...rest,
+          title: stageName,
+        })),
+      }).then(() => {
         if (!this.hasFormErrors) {
-          this.$toast.show(sprintf(this.$options.I18N.CREATED, { name }), {
+          this.$toast.show(sprintf(this.$options.I18N.FORM_CREATED, { name }), {
             position: 'top-center',
           });
           this.name = '';
         }
       });
     },
+    stageGroupLabel(index) {
+      return sprintf(this.$options.I18N.STAGE_INDEX, { index: index + 1 });
+    },
+    recoverStageTitle(name) {
+      return sprintf(this.$options.I18N.HIDDEN_DEFAULT_STAGE, { name });
+    },
+    validateStages() {
+      return this.activeStages.reduce((acc, stage) => [...acc, validateStage(stage)], []);
+    },
+    validate() {
+      const { name } = this;
+      this.nameError = validateValueStreamName({ name });
+      this.stageErrors = this.validateStages();
+    },
+    handleMove({ index, direction }) {
+      const newStages =
+        direction === STAGE_SORT_DIRECTION.UP
+          ? swapArrayItems(this.stages, index - 1, index)
+          : swapArrayItems(this.stages, index, index + 1);
+
+      Vue.set(this, 'stages', newStages);
+    },
+    hasFieldErrors(index) {
+      // TODO: might need to check length or something
+      return Boolean(this.stageErrors[index]?.length);
+    },
+    validateStageFields(index) {
+      Vue.set(this.stageErrors, index, validateStage(this.activeStages[index]));
+    },
+    fieldErrors(index) {
+      return this.stageErrors[index];
+    },
+    onSetHidden(index, hidden = true) {
+      const stage = this.stages[index];
+      Vue.set(this.stages, index, { ...stage, hidden });
+    },
+    handleReset() {
+      this.name = '';
+      DEFAULT_STAGE_CONFIG.forEach((stage, index) => {
+        Vue.set(this.stages, index, { ...stage, hidden: false });
+      });
+    },
   },
   I18N,
+  STAGE_SORT_DIRECTION,
 };
 </script>
 <template>
   <gl-modal
     data-testid="value-stream-form-modal"
     modal-id="value-stream-form-modal"
-    :title="$options.I18N.MODAL_TITLE"
+    scrollable
+    :title="$options.I18N.FORM_TITLE"
     :action-primary="primaryProps"
-    :action-cancel="{ text: $options.I18N.CANCEL }"
+    :action-cancel="{ text: $options.I18N.BTN_CANCEL }"
     @primary.prevent="onSubmit"
   >
     <gl-form>
       <gl-form-group
-        :label="$options.I18N.FIELD_NAME_LABEL"
         label-for="create-value-stream-name"
+        :label="$options.I18N.FORM_FIELD_NAME_LABEL"
         :invalid-feedback="invalidFeedback"
-        :state="isValid"
+        :state="isValueStreamNameValid"
       >
-        <gl-form-input
-          id="create-value-stream-name"
-          v-model.trim="name"
-          name="create-value-stream-name"
-          :placeholder="$options.I18N.FIELD_NAME_PLACEHOLDER"
-          :state="isValid"
-          required
-          @input="onHandleInput"
-        />
+        <div class="gl-display-flex gl-justify-content-space-between">
+          <gl-form-input
+            id="create-value-stream-name"
+            v-model.trim="name"
+            name="create-value-stream-name"
+            :placeholder="$options.I18N.FORM_FIELD_NAME_PLACEHOLDER"
+            :state="isValueStreamNameValid"
+            required
+            @input="onUpdateValueStreamName"
+          />
+          <gl-button
+            v-if="hiddenStages.length"
+            class="gl-ml-3"
+            variant="link"
+            @click="handleReset"
+            >{{ __('Restore defaults') }}</gl-button
+          >
+        </div>
       </gl-form-group>
-      <div v-if="hasExtendedFormFields" data-testid="extended-form-fields"></div>
+      <div v-if="hasExtendedFormFields" data-testid="extended-form-fields">
+        <hr />
+        <div v-for="(stage, activeStageIndex) in activeStages" :key="activeStageIndex">
+          <label class="gl-display-flex">{{ stageGroupLabel(activeStageIndex) }}</label>
+          <default-stage-fields
+            :stage="stage"
+            :index="activeStageIndex"
+            :total-stages="activeStages.length"
+            :errors="fieldErrors(activeStageIndex)"
+            @move="handleMove"
+            @hide="onSetHidden"
+            @input="validateStageFields(activeStageIndex)"
+          />
+        </div>
+        <div v-if="hiddenStages.length">
+          <hr />
+          <gl-form-group v-for="(stage, hiddenStageIndex) in hiddenStages" :key="stage.id">
+            <label class="gl-m-0 gl-vertical-align-middle gl-mr-3">{{
+              recoverStageTitle(stage.name)
+            }}</label>
+            <gl-button variant="link" @click="onRestore(hiddenStageIndex, false)">{{
+              $options.I18N.RESTORE_HIDDEN_STAGE
+            }}</gl-button>
+          </gl-form-group>
+        </div>
+      </div>
     </gl-form>
   </gl-modal>
 </template>
