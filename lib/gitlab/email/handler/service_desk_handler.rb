@@ -152,7 +152,7 @@ module Gitlab
         end
 
         def add_email_participant
-          IssueEmailParticipant.create(issue_id: @issue.id, email: from_address)
+          @issue.issue_email_participants.create(email: from_address)
         end
       end
     end
