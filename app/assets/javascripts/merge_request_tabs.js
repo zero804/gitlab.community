@@ -255,7 +255,7 @@ export default class MergeRequestTabs {
     this.eventHub.$emit('MergeRequestTabChange', action);
   }
 
-  scrollToElement(container) {
+  scrollToContainerElement(container) {
     if (location.hash) {
       const $el = $(`${container} ${location.hash}:not(.match)`);
 
@@ -339,7 +339,7 @@ export default class MergeRequestTabs {
         document.querySelector('div#commits').innerHTML = data.html;
         localTimeAgo($('.js-timeago', 'div#commits'));
         this.commitsLoaded = true;
-        this.scrollToElement('#commits');
+        this.scrollToContainerElement('#commits');
 
         this.toggleLoading(false);
         initAddContextCommitsTriggers();
@@ -408,7 +408,7 @@ export default class MergeRequestTabs {
         this.diffsLoaded = true;
 
         new Diff();
-        this.scrollToElement('#diffs');
+        this.scrollToContainerElement('#diffs');
 
         $('.diff-file').each((i, el) => {
           new BlobForkSuggestion({

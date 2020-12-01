@@ -219,49 +219,46 @@ describe('common_utils', () => {
 
     beforeEach(() => {
       elem = document.createElement('div');
+      elem.id = 'scroll_test';
+      document.body.appendChild(elem);
       window.innerHeight = windowHeight;
       window.mrTabs = { currentAction: 'show' };
-      jest.spyOn($.fn, 'animate');
+      jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
       jest.spyOn($.fn, 'offset').mockReturnValue({ top: elemTop });
     });
 
     afterEach(() => {
-      $.fn.animate.mockRestore();
+      window.scrollTo.mockRestore();
       $.fn.offset.mockRestore();
+      elem.remove();
     });
 
     describe('scrollToElement', () => {
       it('scrolls to element', () => {
         commonUtils.scrollToElement(elem);
-        expect($.fn.animate).toHaveBeenCalledWith(
-          {
-            scrollTop: elemTop,
-          },
-          expect.any(Number),
-        );
+        expect(window.scrollTo).toHaveBeenCalledWith({
+          behavior: 'smooth',
+          top: 0,
+        });
       });
 
       it('scrolls to element with offset', () => {
         const offset = 50;
         commonUtils.scrollToElement(elem, { offset });
-        expect($.fn.animate).toHaveBeenCalledWith(
-          {
-            scrollTop: elemTop + offset,
-          },
-          expect.any(Number),
-        );
+        expect(window.scrollTo).toHaveBeenCalledWith({
+          behavior: 'smooth',
+          top: 50,
+        });
       });
     });
 
     describe('scrollToElementWithContext', () => {
       it('scrolls with context', () => {
-        commonUtils.scrollToElementWithContext();
-        expect($.fn.animate).toHaveBeenCalledWith(
-          {
-            scrollTop: elemTop - windowHeight * 0.1,
-          },
-          expect.any(Number),
-        );
+        commonUtils.scrollToElementWithContext(elem);
+        expect(window.scrollTo).toHaveBeenCalledWith({
+          behavior: 'smooth',
+          top: -100,
+        });
       });
     });
   });

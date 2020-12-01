@@ -261,20 +261,19 @@ export const contentTop = () => {
 };
 
 export const scrollToElement = (element, options = {}) => {
-  let $el = element;
-  if (!(element instanceof $)) {
-    $el = $(element);
+  let el = element;
+  if (element instanceof $) {
+    // eslint-disable-next-line prefer-destructuring
+    el = element[0];
+  } else if (element instanceof String) {
+    el = document.querySelector(element);
   }
-  const { top } = $el.offset();
-  const { offset = 0, duration = 200 } = options;
 
-  // eslint-disable-next-line no-jquery/no-animate
-  return $('body, html').animate(
-    {
-      scrollTop: top - contentTop() + offset,
-    },
-    duration,
-  );
+  if (el && el.getBoundingClientRect) {
+    const { duration = 200, offset = 0 } = options;
+    const y = el.getBoundingClientRect().top + window.pageYOffset + offset;
+    window.scrollTo({ top: y, behavior: duration ? 'smooth' : 'auto' });
+  }
 };
 
 export const scrollToElementWithContext = element => {

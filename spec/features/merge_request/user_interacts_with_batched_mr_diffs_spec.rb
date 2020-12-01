@@ -63,8 +63,8 @@ RSpec.describe 'Batch diffs', :js do
         wait_for_requests
 
         # Confirm scrolled to correct UI element
-        expect(page.find('.diff-file.file-holder:first-of-type .discussion-notes .timeline-entry li.note[id]').obscured?).to be_falsey
-        expect(page.find('.diff-file.file-holder:last-of-type .discussion-notes .timeline-entry li.note[id]').obscured?).to be_truthy
+        expect(page).to have_selector('.diff-file.file-holder:first-of-type .discussion-notes .timeline-entry li.note[id]', visible: true)
+        expect(page).to have_selector('.diff-file.file-holder:last-of-type .discussion-notes .timeline-entry li.note[id]', visible: false)
       end
     end
 
@@ -78,9 +78,8 @@ RSpec.describe 'Batch diffs', :js do
 
         wait_for_requests
 
-        # Confirm scrolled to correct UI element
-        expect(page.find('.diff-file.file-holder:first-of-type .discussion-notes .timeline-entry li.note[id]').obscured?).to be_truthy
-        expect(page.find('.diff-file.file-holder:last-of-type .discussion-notes .timeline-entry li.note[id]').obscured?).to be_falsey
+        expect(page).to have_selector('.diff-file.file-holder:first-of-type .discussion-notes .timeline-entry li.note[id]', visible: false)
+        expect(page).to have_selector('.diff-file.file-holder:last-of-type .discussion-notes .timeline-entry li.note[id]', visible: true)
       end
     end
   end

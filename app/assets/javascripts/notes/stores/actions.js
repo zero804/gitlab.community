@@ -505,7 +505,9 @@ export const toggleAwardRequest = ({ dispatch }, data) => {
 
 export const scrollToNoteIfNeeded = (context, el) => {
   if (!isInViewport(el[0])) {
-    scrollToElement(el);
+    setTimeout(() => {
+      scrollToElement(el);
+    }, 200);
   }
 };
 
