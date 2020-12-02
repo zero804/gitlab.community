@@ -20,6 +20,6 @@ class CopyIssuesServiceDeskReplyToToIssueEmailParticipants < ActiveRecord::Migra
   end
 
   def down
-     # no-op
+    # no-op
   end
 end
