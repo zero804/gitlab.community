@@ -3,6 +3,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { GlAlert, GlButton, GlForm, GlFormGroup, GlFormInput } from '@gitlab/ui';
 import BoardEditableItem from '~/boards/components/sidebar/board_editable_item.vue';
 import autofocusonshow from '~/vue_shared/directives/autofocusonshow';
+import { joinPaths } from '~/lib/utils/url_utility';
 import createFlash from '~/flash';
 import { __ } from '~/locale';
 
@@ -28,6 +29,9 @@ export default {
   computed: {
     ...mapGetters({ issue: 'activeIssue' }),
 
+    pendingChangesStorageKey() {
+      return this.getPendingChangesKey(this.issue);
+    },
     projectPath() {
       const referencePath = this.issue.referencePath || '';
       return referencePath.slice(0, referencePath.indexOf('#'));
@@ -38,17 +42,46 @@ export default {
   },
   watch: {
     issue: {
-      handler(updatedIssue) {
+      handler(updatedIssue, formerIssue) {
+        if (formerIssue?.title !== this.title) {
+          localStorage.setItem(this.getPendingChangesKey(formerIssue), this.title);
+        }
+
         this.title = updatedIssue.title;
+        this.setPendingState();
       },
       immediate: true,
     },
   },
   methods: {
     ...mapActions(['setActiveIssueTitle']),
+    getPendingChangesKey(issue) {
+      if (!issue) {
+        return '';
+      }
+
+      return joinPaths(
+        window.location.pathname.slice(1),
+        String(issue.id),
+        'issue-title-pending-changes',
+      );
+    },
+    setPendingState() {
+      const pendingChanges = localStorage.getItem(this.pendingChangesStorageKey);
+
+      if (pendingChanges) {
+        this.title = pendingChanges;
+        this.showChangesAlert = true;
+        this.$refs.sidebarItem.expand();
+      } else {
+        this.showChangesAlert = false;
+      }
+    },
     cancel() {
       this.title = this.issue.title;
       this.$refs.sidebarItem.collapse();
+      this.showChangesAlert = false;
+      localStorage.removeItem(this.pendingChangesStorageKey);
     },
     async setTitle() {
       this.$refs.sidebarItem.collapse();
@@ -60,6 +93,8 @@ export default {
       try {
         this.loading = true;
         await this.setActiveIssueTitle({ title: this.title, projectPath: this.projectPath });
+        localStorage.removeItem(this.pendingChangesStorageKey);
+        this.showChangesAlert = false;
       } catch (e) {
         this.title = this.issue.title;
         createFlash({ message: this.$options.i18n.updateTitleError });
@@ -70,7 +105,7 @@ export default {
     handleOffClick() {
       if (this.title !== this.issue.title) {
         this.showChangesAlert = true;
-        this.$refs.input.$el.focus();
+        localStorage.setItem(this.pendingChangesStorageKey, this.title);
 
         return;
       }
@@ -84,7 +119,7 @@ export default {
     cancelButton: __('Cancel'),
     updateTitleError: __('An error occurred when updating the issue title'),
     invalidFeedback: __('An issue title is required'),
-    reviewYourChanges: __('Please review your changes to the issue title in order to proceed'),
+    reviewYourChanges: __('Changes to the title have not been saved'),
   },
 };
 </script>
@@ -92,11 +127,10 @@ export default {
 <template>
   <board-editable-item
     ref="sidebarItem"
-    :loading="loading"
     toggle-header
+    :loading="loading"
     :handle-off-click="false"
     @off-click="handleOffClick"
-    @close="showChangesAlert = false"
   >
     <template #title>
       <span class="gl-font-weight-bold" data-testid="issue-title">{{ issue.title }}</span>
@@ -105,13 +139,12 @@ export default {
       <span class="gl-text-gray-800">{{ issue.referencePath }}</span>
     </template>
     <template>
-      <gl-alert v-if="showChangesAlert" variant="danger" class="gl-mb-5" :dismissible="false">
+      <gl-alert v-if="showChangesAlert" variant="warning" class="gl-mb-5" :dismissible="false">
         {{ $options.i18n.reviewYourChanges }}
       </gl-alert>
       <gl-form @submit.prevent="setTitle">
         <gl-form-group :invalid-feedback="$options.i18n.invalidFeedback" :state="validationState">
           <gl-form-input
-            ref="input"
             v-model="title"
             v-autofocusonshow
             :placeholder="$options.i18n.issueTitlePlaceholder"

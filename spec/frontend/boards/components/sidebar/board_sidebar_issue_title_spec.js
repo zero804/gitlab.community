@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import { GlFormInput, GlForm } from '@gitlab/ui';
+import { GlAlert, GlFormInput, GlForm } from '@gitlab/ui';
 import BoardSidebarIssueTitle from '~/boards/components/sidebar/board_sidebar_issue_title.vue';
 import BoardEditableItem from '~/boards/components/sidebar/board_editable_item.vue';
 import createFlash from '~/flash';
@@ -15,6 +15,7 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
   let store;
 
   afterEach(() => {
+    localStorage.clear();
     wrapper.destroy();
     store = null;
     wrapper = null;
@@ -37,7 +38,9 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
   };
 
   const findForm = () => wrapper.find(GlForm);
+  const findAlert = () => wrapper.find(GlAlert);
   const findFormInput = () => wrapper.find(GlFormInput);
+  const findEditableItem = () => wrapper.find(BoardEditableItem);
   const findCancelButton = () => wrapper.find('[data-testid="cancel-button"]');
   const findTitle = () => wrapper.find('[data-testid="issue-title"]');
   const findCollapsed = () => wrapper.find('[data-testid="collapsed-content"]');
@@ -47,6 +50,12 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
 
     expect(findTitle().text()).toContain(TEST_ISSUE.title);
     expect(findCollapsed().text()).toContain(TEST_ISSUE.referencePath);
+  });
+
+  it('does not render alert', () => {
+    createWrapper();
+
+    expect(findAlert().exists()).toBe(false);
   });
 
   describe('when new title is submitted', () => {
@@ -71,6 +80,22 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
         title: TEST_TITLE,
         projectPath: 'h/b',
       });
+    });
+  });
+
+  describe('when abandoning the form without saving', () => {
+    beforeEach(async () => {
+      createWrapper();
+
+      wrapper.vm.$refs.sidebarItem.expand();
+      findFormInput().vm.$emit('input', TEST_TITLE);
+      findEditableItem().vm.$emit('off-click');
+      await wrapper.vm.$nextTick();
+    });
+
+    it('does not collapses sidebar and shows alert', () => {
+      expect(findCollapsed().isVisible()).toBe(false);
+      expect(findAlert().exists()).toBe(true);
     });
   });
 

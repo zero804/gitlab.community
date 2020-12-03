@@ -49,6 +49,8 @@ export default {
     :header-height="$options.headerHeight"
     @close="unsetActiveId"
   >
+    <template #header>{{ __('Issue details') }}</template>
+
     <template>
       <board-sidebar-issue-title />
       <board-assignee-dropdown />

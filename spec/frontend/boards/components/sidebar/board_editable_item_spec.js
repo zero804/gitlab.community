@@ -114,12 +114,13 @@ describe('boards sidebar remove issue', () => {
       expect(findExpanded().isVisible()).toBe(false);
     });
 
-    it('emits close event', async () => {
+    it('emits events', async () => {
       document.body.click();
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.emitted().close.length).toBe(1);
+      expect(wrapper.emitted().close).toHaveLength(1);
+      expect(wrapper.emitted()['off-click']).toHaveLength(1);
     });
   });
 

@@ -5245,6 +5245,9 @@ msgstr ""
 msgid "Changes the title to \"%{title_param}\"."
 msgstr ""
 
+msgid "Changes to the title have not been saved"
+msgstr ""
+
 msgid "Changes were successfully made."
 msgstr ""
 
@@ -15465,6 +15468,9 @@ msgstr ""
 msgid "Issue created from vulnerability %{vulnerability_link}"
 msgstr ""
 
+msgid "Issue details"
+msgstr ""
+
 msgid "Issue events"
 msgstr ""
 
@@ -15480,15 +15486,9 @@ msgstr ""
 msgid "Issue published on status page."
 msgstr ""
 
-<<<<<<< HEAD
-=======
-msgid "Issue template (optional)"
-msgstr ""
-
 msgid "Issue title"
 msgstr ""
 
->>>>>>> d183a05d67e (Edit issue title in swimlanes sidebar)
 msgid "Issue update failed"
 msgstr ""
 
@@ -20870,9 +20870,6 @@ msgid "Please reach out if you have any questions and we'll be happy to assist."
 msgstr ""
 
 msgid "Please refer to %{docs_url}"
-msgstr ""
-
-msgid "Please review your changes to the issue title in order to proceed"
 msgstr ""
 
 msgid "Please select"
