@@ -21,5 +21,12 @@ namespace :gitlab do
 
       puts Gitlab::Json.pretty_generate(result.attributes)
     end
+
+    desc 'GitLab | UsageData | Generate metrics dictionary'
+    task generate_metrics_dictionary: :environment do
+      dictionary = Gitlab::Json.pretty_generate(Gitlab::UsageData::Metric.dictionary)
+
+      puts dictionary
+    end
   end
 end

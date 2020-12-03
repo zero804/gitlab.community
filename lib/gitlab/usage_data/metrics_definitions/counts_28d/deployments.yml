@@ -1,0 +1,18 @@
+name: deployments
+description: Total deployments
+example_value: 99
+product_category:
+stage:
+status: data available
+default_generation: generation_1
+full_path:
+  generation_1: counts_monthy.deployments
+milestone:
+milestone_removed:
+introduced_by_url:
+group: 'group::ops release'
+time_frame: counts_28d
+type: count
+data_source: database
+distribution: [ee, ce]
+tier: ['free', 'starter', 'premium', 'ultimate', 'bronze', 'silver', 'gold']
