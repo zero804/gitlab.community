@@ -9,14 +9,21 @@ RSpec.describe CopyIssuesServiceDeskReplyToToIssueEmailParticipants do
   let!(:issue1) { table(:issues).create!(project_id: project.id, service_desk_reply_to: "a@gitlab.com") }
   let!(:issue2) { table(:issues).create!(project_id: project.id, service_desk_reply_to: "b@gitlab.com") }
   let!(:issue3) { table(:issues).create!(project_id: project.id) }
+  let(:issue_email_participants) { table(:issue_email_participants) }
 
   describe '#up' do
-    it 'creates the http integrations from the alert services', :aggregate_failures do
-      expect { migrate! }.to change { IssueEmailParticipant.count }.by(2)
+    it 'migrates email addresses from service desk issues', :aggregate_failures do
+      expect { migrate! }.to change { issue_email_participants.count }.by(2)
 
-      expect(IssueEmailParticipant.find_by(issue_id: issue1.id).email).to eq("a@gitlab.com")
-      expect(IssueEmailParticipant.find_by(issue_id: issue2.id).email).to eq("b@gitlab.com")
-      expect(IssueEmailParticipant.find_by(issue_id: issue3.id)).to be_nil
+      expect(issue_email_participants.find_by(issue_id: issue1.id).email).to eq("a@gitlab.com")
+      expect(issue_email_participants.find_by(issue_id: issue2.id).email).to eq("b@gitlab.com")
+      expect(issue_email_participants.find_by(issue_id: issue3.id)).to be_nil
+    end
+
+    it 'ignores records conflicting on issue_id and email' do
+      issue_email_participants.create!(issue_id: issue1.id, email: issue1.service_desk_reply_to)
+
+      expect { migrate! }.to change { issue_email_participants.count }.by(1)
     end
   end
 end
