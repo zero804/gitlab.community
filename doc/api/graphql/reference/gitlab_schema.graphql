@@ -9263,7 +9263,7 @@ type Group {
   ): CodeCoverageActivityConnection
 
   """
-  Compliance frameworks available to projects in this namespace Available only
+  Compliance frameworks available to projects in this namespace. Available only
   when feature flag `ff_custom_compliance_frameworks` is enabled.
   """
   complianceFrameworks(
@@ -9281,6 +9281,11 @@ type Group {
     Returns the first _n_ elements from the list.
     """
     first: Int
+
+    """
+    Global ID of a specific compliance framework to return.
+    """
+    id: ComplianceManagementFrameworkID
 
     """
     Returns the last _n_ elements from the list.
@@ -14765,7 +14770,7 @@ type Namespace {
   additionalPurchasedStorageSize: Float
 
   """
-  Compliance frameworks available to projects in this namespace Available only
+  Compliance frameworks available to projects in this namespace. Available only
   when feature flag `ff_custom_compliance_frameworks` is enabled.
   """
   complianceFrameworks(
@@ -14783,6 +14788,11 @@ type Namespace {
     Returns the first _n_ elements from the list.
     """
     first: Int
+
+    """
+    Global ID of a specific compliance framework to return.
+    """
+    id: ComplianceManagementFrameworkID
 
     """
     Returns the last _n_ elements from the list.
