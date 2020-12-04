@@ -12,5 +12,6 @@ class BrokenTestMigration < ActiveRecord::Migration[6.0]
   end
 
   def down
+    remove_concurrent_index_by_name :projects, 'broken_test_migration_index'
   end
 end
