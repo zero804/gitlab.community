@@ -65,7 +65,7 @@ GET /users?active=true
 GET /users?blocked=true
 ```
 
-GitLab supports bot users such as the [alert bot](../operations/incident_management/generic_alerts.md)
+GitLab supports bot users such as the [alert bot](../operations/incident_management/alert_integrations.md)
 or the [support bot](../user/project/service_desk.md#support-bot-user).
 To exclude these users from the users' list, you can use the parameter `exclude_internal=true`
 ([introduced](https://gitlab.com/gitlab-org/gitlab/-/issues/241144) in GitLab 13.4).
@@ -170,7 +170,7 @@ GET /users
 ]
 ```
 
-Users on GitLab [Starter, Bronze, or higher](https://about.gitlab.com/pricing/) also see the `shared_runners_minutes_limit`, and `extra_shared_runners_minutes_limit` parameters.
+Users on GitLab [Starter, Bronze, or higher](https://about.gitlab.com/pricing/) also see the `shared_runners_minutes_limit`, `extra_shared_runners_minutes_limit`, and `using_license_seat` parameters.
 
 ```json
 [
@@ -179,6 +179,7 @@ Users on GitLab [Starter, Bronze, or higher](https://about.gitlab.com/pricing/) 
     ...
     "shared_runners_minutes_limit": 133,
     "extra_shared_runners_minutes_limit": 133,
+    "using_license_seat": true
     ...
   }
 ]
@@ -1485,7 +1486,7 @@ Parameters:
 > - It's [deployed behind a feature flag](../user/feature_flags.md), disabled by default.
 > - To use it in GitLab self-managed instances, ask a GitLab administrator to [enable it](#enable-or-disable-an-administrators-ability-to-use-the-api-to-create-personal-access-tokens). **(CORE)**
 
-CAUTION: **Warning:**
+WARNING:
 This feature might not be available to you. Check the **version history** note above for details.
 
 > Requires admin permissions.

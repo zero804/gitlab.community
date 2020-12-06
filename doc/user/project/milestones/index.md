@@ -97,7 +97,7 @@ If you are expanding from a few projects to a larger number of projects within t
 
 From the project milestone list page, you can promote a project milestone to a group milestone. This will merge all project milestones across all projects in this group with the same name into a single group milestones. All issues and merge requests that previously were assigned one of these project milestones will now be assigned the new group milestones. This action cannot be reversed and the changes are permanent.
 
-CAUTION: **Caution:**
+WARNING:
 From GitLab 12.4 and earlier, some information is lost when you promote a project milestone to a group milestone. Not all features on the project milestone view are available on the group milestone view. If you promote a project milestone to a group milestone, you will lose these features. See [Milestone view](#milestone-view) to see which features are missing from the group milestone view.
 
 ![Promote milestone](img/milestones_promote_milestone.png)
@@ -148,13 +148,13 @@ There are also tabs below these that show the following:
 
 ### Project Burndown Charts **(STARTER)**
 
-For project milestones in [GitLab Starter](https://about.gitlab.com/pricing/), a [burndown chart](burndown_charts.md) is in the milestone view, showing the progress of completing a milestone.
+For project milestones in [GitLab Starter](https://about.gitlab.com/pricing/), a [burndown chart](burndown_and_burnup_charts.md) is in the milestone view, showing the progress of completing a milestone.
 
 ![burndown chart](img/burndown_chart_v13_6.png)
 
 ### Group Burndown Charts **(STARTER)**
 
-For group milestones in [GitLab Starter](https://about.gitlab.com/pricing/), a [burndown chart](burndown_charts.md) is in the milestone view, showing the progress of completing a milestone.
+For group milestones in [GitLab Starter](https://about.gitlab.com/pricing/), a [burndown chart](burndown_and_burnup_charts.md) is in the milestone view, showing the progress of completing a milestone.
 
 ### Milestone sidebar
 

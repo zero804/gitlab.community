@@ -1,6 +1,6 @@
 ---
-stage: none
-group: unassigned
+stage: Enablement
+group: Distribution
 info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://about.gitlab.com/handbook/engineering/ux/technical-writing/#assignments
 ---
 
@@ -91,7 +91,7 @@ You might want to consider creating a wrapper script somewhere else since this c
 owned by `root` and not be writable by group or others. You could also consider changing the ownership of this command
 as required, but that might require temporary ownership changes during `gitlab-shell` upgrades.
 
-CAUTION: **Caution:**
+WARNING:
 Do not disable writes until SSH is confirmed to be working
 perfectly, because the file will quickly become out-of-date.
 

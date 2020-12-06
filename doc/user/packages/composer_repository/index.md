@@ -70,7 +70,10 @@ so that anyone who can access the project can use the package as a dependency.
 
 Prerequisites:
 
-- A package in a GitLab repository.
+- A package in a GitLab repository. Composer packages should be versioned based on
+  the [Composer specification](https://getcomposer.org/doc/04-schema.md#version).
+  If the version is not valid, for example, it has three dots (`1.0.0.0`), an 
+  error (`Validation failed: Version is invalid`) occurs when you publish. 
 - A valid `composer.json` file.
 - The Packages feature is enabled in a GitLab repository.
 - The project ID, which is on the project's home page.
@@ -116,7 +119,7 @@ You can publish a Composer package to the Package Registry as part of your CI/CD
 
 1. Run the pipeline.
 
-You can view the published package by going to **Packages & Registries > Package Registry** and selecting the **Composer** tab.
+To view the published package, go to **Packages & Registries > Package Registry** and select the **Composer** tab.
 
 ### Use a CI/CD template
 
@@ -126,7 +129,7 @@ A more detailed Composer CI/CD file is also available as a `.gitlab-ci.yml` temp
 1. Above the file list, click **Set up CI/CD**. If this button is not available, select **CI/CD Configuration** and then **Edit**.
 1. From the **Apply a template** list, select **Composer**.
 
-CAUTION: **Warning:**
+WARNING:
 Do not save unless you want to overwrite the existing CI/CD file.
 
 ## Install a Composer package
@@ -255,7 +258,7 @@ To install a package:
 
 Output indicates that the package has been successfully installed.
 
-CAUTION: **Important:**
+WARNING:
 Never commit the `auth.json` file to your repository. To install packages from a CI/CD job,
 consider using the [`composer config`](https://getcomposer.org/doc/articles/handling-private-packages-with-satis.md#authentication) tool with your personal access token
 stored in a [GitLab CI/CD environment variable](../../../ci/variables/README.md) or in

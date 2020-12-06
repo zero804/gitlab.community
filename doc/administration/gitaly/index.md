@@ -22,10 +22,11 @@ In the Gitaly documentation:
 GitLab end users do not have direct access to Gitaly. Gitaly only manages Git
 repository access for GitLab. Other types of GitLab data aren't accessed using Gitaly.
 
-CAUTION: **Caution:**
-From GitLab 13.0, Gitaly support for NFS is deprecated. In GitLab 14.0, Gitaly support
-for NFS is scheduled to be removed. Upgrade to [Gitaly Cluster](praefect.md) as soon as
-possible.
+WARNING:
+From GitLab 13.0, Gitaly support for NFS is deprecated. As of GitLab 14.0, NFS-related issues
+with Gitaly will no longer be addressed. Upgrade to [Gitaly Cluster](praefect.md) as soon as
+possible. Watch for [tools to enable bulk move](https://gitlab.com/groups/gitlab-org/-/epics/4916)
+of projects to Gitaly Cluster.
 
 ## Architecture
 
@@ -914,7 +915,7 @@ your Gitaly servers as follows:
 gitaly['auth_transitioning'] = false
 ```
 
-CAUTION: **Caution:**
+WARNING:
 Without completing this step, you have **no Gitaly authentication**.
 
 ### Verify authentication is enforced

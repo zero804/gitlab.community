@@ -213,12 +213,23 @@ as artifacts.
 The collected DAST report uploads to GitLab as an artifact and is summarized in merge requests and the pipeline view. It's also used to provide data for security
 dashboards.
 
+#### `artifacts:reports:coverage_fuzzing` **(ULTIMATE)**
+
+> - Introduced in GitLab 13.4.
+> - Requires GitLab Runner 13.4 or later.
+
+The `coverage_fuzzing` report collects [coverage fuzzing bugs](../../user/application_security/coverage_fuzzing/index.md)
+as artifacts.
+
+The collected coverage fuzzing report uploads to GitLab as an artifact and is summarized in merge
+requests and the pipeline view. It's also used to provide data for security dashboards.
+
 #### `artifacts:reports:license_management` **(ULTIMATE)**
 
 > - Introduced in GitLab 11.5.
 > - Requires GitLab Runner 11.5 and above.
 
-CAUTION: **Warning:**
+WARNING:
 This artifact is still valid but is **deprecated** in favor of the
 [artifacts:reports:license_scanning](../pipelines/job_artifacts.md#artifactsreportslicense_scanning)
 introduced in GitLab 12.8.

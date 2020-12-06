@@ -144,7 +144,7 @@ package (highly recommended), follow the steps below:
 Before beginning, you should already have a working GitLab instance. [Learn how
 to install GitLab](https://about.gitlab.com/install/).
 
-Provision a PostgreSQL server (PostgreSQL 11 or newer). 
+Provision a PostgreSQL server (PostgreSQL 11 or newer).
 
 Prepare all your new nodes by [installing
 GitLab](https://about.gitlab.com/install/).
@@ -398,7 +398,7 @@ application server, or a Gitaly node.
    so we use `default` here as well. This cluster has three Gitaly nodes `gitaly-1`,
    `gitaly-2`, and `gitaly-3`, which are intended to be replicas of each other.
 
-   CAUTION: **Caution:**
+   WARNING:
    If you have data on an already existing storage called
    `default`, you should configure the virtual storage with another name and
    [migrate the data to the Gitaly Cluster storage](#migrate-existing-repositories-to-gitaly-cluster)
@@ -498,6 +498,7 @@ To configure Praefect with TLS:
 **For Omnibus GitLab**
 
 1. Create certificates for Praefect servers.
+
 1. On the Praefect servers, create the `/etc/gitlab/ssl` directory and copy your key
    and certificate there:
 
@@ -516,7 +517,8 @@ To configure Praefect with TLS:
    praefect['key_path'] = "/etc/gitlab/ssl/key.pem"
    ```
 
-1. Save the file and [reconfigure GitLab](../restart_gitlab.md#omnibus-gitlab-reconfigure).
+1. Save the file and [reconfigure](../restart_gitlab.md#omnibus-gitlab-reconfigure).
+
 1. On the Praefect clients (including each Gitaly server), copy the certificates,
    or their certificate authority, into `/etc/gitlab/trusted-certs`:
 
@@ -529,8 +531,10 @@ To configure Praefect with TLS:
 
    ```ruby
    git_data_dirs({
-     'default' => { 'gitaly_address' => 'tls://praefect1.internal:3305' },
-     'storage1' => { 'gitaly_address' => 'tls://praefect2.internal:3305' },
+     "default" => {
+       "gitaly_address" => 'tls://LOAD_BALANCER_SERVER_ADDRESS:2305',
+       "gitaly_token" => 'PRAEFECT_EXTERNAL_TOKEN'
+     }
    })
    ```
 
@@ -565,10 +569,7 @@ To configure Praefect with TLS:
      repositories:
        storages:
          default:
-           gitaly_address: tls://praefect1.internal:3305
-           path: /some/local/path
-         storage1:
-           gitaly_address: tls://praefect2.internal:3305
+           gitaly_address: tls://LOAD_BALANCER_SERVER_ADDRESS:3305
            path: /some/local/path
    ```
 
@@ -816,7 +817,7 @@ Particular attention should be shown to:
 1. Disable the default Gitaly service running on the GitLab host. It isn't needed
    because GitLab connects to the configured cluster.
 
-   CAUTION: **Caution:**
+   WARNING:
    If you have existing data stored on the default Gitaly storage,
    you should [migrate the data your Gitaly Cluster storage](#migrate-existing-repositories-to-gitaly-cluster)
    first.
@@ -833,6 +834,8 @@ Particular attention should be shown to:
    - `LOAD_BALANCER_SERVER_ADDRESS` with the IP address or hostname of the load
      balancer.
    - `PRAEFECT_EXTERNAL_TOKEN` with the real secret
+
+   If you are using TLS, the `gitaly_address` should begin with `tls://`.
 
    ```ruby
    git_data_dirs({
@@ -1211,7 +1214,7 @@ Praefect provides the following subcommands to re-enable writes:
   sudo /opt/gitlab/embedded/bin/praefect -config /var/opt/gitlab/praefect/config.toml accept-dataloss -virtual-storage <virtual-storage> -repository <relative-path> -authoritative-storage <storage-name>
   ```
 
-CAUTION: **Caution:**
+WARNING:
 `accept-dataloss` causes permanent data loss by overwriting other versions of the repository. Data
 [recovery efforts](#data-recovery) must be performed before using it.
 

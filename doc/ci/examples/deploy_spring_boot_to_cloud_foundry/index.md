@@ -1,6 +1,6 @@
 ---
 stage: Release
-group: Progressive Delivery
+group: Release
 info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://about.gitlab.com/handbook/engineering/ux/technical-writing/#assignments
 type: tutorial
 ---
@@ -116,7 +116,7 @@ After set up, GitLab CI/CD deploys your app to CF at every push to your
 repository's default branch. To review the build logs or watch your builds
 running live, navigate to **CI/CD > Pipelines**.
 
-CAUTION: **Caution:**
+WARNING:
 It's considered best practice for security to create a separate deploy user for
 your application and add its credentials to GitLab instead of using a
 developer's credentials.

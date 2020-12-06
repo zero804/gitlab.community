@@ -1,6 +1,6 @@
 ---
-stage: none
-group: unassigned
+stage: Enablement
+group: Distribution
 info: To determine the technical writer assigned to the Stage/Group associated with this page, see https://about.gitlab.com/handbook/engineering/ux/technical-writing/#assignments
 ---
 
@@ -131,7 +131,7 @@ sudo -u git -H bundle exec rake "gitlab:uploads:migrate[DesignManagement::Design
 If you need to disable [object storage](../../object_storage.md) for any reason, you must first
 migrate your data out of object storage and back into your local storage.
 
-CAUTION: **Warning:**
+WARNING:
 **Extended downtime is required** so no new files are created in object storage during
 the migration. A configuration setting is planned to allow migrating
 from object storage to local files with only a brief moment of downtime for configuration changes.

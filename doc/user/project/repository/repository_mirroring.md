@@ -124,7 +124,7 @@ After the mirror is created, this option can currently only be modified via the 
 
 To set up a mirror from GitLab to GitHub, you need to follow these steps:
 
-1. Create a [GitHub personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with the `public_repo` box checked.
+1. Create a [GitHub personal access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) with the `public_repo` box checked.
 1. Fill in the **Git repository URL** field using this format: `https://<your_github_username>@github.com/<your_github_group>/<your_github_project>.git`.
 1. Fill in **Password** field with your GitHub personal access token.
 1. Click the **Mirror repository** button.
@@ -256,7 +256,7 @@ Changes pushed to the upstream repository will be pulled into the GitLab reposit
 - Automatically within a certain period of time.
 - When a [forced update](#forcing-an-update) is initiated.
 
-CAUTION: **Caution:**
+WARNING:
 If you do manually update a branch in the GitLab repository, the branch will become diverged from
 upstream and GitLab will no longer automatically update this branch to prevent any changes from being lost.
 Also note that deleted branches and tags in the upstream repository will not be reflected in the GitLab repository.
@@ -320,7 +320,7 @@ fingerprints in the open for you to check:
 
 - [AWS CodeCommit](https://docs.aws.amazon.com/codecommit/latest/userguide/regions.html#regions-fingerprints)
 - [Bitbucket](https://support.atlassian.com/bitbucket-cloud/docs/configure-ssh-and-two-step-verification/)
-- [GitHub](https://docs.github.com/en/github/authenticating-to-github/githubs-ssh-key-fingerprints)
+- [GitHub](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/githubs-ssh-key-fingerprints)
 - [GitLab.com](../../gitlab_com/index.md#ssh-host-keys-fingerprints)
 - [Launchpad](https://help.launchpad.net/SSHFingerprints)
 - [Savannah](http://savannah.gnu.org/maintenance/SshAccess/)
@@ -375,7 +375,7 @@ SSH public key authentication for mirrors cannot be used in a pre-receive hook.
 You can choose to always update your local branches with remote versions, even if they have
 diverged from the remote.
 
-CAUTION: **Caution:**
+WARNING:
 For mirrored branches, enabling this option results in the loss of local changes.
 
 To use this option, check the **Overwrite diverged branches** box when creating a repository mirror.
@@ -421,7 +421,7 @@ update button which is available on the **Mirroring repositories** section of th
 
 ## Bidirectional mirroring **(STARTER)**
 
-CAUTION: **Caution:**
+WARNING:
 Bidirectional mirroring may cause conflicts.
 
 If you configure a GitLab repository to both pull from, and push to, the same remote source, there
@@ -464,7 +464,7 @@ To do this:
 
 ### Preventing conflicts using a `pre-receive` hook
 
-CAUTION: **Warning:**
+WARNING:
 The solution proposed will negatively impact the performance of
 Git push operations because they will be proxied to the upstream Git
 repository.
@@ -547,7 +547,7 @@ Note that this sample has a few limitations:
 
 ### Mirroring with Perforce Helix via Git Fusion **(STARTER)**
 
-CAUTION: **Warning:**
+WARNING:
 Bidirectional mirroring should not be used as a permanent configuration. Refer to
 [Migrating from Perforce Helix](../import/perforce.md) for alternative migration approaches.
 

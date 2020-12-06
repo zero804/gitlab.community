@@ -60,6 +60,12 @@ module UsersHelper
     "access:#{max_project_member_access(project)}"
   end
 
+  def show_status_emoji?(status)
+    return false unless status
+
+    status.message.present? || status.emoji != UserStatus::DEFAULT_EMOJI
+  end
+
   def user_status(user)
     return unless user
 
@@ -123,7 +129,7 @@ module UsersHelper
     }
   end
 
-  def unblock_user_modal_data(user)
+  def user_unblock_data(user)
     {
       path: unblock_admin_user_path(user),
       method: 'put',
@@ -162,6 +168,19 @@ module UsersHelper
     }
   end
 
+  def user_activation_data(user)
+    {
+      path: activate_admin_user_path(user),
+      method: 'put',
+      modal_attributes: {
+        title: s_('AdminUsers|Activate user %{username}?') % { username: sanitize_name(user.name) },
+        message: s_('AdminUsers|You can always deactivate their account again if needed.'),
+        okVariant: 'info',
+        okTitle: s_('AdminUsers|Activate')
+      }.to_json
+    }
+  end
+
   def user_deactivation_effects
     header = tag.p s_('AdminUsers|Deactivating a user has the following effects:')
 
@@ -181,7 +200,7 @@ module UsersHelper
   def user_display_name(user)
     return s_('UserProfile|Blocked user') if user.blocked?
 
-    can_read_profile = can?(user, :read_user_profile, current_user)
+    can_read_profile = can?(current_user, :read_user_profile, user)
     return s_('UserProfile|Unconfirmed user') unless user.confirmed? || can_read_profile
 
     user.name
