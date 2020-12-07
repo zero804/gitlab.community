@@ -1,4 +1,5 @@
 <script>
+/* eslint-disable vue/no-v-html */
 import { mapState, mapActions, mapGetters } from 'vuex';
 import { GlButton, GlModalDirective } from '@gitlab/ui';
 import glFeatureFlagsMixin from '~/vue_shared/mixins/gl_feature_flags_mixin';
@@ -31,6 +32,13 @@ export default {
     'gl-modal': GlModalDirective,
   },
   mixins: [glFeatureFlagsMixin()],
+  props: {
+    helpHtml: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
   computed: {
     ...mapGetters(['currentKey', 'propsSource', 'isDisabled']),
     ...mapState([
@@ -95,6 +103,10 @@ export default {
       :learn-more-path="propsSource.learnMorePath"
       @change="setOverride"
     />
+
+    <!-- helpHtml is trusted input -->
+    <div v-if="helpHtml" v-html="helpHtml"></div>
+
     <active-checkbox v-if="propsSource.showActive" :key="`${currentKey}-active-checkbox`" />
     <jira-trigger-fields
       v-if="isJira"

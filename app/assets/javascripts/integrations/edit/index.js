@@ -79,13 +79,12 @@ export default (el, defaultEl) => {
     return null;
   }
 
+  const helpHtml = el.querySelector('.js-integration-help-content')?.innerHTML;
   const props = parseDatasetToProps(el.dataset);
-
   const initialState = {
     defaultState: null,
     customState: props,
   };
-
   if (defaultEl) {
     initialState.defaultState = Object.freeze(parseDatasetToProps(defaultEl.dataset));
   }
@@ -94,7 +93,11 @@ export default (el, defaultEl) => {
     el,
     store: createStore(initialState),
     render(createElement) {
-      return createElement(IntegrationForm);
+      return createElement(IntegrationForm, {
+        props: {
+          helpHtml,
+        },
+      });
     },
   });
 };
