@@ -310,7 +310,14 @@ db:check-schema:
     - .rails:rules:ee-mr-and-master-only
   script:
     - source scripts/schema_changed.sh
-    - scripts/verify_migrate_rollback
+
+db:check-migrations:
+  extends:
+    - .db-job-base
+    - .rails:rules:ee-mr-and-master-only
+  script:
+    - scripts/validate_migration_schema
+  allow_failure: true
 
 db:migrate-from-v12.10.0:
   extends: .db-job-base
