@@ -1,0 +1,5 @@
+---
+title: Support separate index for issues in delete_index rake task
+merge_request: 49418
+author:
+type: changed

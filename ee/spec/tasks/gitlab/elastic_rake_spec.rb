@@ -13,7 +13,7 @@ RSpec.describe 'gitlab:elastic namespace rake tasks', :elastic do
     before do
       es_helper.delete_index
       es_helper.delete_index(index_name: es_helper.migrations_index_name)
-      delete_standalone_indices
+      es_helper.delete_standalone_indices
     end
 
     it 'creates the default index', :aggregate_failures do
@@ -91,6 +91,10 @@ RSpec.describe 'gitlab:elastic namespace rake tasks', :elastic do
 
     it 'removes the index' do
       expect { subject }.to change { es_helper.index_exists? }.from(true).to(false)
+    end
+
+    it_behaves_like 'deletes all standalone indices' do
+      let(:helper) { es_helper }
     end
   end
 
@@ -197,15 +201,6 @@ RSpec.describe 'gitlab:elastic namespace rake tasks', :elastic do
       it 'just prints a message' do
         expect { subject }.to output("Did not find the current running reindexing job.\n").to_stdout
       end
-    end
-  end
-
-  private
-
-  def delete_standalone_indices
-    indices = es_helper.standalone_indices_proxies.map(&:index_name)
-    indices.each do |index_name|
-      es_helper.delete_index(index_name: index_name)
     end
   end
 end

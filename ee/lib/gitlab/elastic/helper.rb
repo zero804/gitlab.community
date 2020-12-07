@@ -127,6 +127,15 @@ module Gitlab
         end
       end
 
+      def delete_standalone_indices
+        standalone_indices_proxies.map do |proxy|
+          index_name = target_index_name(target: proxy.index_name)
+          result = delete_index(index_name: index_name)
+
+          [index_name, proxy.index_name, result]
+        end
+      end
+
       def create_empty_index(with_alias: true, options: {})
         new_index_name = options[:index_name] || "#{target_name}-#{Time.now.strftime("%Y%m%d-%H%M")}"
 

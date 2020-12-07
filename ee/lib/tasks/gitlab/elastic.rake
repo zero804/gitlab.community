@@ -84,7 +84,7 @@ namespace :gitlab do
       puts "Alias '#{helper.target_name}' → '#{index_name}' has been created".color(:green) if with_alias
     end
 
-    desc "GitLab | Elasticsearch | Delete index"
+    desc "GitLab | Elasticsearch | Delete all indexes"
     task :delete_index, [:target_name] => [:environment] do |t, args|
       helper = Gitlab::Elastic::Helper.new(target_name: args[:target_name])
 
@@ -93,9 +93,18 @@ namespace :gitlab do
       else
         puts "Index/alias '#{helper.target_name}' was not found".color(:green)
       end
+
+      results = helper.delete_standalone_indices
+      results.each do |index_name, alias_name, result|
+        if result
+          puts "Index '#{index_name}' with alias '#{alias_name}' has been deleted".color(:green)
+        else
+          puts "Index '#{index_name}' with alias '#{alias_name}' was not found".color(:green)
+        end
+      end
     end
 
-    desc "GitLab | Elasticsearch | Recreate index"
+    desc "GitLab | Elasticsearch | Recreate indexes"
     task :recreate_index, [:target_name] => [:environment] do |t, args|
       Rake::Task["gitlab:elastic:delete_index"].invoke(*args)
       Rake::Task["gitlab:elastic:create_empty_index"].invoke(*args)
