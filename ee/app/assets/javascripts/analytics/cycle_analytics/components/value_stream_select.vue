@@ -10,7 +10,7 @@ import {
 } from '@gitlab/ui';
 import { mapState, mapActions } from 'vuex';
 import { sprintf, __ } from '~/locale';
-import ValueStreamForm from './value_stream_form.vue';
+import ValueStreamForm from './value_stream_form/index.vue';
 
 const I18N = {
   DELETE_NAME: __('Delete %{name}'),
