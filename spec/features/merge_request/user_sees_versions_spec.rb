@@ -191,9 +191,10 @@ RSpec.describe 'Merge request > User sees versions', :js do
         find('.btn-default').click
         click_link 'version 1'
       end
-      expect(page).to have_content '0 files'
+      expect(page).to have_content 'No changes between version 1 and version 1'
     end
   end
+
 
   describe 'compare with newer version' do
     before do
@@ -217,7 +218,8 @@ RSpec.describe 'Merge request > User sees versions', :js do
         expect(page).to have_content 'version 1'
       end
 
-      expect(page).to have_content '0 files'
+      expect(page).to have_content 'No changes between version 1 and version 1'
+
     end
   end
 

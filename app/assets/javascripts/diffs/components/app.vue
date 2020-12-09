@@ -140,8 +140,6 @@ export default {
       isBatchLoading: state => state.diffs.isBatchLoading,
       diffFiles: state => state.diffs.diffFiles,
       diffViewType: state => state.diffs.diffViewType,
-      mergeRequestDiffs: state => state.diffs.mergeRequestDiffs,
-      mergeRequestDiff: state => state.diffs.mergeRequestDiff,
       commit: state => state.diffs.commit,
       renderOverflowWarning: state => state.diffs.renderOverflowWarning,
       numTotalFiles: state => state.diffs.realSize,
@@ -149,9 +147,9 @@ export default {
       plainDiffPath: state => state.diffs.plainDiffPath,
       emailPatchPath: state => state.diffs.emailPatchPath,
       retrievingBatches: state => state.diffs.retrievingBatches,
+      showTreeList: state => state.diffs.showTreeList && state.diffs.diffFiles.length > 0,
     }),
     ...mapState('diffs', [
-      'showTreeList',
       'isLoading',
       'startVersion',
       'currentDiffFileId',
@@ -176,11 +174,7 @@ export default {
       return this.currentUser.can_fork === true && this.currentUser.can_create_merge_request;
     },
     renderDiffFiles() {
-      return (
-        this.diffFiles.length > 0 ||
-        (this.startVersion &&
-          this.startVersion.version_index === this.mergeRequestDiff.version_index)
-      );
+      return this.diffFiles.length > 0;
     },
     hideFileStats() {
       return this.treeWidth <= TREE_HIDE_STATS_WIDTH;
@@ -464,7 +458,6 @@ export default {
     <div v-if="isLoading || !isTreeLoaded" class="loading"><gl-loading-icon size="lg" /></div>
     <div v-else id="diffs" :class="{ active: shouldShow }" class="diffs tab-pane">
       <compare-versions
-        :merge-request-diffs="mergeRequestDiffs"
         :is-limited-container="isLimitedContainer"
         :diff-files-count-text="numTotalFiles"
       />
