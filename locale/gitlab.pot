@@ -15162,10 +15162,16 @@ msgstr ""
 msgid "Invite Members"
 msgstr ""
 
+msgid "Invite a group"
+msgstr ""
+
 msgid "Invite group"
 msgstr ""
 
 msgid "Invite member"
+msgstr ""
+
+msgid "Invite members"
 msgstr ""
 
 msgid "Invite team members"
@@ -15235,6 +15241,9 @@ msgid "InviteMembersModal|Some of the members could not be added"
 msgstr ""
 
 msgid "InviteMembersModal|You're inviting members to the %{name} %{type}"
+msgstr ""
+
+msgid "InviteMembers|Invite a group"
 msgstr ""
 
 msgid "InviteMembers|Invite team members"

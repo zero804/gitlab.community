@@ -20,6 +20,11 @@ export default {
       type: String,
       required: true,
     },
+    isInviteGroup: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {

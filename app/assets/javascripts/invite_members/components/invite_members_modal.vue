@@ -9,10 +9,12 @@ import {
   GlButton,
   GlFormInput,
 } from '@gitlab/ui';
+import { partition, isString } from 'lodash';
 import eventHub from '../event_hub';
 import { s__, __, sprintf } from '~/locale';
 import Api from '~/api';
 import MembersTokenSelect from '~/invite_members/components/members_token_select.vue';
+import GroupFilter from '~/invite_members/components/group_filter.vue';
 
 export default {
   name: 'InviteMembersModal',
@@ -26,6 +28,7 @@ export default {
     GlButton,
     GlFormInput,
     MembersTokenSelect,
+    GroupFilter,
   },
   props: {
     id: {
@@ -58,7 +61,8 @@ export default {
       visible: true,
       modalId: 'invite-members-modal',
       selectedAccessLevel: this.defaultAccessLevel,
-      newUsersToInvite: '',
+      newUsersToInvite: [],
+      isInviteGroup: false,
       selectedDate: undefined,
     };
   },
@@ -70,22 +74,40 @@ export default {
       return this.isProject ? __('project') : __('group');
     },
     introText() {
-      return sprintf(s__("InviteMembersModal|You're inviting members to the %{name} %{type}"), {
+      return sprintf(s__("InviteMembersModal|You're inviting %{invitee} to the %{name} %{type}"), {
         name: this.inviteToName,
         type: this.inviteToType,
+        invitee: this.isInviteGroup ? __('a group') : __('members'),
       });
+    },
+    //isInviteGroup() {
+    //  return this.isInviteGroup;
+    //},
+    modalTitle() {
+      return this.isInviteGroup
+        ? this.$options.labels.modalTitleGroup
+        : this.$options.labels.modalTitleMembers;
+    },
+    searchFieldLabel() {
+      return this.isInviteGroup
+        ? this.$options.labels.groupToInvite
+        : this.$options.labels.newUsersToInvite;
+    },
+    searchPlaceholder() {
+      return this.isInviteGroup
+        ? this.$options.labels.groupPlaceholder
+        : this.$options.labels.userPlaceholder;
     },
     toastOptions() {
       return {
         onComplete: () => {
           this.selectedAccessLevel = this.defaultAccessLevel;
-          this.newUsersToInvite = '';
+          this.newUsersToInvite = [];
         },
       };
     },
-    postData() {
+    basePostData() {
       return {
-        user_id: this.newUsersToInvite,
         access_level: this.selectedAccessLevel,
         expires_at: this.selectedDate,
         format: 'json',
@@ -99,16 +121,35 @@ export default {
   },
   mounted() {
     eventHub.$on('openModal', this.openModal);
+    eventHub.$on('openInviteGroupModal', this.openInviteGroupModal);
   },
   methods: {
+    partitionNewUsersToInvite() {
+      const [usersToInviteByEmail, usersToInviteById] = partition(
+        this.newUsersToInvite,
+        user => isString(user.id) && user.id.includes('user-defined-token'),
+      );
+
+      return [
+        usersToInviteByEmail.map(user => user.name).join(','),
+        usersToInviteById.map(user => user.id).join(','),
+      ];
+    },
+    openInviteGroupModal() {
+      this.isInviteGroup = true;
+
+      this.$root.$emit('bv::show::modal', this.modalId);
+    },
     openModal() {
+      this.isInviteGroup = false;
+
       this.$root.$emit('bv::show::modal', this.modalId);
     },
     closeModal() {
       this.$root.$emit('bv::hide::modal', this.modalId);
     },
     sendInvite() {
-      this.submitForm(this.postData);
+      this.submitForm();
       this.closeModal();
     },
     cancelInvite() {
@@ -120,15 +161,39 @@ export default {
     changeSelectedItem(item) {
       this.selectedAccessLevel = item;
     },
-    submitForm(formData) {
-      if (this.isProject) {
-        return Api.inviteProjectMembers(this.id, formData)
-          .then(this.showToastMessageSuccess)
-          .catch(this.showToastMessageError);
+    submitForm() {
+      const [usersToInviteByEmail, usersToInviteById] = this.partitionNewUsersToInvite();
+      const promises = [];
+
+      if (usersToInviteByEmail !== '') {
+        const apiInviteByEmail = this.isProject
+          ? Api.inviteProjectMembersByEmail.bind(Api)
+          : Api.inviteGroupMembersByEmail.bind(Api);
+
+        promises.push(apiInviteByEmail(this.id, this.inviteByEmailPostData(usersToInviteByEmail)));
       }
-      return Api.inviteGroupMember(this.id, formData)
+
+      if (usersToInviteById !== '') {
+        const apiAddById = this.isProject
+          ? Api.inviteProjectMembers.bind(Api)
+          : Api.inviteGroupMembers.bind(Api);
+
+        promises.push(apiAddById(this.id, this.addByIdPostData(usersToInviteById)));
+      }
+
+      Promise.all(promises)
         .then(this.showToastMessageSuccess)
         .catch(this.showToastMessageError);
+    },
+    inviteByEmailPostData(usersToInviteByEmail) {
+      if (usersToInviteByEmail === undefined) return this.basePostData;
+
+      return { ...this.basePostData, email: usersToInviteByEmail };
+    },
+    addByIdPostData(usersToInviteById) {
+      if (usersToInviteById === undefined) return this.basePostData;
+
+      return { ...this.basePostData, user_id: usersToInviteById };
     },
     showToastMessageSuccess() {
       this.$toast.show(this.$options.labels.toastMessageSuccessful, this.toastOptions);
@@ -140,9 +205,12 @@ export default {
     },
   },
   labels: {
-    modalTitle: s__('InviteMembersModal|Invite team members'),
+    modalTitleMembers: s__('InviteMembersModal|Invite team members'),
+    modalTitleGroup: s__('InviteMembersModal|Invite a group'),
     newUsersToInvite: s__('InviteMembersModal|GitLab member or Email address'),
+    groupToInvite: s__('InviteMembersModal|Select a group to invite'),
     userPlaceholder: s__('InviteMembersModal|Search for members to invite'),
+    groupPlaceholder: s__('InviteMembersModal|Search for a group to invite'),
     accessLevel: s__('InviteMembersModal|Choose a role permission'),
     accessExpireDate: s__('InviteMembersModal|Access expiration date (optional)'),
     toastMessageSuccessful: s__('InviteMembersModal|Members were successfully added'),
@@ -159,22 +227,25 @@ export default {
   <gl-modal
     :modal-id="modalId"
     size="sm"
-    :title="$options.labels.modalTitle"
+    :title="modalTitle"
     :header-close-label="$options.labels.headerCloseLabel"
   >
     <div class="gl-ml-5 gl-mr-5">
       <div>{{ introText }}</div>
 
       <label :id="$options.membersTokenSelectLabelId" class="gl-font-weight-bold gl-mt-5">{{
-        $options.labels.newUsersToInvite
+        searchFieldLabel
       }}</label>
       <div class="gl-mt-2">
         <members-token-select
+          v-if="!isInviteGroup"
           v-model="newUsersToInvite"
-          :label="$options.labels.newUsersToInvite"
+          :is-invite-group="isInviteGroup"
+          :label="searchFieldLabel"
           :aria-labelledby="$options.membersTokenSelectLabelId"
-          :placeholder="$options.labels.userPlaceholder"
+          :placeholder="searchPlaceholder"
         />
+        <group-filter v-if="isInviteGroup" />
       </div>
 
       <label class="gl-font-weight-bold gl-mt-5">{{ $options.labels.accessLevel }}</label>
