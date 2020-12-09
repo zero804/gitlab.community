@@ -87,6 +87,7 @@ RSpec.describe IncidentManagement::OncallRotations::CreateService do
 
     context 'when participant cannot read project' do
       let_it_be(:other_user) { create(:user) }
+
       let(:participants) do
         [
           {
