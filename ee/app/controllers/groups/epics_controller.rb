@@ -19,6 +19,7 @@ class Groups::EpicsController < Groups::ApplicationController
 
   before_action do
     push_frontend_feature_flag(:vue_issuable_epic_sidebar, @group)
+    push_frontend_feature_flag(:remove_comment_close_reopen, @group)
   end
 
   feature_category :epics

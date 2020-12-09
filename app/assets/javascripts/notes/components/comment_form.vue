@@ -23,6 +23,7 @@ import userAvatarLink from '~/vue_shared/components/user_avatar/user_avatar_link
 import noteSignedOutWidget from './note_signed_out_widget.vue';
 import discussionLockedWidget from './discussion_locked_widget.vue';
 import issuableStateMixin from '../mixins/issuable_state';
+import glFeatureFlagsMixin from '~/vue_shared/mixins/gl_feature_flags_mixin';
 
 export default {
   name: 'CommentForm',
@@ -36,7 +37,7 @@ export default {
     TimelineEntryItem,
     GlIcon,
   },
-  mixins: [issuableStateMixin],
+  mixins: [issuableStateMixin, glFeatureFlagsMixin()],
   props: {
     noteableType: {
       type: String,
@@ -143,6 +144,9 @@ export default {
     },
     trackingLabel() {
       return slugifyWithUnderscore(`${this.commentButtonTitle} button`);
+    },
+    hasCloseAndCommentButton() {
+      return !this.glFeatures.removeCommentCloseReopen;
     },
   },
   watch: {
@@ -415,7 +419,7 @@ export default {
               </div>
 
               <gl-button
-                v-if="canToggleIssueState"
+                v-if="hasCloseAndCommentButton && canToggleIssueState"
                 :loading="isToggleStateButtonLoading"
                 category="secondary"
                 :variant="buttonVariant"
