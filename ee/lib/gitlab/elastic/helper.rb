@@ -190,7 +190,9 @@ module Gitlab
       end
 
       def index_size(index_name: nil)
-        client.indices.stats['indices'][index_name || target_index_name]['total']
+        index = target_index_name(target: index_name || target_index_name)
+
+        client.indices.stats.dig('indices', index, 'total')
       end
 
       def documents_count(index_name: nil)

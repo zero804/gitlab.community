@@ -1,0 +1,5 @@
+---
+title: Support separate index for issues in index_size rake task
+merge_request: 49617
+author:
+type: changed

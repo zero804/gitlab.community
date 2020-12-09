@@ -200,7 +200,7 @@ RSpec.describe Gitlab::Elastic::Helper do
     end
   end
 
-  describe '#cluster_free_size' do
+  describe '#cluster_free_size_bytes' do
     it 'returns valid cluster size' do
       expect(helper.cluster_free_size_bytes).to be_positive
     end
@@ -218,6 +218,53 @@ RSpec.describe Gitlab::Elastic::Helper do
       .to change { helper.target_index_name }.to(new_index_name)
 
       helper.delete_index(index_name: new_index_name)
+    end
+  end
+
+  describe '#index_size' do
+    subject { helper.index_size }
+
+    context 'when there is a legacy index' do
+      include_context 'with a legacy index'
+
+      it { is_expected.to have_key("docs") }
+      it { is_expected.to have_key("store") }
+    end
+
+    context 'when there is an alias', :aggregate_failures do
+      include_context 'with an existing index and alias'
+
+      it { is_expected.to have_key("docs") }
+      it { is_expected.to have_key("store") }
+
+      it 'supports providing the alias name' do
+        alias_name = helper.target_name
+
+        expect(helper.index_size(index_name: alias_name)).to have_key("docs")
+        expect(helper.index_size(index_name: alias_name)).to have_key("store")
+      end
+    end
+  end
+
+  describe '#documents_count' do
+    subject { helper.documents_count }
+
+    context 'when there is a legacy index' do
+      include_context 'with a legacy index'
+
+      it { is_expected.to eq(0) }
+    end
+
+    context 'when there is an alias' do
+      include_context 'with an existing index and alias'
+
+      it { is_expected.to eq(0) }
+
+      it 'supports providing the alias name' do
+        alias_name = helper.target_name
+
+        expect(helper.documents_count(index_name: alias_name)).to eq(0)
+      end
     end
   end
 end
