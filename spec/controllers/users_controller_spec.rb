@@ -79,7 +79,7 @@ RSpec.describe UsersController do
       end
     end
 
-    context 'json with events' do
+    context 'requested in json format' do
       let(:project) { create(:project) }
 
       before do
@@ -89,27 +89,11 @@ RSpec.describe UsersController do
         sign_in(user)
       end
 
-      it 'loads events' do
+      it 'returns 404 with deprecation message' do
         get :show, params: { username: user }, format: :json
 
-        expect(assigns(:events)).not_to be_empty
-      end
-
-      it 'hides events if the user cannot read cross project' do
-        allow(Ability).to receive(:allowed?).and_call_original
-        expect(Ability).to receive(:allowed?).with(user, :read_cross_project) { false }
-
-        get :show, params: { username: user }, format: :json
-
-        expect(assigns(:events)).to be_empty
-      end
-
-      it 'hides events if the user has a private profile' do
-        Gitlab::DataBuilder::Push.build_sample(project, private_user)
-
-        get :show, params: { username: private_user.username }, format: :json
-
-        expect(assigns(:events)).to be_empty
+        expect(response).to have_gitlab_http_status(:not_found)
+        expect(Gitlab::Json.parse(response.body)['message']).to include('This endpoint is deprecated.')
       end
     end
   end
