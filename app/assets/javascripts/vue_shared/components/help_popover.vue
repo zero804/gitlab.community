@@ -8,7 +8,8 @@ import { GlIcon, GlPopover } from '@gitlab/ui';
 export default {
   name: 'HelpPopover',
   components: {
-    GlIcon, GlPopover,
+    GlIcon,
+    GlPopover,
   },
   props: {
     options: {
@@ -17,18 +18,21 @@ export default {
       default: () => ({}),
     },
   },
-  
 };
 </script>
 <template>
   <span>
-    <button ref="popoverTrigger" type="button" class="btn btn-blank btn-transparent btn-help" tabindex="0">
+    <button
+      ref="popoverTrigger"
+      type="button"
+      class="btn btn-blank btn-transparent btn-help"
+      tabindex="0"
+    >
       <gl-icon name="question" />
     </button>
     <gl-popover triggers="hover focus" :target="() => $refs.popoverTrigger">
-      <template #title>{{options.title}}</template>
-      {{options.content}}
+      <template #title>{{ options.title }}</template>
+      {{ options.content }}
     </gl-popover>
   </span>
-
 </template>
