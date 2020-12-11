@@ -1,10 +1,15 @@
 <script>
+import { GlFormText, GlIcon, GlLink, GlSprintf } from '@gitlab/ui';
 import IntegrationView from './integration_view.vue';
 import { INTEGRATION_VIEW_CONFIGS, i18n } from '../constants';
 
 export default {
   name: 'ProfilePreferences',
   components: {
+    GlFormText,
+    GlIcon,
+    GlLink,
+    GlSprintf,
     IntegrationView,
   },
   inject: {
@@ -34,67 +39,83 @@ export default {
     <div class="col-sm-12">
       <hr />
     </div>
-    <div class="col-lg-4 profile-settings-sidebar">
+    <div id="localization" class="col-lg-4 profile-settings-sidebar">
       <h4 class="gl-mt-0">
         {{ $options.i18n.localization }}
       </h4>
       <p>
         {{ $options.i18n.localizationDescription }}
-        <a target="_blank" href="/help/user/profile/preferences#localization">
-          {{ $options.i18n.learnMore }} </a
-        >.
+        <gl-sprintf :message="$options.i18n.learnMore">
+          <template #link="{ content }">
+            <gl-link
+              class="gl-display-inline-block"
+              href="/help/user/profile/preferences#localization"
+              target="_blank"
+            >
+              {{ content }}
+            </gl-link>
+          </template>
+        </gl-sprintf>
       </p>
     </div>
     <div class="col-lg-8">
-      <div class="form-group">
-        <label class="label-bold" for="user_preferred_language">
+      <div class="gl-form-group">
+        <label class="gl-font-weight-bold" for="user_preferred_language">
           {{ $options.i18n.language }}
         </label>
-        <div class="select-wrapper">
+        <div class="gl-relative">
           <select
             id="user_preferred_language"
             v-model="selectedPreferredLanguage"
             class="form-control select-control"
             name="user[preferred_language]"
-            tabindex="-1"
             title="Language"
           >
             <option
               v-for="[optionName, optionValue] in languageChoices"
               :key="optionValue"
+              data-testid="user-preferred-language-option"
               :value="optionValue"
             >
               {{ optionName }}
             </option>
           </select>
-          <i aria-hidden="true" class="fa fa-chevron-down"> </i>
+          <gl-icon
+            name="chevron-down"
+            data-hidden="true"
+            class="gl-absolute gl-top-4 gl-right-3 gl-text-gray-200"
+          />
         </div>
-        <div class="form-text text-muted">
+        <gl-form-text>
           {{ $options.i18n.experimentalDescription }}
-        </div>
+        </gl-form-text>
       </div>
-      <div class="form-group">
-        <label class="label-bold" for="user_first_day_of_week">
+      <div class="gl-form-group">
+        <label class="gl-font-weight-bold" for="user_first_day_of_week">
           {{ $options.i18n.firstDayOfTheWeek }}
         </label>
-        <div class="select-wrapper">
+        <div class="gl-relative">
           <select
             id="user_first_day_of_week"
             v-model="selectedFirstDayOfWeek"
             class="form-control select-control"
             name="user[first_day_of_week]"
-            tabindex="-1"
             title="First day of the week"
           >
             <option
               v-for="[optionName, optionValue] in firstDayOfWeekChoicesWithDefault"
               :key="optionValue"
+              data-testid="user-first-day-of-week-option"
               :value="optionValue"
             >
               {{ optionName }}
             </option>
           </select>
-          <i aria-hidden="true" class="fa fa-chevron-down"> </i>
+          <gl-icon
+            name="chevron-down"
+            data-hidden="true"
+            class="gl-absolute gl-top-4 gl-right-3 gl-text-gray-200"
+          />
         </div>
       </div>
     </div>
@@ -118,19 +139,16 @@ export default {
         {{ $options.i18n.timePreferencesDescription }}
       </p>
     </div>
-    <div
-      v-if="featureFlags.userTimeSettings"
-      class="col-lg-8"
-      data-testid="user-time-settings-option"
-    >
+    <div v-if="featureFlags.userTimeSettings" class="col-lg-8">
       <h5>
         {{ $options.i18n.timeFormat }}
       </h5>
-      <div class="form-group form-check">
+      <div class="gl-form-group gl-form-checkbox form-check">
         <input name="user[time_format_in_24h]" type="hidden" value="0" />
         <input
           id="user_time_format_in_24h"
           v-model="selectedTimeFormatIn24h"
+          data-testid="user-time-format-option"
           class="form-check-input"
           name="user[time_format_in_24h]"
           type="checkbox"
@@ -140,11 +158,15 @@ export default {
           {{ $options.i18n.timeFormatLabel }}
         </label>
       </div>
-      <div class="form-group form-check">
+      <h5>
+        {{ $options.i18n.relativeTime }}
+      </h5>
+      <div class="gl-form-group gl-form-checkbox form-check">
         <input name="user[time_display_relative]" type="hidden" value="0" />
         <input
           id="user_time_display_relative"
           v-model="selectedTimeDisplayRelative"
+          data-testid="user-time-relative-option"
           class="form-check-input"
           name="user[time_display_relative]"
           type="checkbox"
@@ -152,6 +174,9 @@ export default {
         />
         <label class="form-check-label" for="user_time_display_relative">
           {{ $options.i18n.relativeTimeLabel }}
+          <p class="help-text">
+            {{ $options.i18n.relativeTimeHelpText }}
+          </p>
         </label>
       </div>
     </div>

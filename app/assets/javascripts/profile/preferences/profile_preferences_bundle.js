@@ -18,7 +18,19 @@ export default () => {
     (memo, key) => {
       let value = el.dataset[key];
       if (shouldParse.includes(key)) {
-        value = JSON.parse(value);
+        try {
+          value = JSON.parse(value);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Was not able to parse "${key}". The original value was:`,
+            value,
+            // eslint-disable-next-line @gitlab/require-i18n-strings
+            'Error:',
+            error,
+          );
+          value = null;
+        }
       }
 
       return { ...memo, [key]: value };

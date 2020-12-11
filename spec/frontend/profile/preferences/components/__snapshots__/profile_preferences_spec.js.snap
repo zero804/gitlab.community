@@ -12,6 +12,7 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
    
   <div
     class="col-lg-4 profile-settings-sidebar"
+    id="localization"
   >
     <h4
       class="gl-mt-0"
@@ -25,15 +26,16 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
       
       Customize language and region related settings.
       
-      <a
+      <gl-link-stub
+        class="gl-display-inline-block"
         href="/help/user/profile/preferences#localization"
         target="_blank"
       >
         
-        Learn more 
-      </a>
+            Learn more
+          
+      </gl-link-stub>
       .
-    
     </p>
   </div>
    
@@ -41,10 +43,10 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
     class="col-lg-8"
   >
     <div
-      class="form-group"
+      class="gl-form-group"
     >
       <label
-        class="label-bold"
+        class="gl-font-weight-bold"
         for="user_preferred_language"
       >
         
@@ -53,16 +55,16 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
       </label>
        
       <div
-        class="select-wrapper"
+        class="gl-relative"
       >
         <select
           class="form-control select-control"
           id="user_preferred_language"
           name="user[preferred_language]"
-          tabindex="-1"
           title="Language"
         >
           <option
+            data-testid="user-preferred-language-option"
             value="en"
           >
             
@@ -70,6 +72,7 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
           
           </option>
           <option
+            data-testid="user-preferred-language-option"
             value="da"
           >
             
@@ -77,6 +80,7 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
           
           </option>
           <option
+            data-testid="user-preferred-language-option"
             value="swe"
           >
             
@@ -85,26 +89,29 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
           </option>
         </select>
          
-        <i
-          aria-hidden="true"
-          class="fa fa-chevron-down"
+        <gl-icon-stub
+          class="gl-absolute gl-top-4 gl-right-3 gl-text-gray-200"
+          data-hidden="true"
+          name="chevron-down"
+          size="16"
         />
       </div>
        
-      <div
-        class="form-text text-muted"
+      <gl-form-text-stub
+        tag="small"
+        textvariant="muted"
       >
         
         This feature is experimental and translations are not complete yet
       
-      </div>
+      </gl-form-text-stub>
     </div>
      
     <div
-      class="form-group"
+      class="gl-form-group"
     >
       <label
-        class="label-bold"
+        class="gl-font-weight-bold"
         for="user_first_day_of_week"
       >
         
@@ -113,16 +120,16 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
       </label>
        
       <div
-        class="select-wrapper"
+        class="gl-relative"
       >
         <select
           class="form-control select-control"
           id="user_first_day_of_week"
           name="user[first_day_of_week]"
-          tabindex="-1"
           title="First day of the week"
         >
           <option
+            data-testid="user-first-day-of-week-option"
             value="1"
           >
             
@@ -130,6 +137,7 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
           
           </option>
           <option
+            data-testid="user-first-day-of-week-option"
             value="7"
           >
             
@@ -138,9 +146,11 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
           </option>
         </select>
          
-        <i
-          aria-hidden="true"
-          class="fa fa-chevron-down"
+        <gl-icon-stub
+          class="gl-absolute gl-top-4 gl-right-3 gl-text-gray-200"
+          data-hidden="true"
+          name="chevron-down"
+          size="16"
         />
       </div>
     </div>
@@ -174,7 +184,6 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
    
   <div
     class="col-lg-8"
-    data-testid="user-time-settings-option"
   >
     <h5>
       
@@ -183,7 +192,7 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
     </h5>
      
     <div
-      class="form-group form-check"
+      class="gl-form-group gl-form-checkbox form-check"
     >
       <input
         name="user[time_format_in_24h]"
@@ -193,6 +202,7 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
        
       <input
         class="form-check-input"
+        data-testid="user-time-format-option"
         id="user_time_format_in_24h"
         name="user[time_format_in_24h]"
         type="checkbox"
@@ -209,8 +219,14 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
       </label>
     </div>
      
+    <h5>
+      
+      Time display
+    
+    </h5>
+     
     <div
-      class="form-group form-check"
+      class="gl-form-group gl-form-checkbox form-check"
     >
       <input
         name="user[time_display_relative]"
@@ -220,6 +236,7 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
        
       <input
         class="form-check-input"
+        data-testid="user-time-relative-option"
         id="user_time_display_relative"
         name="user[time_display_relative]"
         type="checkbox"
@@ -231,8 +248,15 @@ exports[`ProfilePreferences component should render ProfilePreferences properly 
         for="user_time_display_relative"
       >
         
-        For example: 30 mins ago.
-      
+        Use relative times
+        
+        <p
+          class="help-text"
+        >
+          
+          For example: 30 mins ago.
+        
+        </p>
       </label>
     </div>
   </div>

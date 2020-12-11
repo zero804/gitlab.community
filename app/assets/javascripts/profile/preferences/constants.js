@@ -18,7 +18,7 @@ export const i18n = {
   localizationDescription: s__(
     'ProfilePreferences|Customize language and region related settings.',
   ),
-  learnMore: s__('ProfilePreferences|Learn more'),
+  learnMore: s__('ProfilePreferences|%{linkStart}Learn more%{linkEnd}.'),
   language: s__('ProfilePreferences|Language'),
   experimentalDescription: s__(
     'ProfilePreferences|This feature is experimental and translations are not complete yet',
@@ -30,7 +30,9 @@ export const i18n = {
   ),
   timeFormat: s__('ProfilePreferences|Time format'),
   timeFormatLabel: s__('ProfilePreferences|Display time in 24-hour format'),
-  relativeTimeLabel: s__('ProfilePreferences|For example: 30 mins ago.'),
+  relativeTime: s__('ProfilePreferences|Time display'),
+  relativeTimeLabel: s__('ProfilePreferences|Use relative times'),
+  relativeTimeHelpText: s__('ProfilePreferences|For example: 30 mins ago.'),
   integrations: s__('ProfilePreferences|Integrations'),
   integrationsDescription: s__(
     'ProfilePreferences|Customize integrations with third party services.',
