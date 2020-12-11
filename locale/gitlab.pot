@@ -21067,6 +21067,9 @@ msgstr ""
 msgid "Profile Settings"
 msgstr ""
 
+msgid "ProfilePreferences|%{linkStart}Learn more%{linkEnd}."
+msgstr ""
+
 msgid "ProfilePreferences|Customize integrations with third party services."
 msgstr ""
 
@@ -21097,9 +21100,6 @@ msgstr ""
 msgid "ProfilePreferences|Language"
 msgstr ""
 
-msgid "ProfilePreferences|Learn more"
-msgstr ""
-
 msgid "ProfilePreferences|Localization"
 msgstr ""
 
@@ -21112,10 +21112,16 @@ msgstr ""
 msgid "ProfilePreferences|This feature is experimental and translations are not complete yet"
 msgstr ""
 
+msgid "ProfilePreferences|Time display"
+msgstr ""
+
 msgid "ProfilePreferences|Time format"
 msgstr ""
 
 msgid "ProfilePreferences|Time preferences"
+msgstr ""
+
+msgid "ProfilePreferences|Use relative times"
 msgstr ""
 
 msgid "ProfileSession|on"
