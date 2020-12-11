@@ -3793,9 +3793,9 @@ Represents the vulnerability details base.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
 
 ### VulnerabilityDetailCode
 
@@ -3803,11 +3803,11 @@ Represents the vulnerability details code field.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `lang` | String | Language of the code |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
-| `value` | String! | Source code |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `lang` | String | Language of the code. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
+| `value` | String! | Source code. |
 
 ### VulnerabilityDetailCommit
 
@@ -3815,10 +3815,10 @@ Represents the vulnerability details commit field.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
-| `value` | String! | The commit sha value |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
+| `value` | String! | The commit sha value. |
 
 ### VulnerabilityDetailDiff
 
@@ -3826,11 +3826,11 @@ Represents the vulnerability details diff field.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `after` | String! | Value of the field after the change |
-| `before` | String! | Value of the field before the change |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
+| `after` | String! | Value of the field after the change. |
+| `before` | String! | Value of the field before the change. |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
 
 ### VulnerabilityDetailFileLocation
 
@@ -3838,12 +3838,12 @@ Represents the vulnerability details location within a file in the project.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `fileName` | String! | File name |
-| `lineEnd` | Int! | End line number of the file location |
-| `lineStart` | Int! | Start line number of the file location |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `fileName` | String! | File name. |
+| `lineEnd` | Int! | End line number of the file location. |
+| `lineStart` | Int! | Start line number of the file location. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
 
 ### VulnerabilityDetailInt
 
@@ -3851,11 +3851,11 @@ Represents the vulnerability details integer value.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `format` | String | Format of the field |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
-| `value` | Int! | Value of the field |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `format` | String | Format of the field. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
+| `value` | Int! | Value of the field. |
 
 ### VulnerabilityDetailLangText
 
@@ -3863,8 +3863,8 @@ Represents the vulnerability details text in given language.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `lang` | String! | Language of the field |
-| `value` | String! | Value of the field |
+| `lang` | String! | Language of the field. |
+| `value` | String! | Value of the field. |
 
 ### VulnerabilityDetailList
 
@@ -3872,10 +3872,10 @@ Represents the vulnerability details list value.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `items` | VulnerabilityDetail! => Array | List of details |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `items` | VulnerabilityDetail! => Array | List of details. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
 
 ### VulnerabilityDetailMarkdown
 
@@ -3883,10 +3883,10 @@ Represents the vulnerability details Markdown field.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
-| `value` | VulnerabilityDetailLangText! | Value of the Markdown field |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
+| `value` | VulnerabilityDetailLangText! | Value of the Markdown field. |
 
 ### VulnerabilityDetailModuleLocation
 
@@ -3894,11 +3894,11 @@ Represents the vulnerability details location within a file in the project.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `moduleName` | String! | Module name |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
-| `offset` | Int! | Offset of the module location |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `moduleName` | String! | Module name. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
+| `offset` | Int! | Offset of the module location. |
 
 ### VulnerabilityDetailTable
 
@@ -3906,10 +3906,10 @@ Represents the vulnerability details table value.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `items` | VulnerabilityDetailTableItems! | Table items |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `items` | VulnerabilityDetailTableItems! | Table items. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
 
 ### VulnerabilityDetailTableItems
 
@@ -3917,11 +3917,11 @@ Represents the vulnerability details table items value.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `headers` | VulnerabilityDetail! => Array | Table headers |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
-| `rows` | VulnerabilityDetail! => Array | Table rows |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `headers` | VulnerabilityDetail! => Array | Table headers. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
+| `rows` | VulnerabilityDetail! => Array | Table rows. |
 
 ### VulnerabilityDetailText
 
@@ -3929,10 +3929,10 @@ Represents the vulnerability details text field.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
-| `value` | VulnerabilityDetailLangText! => Array | Value of the text field |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
+| `value` | VulnerabilityDetailLangText! => Array | Value of the text field. |
 
 ### VulnerabilityDetailUrl
 
@@ -3940,11 +3940,11 @@ Represents the vulnerability details URL field.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages |
-| `fieldName` | String | Name of the field |
-| `href` | String! | Href of the URL |
-| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages |
-| `text` | VulnerabilityDetailLangText | Text of the URL |
+| `description` | VulnerabilityDetailLangText! => Array | Description of the field in given languages. |
+| `fieldName` | String | Name of the field. |
+| `href` | String! | Href of the URL. |
+| `name` | VulnerabilityDetailLangText! => Array | Name of the field in given languages. |
+| `text` | VulnerabilityDetailLangText | Text of the URL. |
 
 ### VulnerabilityDismissPayload
 

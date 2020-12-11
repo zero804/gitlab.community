@@ -25146,17 +25146,17 @@ Represents the vulnerability details base
 """
 type VulnerabilityDetailBase {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 }
@@ -25166,27 +25166,27 @@ Represents the vulnerability details code field
 """
 type VulnerabilityDetailCode {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Language of the code
+  Language of the code.
   """
   lang: String
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 
   """
-  Source code
+  Source code.
   """
   value: String!
 }
@@ -25196,22 +25196,22 @@ Represents the vulnerability details commit field
 """
 type VulnerabilityDetailCommit {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 
   """
-  The commit sha value
+  The commit sha value.
   """
   value: String!
 }
@@ -25221,27 +25221,27 @@ Represents the vulnerability details diff field
 """
 type VulnerabilityDetailDiff {
   """
-  Value of the field after the change
+  Value of the field after the change.
   """
   after: String!
 
   """
-  Value of the field before the change
+  Value of the field before the change.
   """
   before: String!
 
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 }
@@ -25251,32 +25251,32 @@ Represents the vulnerability details location within a file in the project
 """
 type VulnerabilityDetailFileLocation {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  File name
+  File name.
   """
   fileName: String!
 
   """
-  End line number of the file location
+  End line number of the file location.
   """
   lineEnd: Int!
 
   """
-  Start line number of the file location
+  Start line number of the file location.
   """
   lineStart: Int!
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 }
@@ -25286,27 +25286,27 @@ Represents the vulnerability details integer value
 """
 type VulnerabilityDetailInt {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Format of the field
+  Format of the field.
   """
   format: String
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 
   """
-  Value of the field
+  Value of the field.
   """
   value: Int!
 }
@@ -25316,12 +25316,12 @@ Represents the vulnerability details text in given language
 """
 type VulnerabilityDetailLangText {
   """
-  Language of the field
+  Language of the field.
   """
   lang: String!
 
   """
-  Value of the field
+  Value of the field.
   """
   value: String!
 }
@@ -25331,22 +25331,22 @@ Represents the vulnerability details list value
 """
 type VulnerabilityDetailList {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  List of details
+  List of details.
   """
   items: [VulnerabilityDetail!]!
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 }
@@ -25356,22 +25356,22 @@ Represents the vulnerability details Markdown field
 """
 type VulnerabilityDetailMarkdown {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 
   """
-  Value of the Markdown field
+  Value of the Markdown field.
   """
   value: VulnerabilityDetailLangText!
 }
@@ -25381,27 +25381,27 @@ Represents the vulnerability details location within a file in the project
 """
 type VulnerabilityDetailModuleLocation {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Module name
+  Module name.
   """
   moduleName: String!
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 
   """
-  Offset of the module location
+  Offset of the module location.
   """
   offset: Int!
 }
@@ -25411,22 +25411,22 @@ Represents the vulnerability details table value
 """
 type VulnerabilityDetailTable {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Table items
+  Table items.
   """
   items: VulnerabilityDetailTableItems!
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 }
@@ -25436,27 +25436,27 @@ Represents the vulnerability details table items value
 """
 type VulnerabilityDetailTableItems {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Table headers
+  Table headers.
   """
   headers: [VulnerabilityDetail!]!
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 
   """
-  Table rows
+  Table rows.
   """
   rows: [VulnerabilityDetail!]!
 }
@@ -25466,22 +25466,22 @@ Represents the vulnerability details text field
 """
 type VulnerabilityDetailText {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 
   """
-  Value of the text field
+  Value of the text field.
   """
   value: [VulnerabilityDetailLangText!]!
 }
@@ -25491,27 +25491,27 @@ Represents the vulnerability details URL field
 """
 type VulnerabilityDetailUrl {
   """
-  Description of the field in given languages
+  Description of the field in given languages.
   """
   description: [VulnerabilityDetailLangText!]!
 
   """
-  Name of the field
+  Name of the field.
   """
   fieldName: String
 
   """
-  Href of the URL
+  Href of the URL.
   """
   href: String!
 
   """
-  Name of the field in given languages
+  Name of the field in given languages.
   """
   name: [VulnerabilityDetailLangText!]!
 
   """
-  Text of the URL
+  Text of the URL.
   """
   text: VulnerabilityDetailLangText
 }

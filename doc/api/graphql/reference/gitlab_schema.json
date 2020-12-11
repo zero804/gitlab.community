@@ -73225,7 +73225,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -73251,7 +73251,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -73265,7 +73265,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -73304,7 +73304,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -73330,7 +73330,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -73344,7 +73344,7 @@
             },
             {
               "name": "lang",
-              "description": "Language of the code",
+              "description": "Language of the code.",
               "args": [
 
               ],
@@ -73358,7 +73358,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -73384,7 +73384,7 @@
             },
             {
               "name": "value",
-              "description": "Source code",
+              "description": "Source code.",
               "args": [
 
               ],
@@ -73415,7 +73415,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -73441,7 +73441,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -73455,7 +73455,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -73481,7 +73481,7 @@
             },
             {
               "name": "value",
-              "description": "The commit sha value",
+              "description": "The commit sha value.",
               "args": [
 
               ],
@@ -73512,7 +73512,7 @@
           "fields": [
             {
               "name": "after",
-              "description": "Value of the field after the change",
+              "description": "Value of the field after the change.",
               "args": [
 
               ],
@@ -73530,7 +73530,7 @@
             },
             {
               "name": "before",
-              "description": "Value of the field before the change",
+              "description": "Value of the field before the change.",
               "args": [
 
               ],
@@ -73548,7 +73548,7 @@
             },
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -73574,7 +73574,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -73588,7 +73588,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -73627,7 +73627,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -73653,7 +73653,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -73667,7 +73667,7 @@
             },
             {
               "name": "fileName",
-              "description": "File name",
+              "description": "File name.",
               "args": [
 
               ],
@@ -73685,7 +73685,7 @@
             },
             {
               "name": "lineEnd",
-              "description": "End line number of the file location",
+              "description": "End line number of the file location.",
               "args": [
 
               ],
@@ -73703,7 +73703,7 @@
             },
             {
               "name": "lineStart",
-              "description": "Start line number of the file location",
+              "description": "Start line number of the file location.",
               "args": [
 
               ],
@@ -73721,7 +73721,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -73760,7 +73760,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -73786,7 +73786,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -73800,7 +73800,7 @@
             },
             {
               "name": "format",
-              "description": "Format of the field",
+              "description": "Format of the field.",
               "args": [
 
               ],
@@ -73814,7 +73814,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -73840,7 +73840,7 @@
             },
             {
               "name": "value",
-              "description": "Value of the field",
+              "description": "Value of the field.",
               "args": [
 
               ],
@@ -73871,7 +73871,7 @@
           "fields": [
             {
               "name": "lang",
-              "description": "Language of the field",
+              "description": "Language of the field.",
               "args": [
 
               ],
@@ -73889,7 +73889,7 @@
             },
             {
               "name": "value",
-              "description": "Value of the field",
+              "description": "Value of the field.",
               "args": [
 
               ],
@@ -73920,7 +73920,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -73946,7 +73946,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -73960,7 +73960,7 @@
             },
             {
               "name": "items",
-              "description": "List of details",
+              "description": "List of details.",
               "args": [
 
               ],
@@ -73986,7 +73986,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -74025,7 +74025,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -74051,7 +74051,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -74065,7 +74065,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -74091,7 +74091,7 @@
             },
             {
               "name": "value",
-              "description": "Value of the Markdown field",
+              "description": "Value of the Markdown field.",
               "args": [
 
               ],
@@ -74122,7 +74122,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -74148,7 +74148,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -74162,7 +74162,7 @@
             },
             {
               "name": "moduleName",
-              "description": "Module name",
+              "description": "Module name.",
               "args": [
 
               ],
@@ -74180,7 +74180,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -74206,7 +74206,7 @@
             },
             {
               "name": "offset",
-              "description": "Offset of the module location",
+              "description": "Offset of the module location.",
               "args": [
 
               ],
@@ -74237,7 +74237,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -74263,7 +74263,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -74277,7 +74277,7 @@
             },
             {
               "name": "items",
-              "description": "Table items",
+              "description": "Table items.",
               "args": [
 
               ],
@@ -74295,7 +74295,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -74334,7 +74334,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -74360,7 +74360,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -74374,7 +74374,7 @@
             },
             {
               "name": "headers",
-              "description": "Table headers",
+              "description": "Table headers.",
               "args": [
 
               ],
@@ -74400,7 +74400,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -74426,7 +74426,7 @@
             },
             {
               "name": "rows",
-              "description": "Table rows",
+              "description": "Table rows.",
               "args": [
 
               ],
@@ -74465,7 +74465,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -74491,7 +74491,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -74505,7 +74505,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -74531,7 +74531,7 @@
             },
             {
               "name": "value",
-              "description": "Value of the text field",
+              "description": "Value of the text field.",
               "args": [
 
               ],
@@ -74570,7 +74570,7 @@
           "fields": [
             {
               "name": "description",
-              "description": "Description of the field in given languages",
+              "description": "Description of the field in given languages.",
               "args": [
 
               ],
@@ -74596,7 +74596,7 @@
             },
             {
               "name": "fieldName",
-              "description": "Name of the field",
+              "description": "Name of the field.",
               "args": [
 
               ],
@@ -74610,7 +74610,7 @@
             },
             {
               "name": "href",
-              "description": "Href of the URL",
+              "description": "Href of the URL.",
               "args": [
 
               ],
@@ -74628,7 +74628,7 @@
             },
             {
               "name": "name",
-              "description": "Name of the field in given languages",
+              "description": "Name of the field in given languages.",
               "args": [
 
               ],
@@ -74654,7 +74654,7 @@
             },
             {
               "name": "text",
-              "description": "Text of the URL",
+              "description": "Text of the URL.",
               "args": [
 
               ],
