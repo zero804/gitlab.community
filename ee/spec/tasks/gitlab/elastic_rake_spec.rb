@@ -16,11 +16,6 @@ RSpec.describe 'gitlab:elastic namespace rake tasks', :elastic do
       delete_standalone_indices
     end
 
-    # prevent issues with the elastic rspec helper
-    after do
-      delete_standalone_indices
-    end
-
     it 'creates the default index', :aggregate_failures do
       expect { subject }.to change { es_helper.index_exists? }.from(false).to(true)
     end
@@ -208,10 +203,8 @@ RSpec.describe 'gitlab:elastic namespace rake tasks', :elastic do
   private
 
   def delete_standalone_indices
-    Gitlab::Elastic::Helper::ES_SEPARATE_CLASSES.each do |class_name|
-      proxy = ::Elastic::Latest::ApplicationClassProxy.new(class_name, use_separate_indices: true)
-      alias_name = proxy.index_name
-      index_name = es_helper.target_index_name(target: alias_name)
+    indices = es_helper.standalone_indices_proxies.map(&:index_name)
+    indices.each do |index_name|
       es_helper.delete_index(index_name: index_name)
     end
   end
