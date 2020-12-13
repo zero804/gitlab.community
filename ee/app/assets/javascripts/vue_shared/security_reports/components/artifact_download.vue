@@ -14,6 +14,9 @@ export default {
     reportTypes: {
       type: Array,
       required: true,
+      validator: reportType => {
+        return reportType.every(report => reportTypeToSecurityReportTypeEnum[report]);
+      },
     },
     targetProjectFullPath: {
       type: String,

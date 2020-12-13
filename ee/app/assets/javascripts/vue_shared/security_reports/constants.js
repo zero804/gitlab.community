@@ -1,5 +1,5 @@
 import { invert } from 'lodash';
-import {reportTypeToSecurityReportTypeEnum as reportTypeToSecurityReportTypeEnumCE } from '~/vue_shared/security_reports/constants';
+import { reportTypeToSecurityReportTypeEnum as reportTypeToSecurityReportTypeEnumCE } from '~/vue_shared/security_reports/constants';
 
 // eslint-disable-next-line import/export
 export * from '~/vue_shared/security_reports/constants';
