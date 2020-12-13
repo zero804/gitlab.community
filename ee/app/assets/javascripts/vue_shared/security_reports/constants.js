@@ -1,6 +1,7 @@
 import { invert } from 'lodash';
 import {reportTypeToSecurityReportTypeEnum as reportTypeToSecurityReportTypeEnumCE } from '~/vue_shared/security_reports/constants';
 
+// eslint-disable-next-line import/export
 export * from '~/vue_shared/security_reports/constants';
 
 /**
@@ -15,11 +16,12 @@ export const REPORT_TYPE_API_FUZZING = 'api_fuzzing';
  */
 export const SECURITY_REPORT_TYPE_ENUM_API_FUZZING = 'API_FUZZING';
 
-/* Override CE Definitions *?
+/* Override CE Definitions */
 
 /**
  * A mapping from security scan report types to SecurityReportTypeEnum values.
  */
+// eslint-disable-next-line import/export
 export const reportTypeToSecurityReportTypeEnum = {
   ...reportTypeToSecurityReportTypeEnumCE,
   [REPORT_TYPE_API_FUZZING]: SECURITY_REPORT_TYPE_ENUM_API_FUZZING,
@@ -28,4 +30,5 @@ export const reportTypeToSecurityReportTypeEnum = {
 /**
  * A mapping from SecurityReportTypeEnum values to security scan report types.
  */
+// eslint-disable-next-line import/export
 export const securityReportTypeEnumToReportType = invert(reportTypeToSecurityReportTypeEnum);

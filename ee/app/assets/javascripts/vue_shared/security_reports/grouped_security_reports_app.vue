@@ -4,11 +4,9 @@ import { once } from 'lodash';
 import { componentNames } from 'ee/reports/components/issue_body';
 import { GlButton, GlSprintf, GlLink, GlModalDirective } from '@gitlab/ui';
 import FuzzingArtifactsDownload from 'ee/security_dashboard/components/fuzzing_artifacts_download.vue';
-import {
-  securityReportTypeEnumToReportType,
-} from './constants';
-import { LOADING } from '~/reports/constants';
 import ArtifactDownload from 'ee/vue_shared/security_reports/components/artifact_download.vue';
+import { LOADING } from '~/reports/constants';
+import { securityReportTypeEnumToReportType } from './constants';
 import glFeatureFlagsMixin from '~/vue_shared/mixins/gl_feature_flags_mixin';
 import ReportSection from '~/reports/components/report_section.vue';
 import SummaryRow from '~/reports/components/summary_row.vue';
@@ -241,7 +239,7 @@ export default {
       type: Number,
       required: false,
       default: 0,
-    },    
+    },
   },
   componentNames,
   computed: {
@@ -347,8 +345,6 @@ export default {
       return this.hasIssuesForReportType(MODULE_SECRET_DETECTION);
     },
     shouldShowDownloadGuidance() {
-      let foo = LOADING;
-      //debugger;
       return this.summaryStatus !== LOADING;
     },
   },
@@ -679,10 +675,10 @@ export default {
 
             <artifact-download
               v-if="shouldShowDownloadGuidance"
-              :reportTypes="[$options.reportTypes.API_FUZZING]"
+              :report-types="[$options.reportTypes.API_FUZZING]"
               :target-project-full-path="targetProjectFullPath"
               :mr-iid="mrIid"
-            />            
+            />
           </summary-row>
 
           <grouped-issues-list
