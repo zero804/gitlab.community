@@ -345,7 +345,7 @@ export default {
       return this.hasIssuesForReportType(MODULE_SECRET_DETECTION);
     },
     shouldShowDownloadGuidance() {
-      return this.summaryStatus !== LOADING;
+      return this.targetProjectFullPath && this.mrIid && this.summaryStatus !== LOADING;
     },
   },
 
