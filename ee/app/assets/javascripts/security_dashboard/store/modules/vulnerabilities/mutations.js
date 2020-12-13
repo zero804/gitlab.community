@@ -18,7 +18,6 @@ export default {
     state.isLoadingVulnerabilities = true;
     state.errorLoadingVulnerabilities = false;
     state.loadingVulnerabilitiesErrorCode = null;
-    state.hasRequestedVulnerabilities = true;
   },
   [types.RECEIVE_VULNERABILITIES_SUCCESS](state, payload) {
     state.isLoadingVulnerabilities = false;

@@ -62,7 +62,6 @@ describe('vulnerabilities module mutations', () => {
         isLoadingVulnerabilities: true,
         errorLoadingVulnerabilities: false,
         loadingVulnerabilitiesErrorCode: null,
-        hasRequestedVulnerabilities: true,
       });
     });
   });

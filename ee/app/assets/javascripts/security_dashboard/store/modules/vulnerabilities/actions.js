@@ -25,6 +25,7 @@ import * as types from './mutation_types';
 
 const hideModal = () => $('#modal-mrwidget-security-issue').modal('hide');
 let vulnerabilitiesSource;
+let hasRequestedVulnerabilities = false;
 
 export const setPipelineId = ({ commit }, id) => commit(types.SET_PIPELINE_ID, id);
 
@@ -42,6 +43,8 @@ export const getVulnerabilities = ({ state, dispatch }, params = {}) => {
   if (!state.vulnerabilitiesEndpoint) {
     return;
   }
+
+  hasRequestedVulnerabilities = true;
   dispatch('requestVulnerabilities');
   // Cancel a pending request if there is one.
   if (vulnerabilitiesSource) {
@@ -76,7 +79,7 @@ export const getVulnerabilitiesDelayed = debounce(
 );
 
 export const fetchVulnerabilities = ({ state, dispatch }, params) => {
-  const action = state.hasRequestedVulnerabilities
+  const action = hasRequestedVulnerabilities
     ? 'getVulnerabilitiesDelayed'
     : 'getVulnerabilitiesInitial';
 
