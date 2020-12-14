@@ -37,10 +37,10 @@ module Projects
         )
 
         service.execute(container_repository).tap do |result|
-          next unless result[:status] == :success && @chunked
+          next unless @chunked
 
-          result[:status] = :error
           result[:chunked] = true
+          result[:status] = :error
         end
       end
 

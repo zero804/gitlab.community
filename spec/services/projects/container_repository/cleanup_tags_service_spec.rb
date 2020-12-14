@@ -306,7 +306,7 @@ RSpec.describe Projects::ContainerRepository::CleanupTagsService do
         context 'with delete tags service returns an error' do
           let(:delete_tags_service_status) { :error }
 
-          it_behaves_like 'returning the response', status: :error
+          it_behaves_like 'returning the response', status: :error, chunked: true
         end
 
         context 'with throttling feature flag disabled' do
