@@ -33,9 +33,9 @@ import { convertToCamelCase } from '~/lib/utils/text_utility';
 
 export default {
   i18n: {
-    openedAgo: __('opened %{timeAgoString} by %{user}'),
-    openedAgoJira: __('opened %{timeAgoString} by %{user} in Jira'),
-    openedAgoServiceDesk: __('opened %{timeAgoString} by %{email} via %{user}'),
+    openedAgo: __('created %{timeAgoString} by %{user}'),
+    openedAgoJira: __('created %{timeAgoString} by %{user} in Jira'),
+    openedAgoServiceDesk: __('created %{timeAgoString} by %{email} via %{user}'),
   },
   inject: ['scopedLabelsAvailable'],
   components: {

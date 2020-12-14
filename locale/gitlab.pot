@@ -32543,6 +32543,15 @@ msgstr ""
 msgid "created"
 msgstr ""
 
+msgid "created %{timeAgoString} by %{email} via %{user}"
+msgstr ""
+
+msgid "created %{timeAgoString} by %{user}"
+msgstr ""
+
+msgid "created %{timeAgoString} by %{user} in Jira"
+msgstr ""
+
 msgid "created %{timeAgo}"
 msgstr ""
 
@@ -33285,15 +33294,6 @@ msgid "on track"
 msgstr ""
 
 msgid "open issue"
-msgstr ""
-
-msgid "opened %{timeAgoString} by %{email} via %{user}"
-msgstr ""
-
-msgid "opened %{timeAgoString} by %{user}"
-msgstr ""
-
-msgid "opened %{timeAgoString} by %{user} in Jira"
 msgstr ""
 
 msgid "opened %{timeAgo}"
