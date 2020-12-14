@@ -33,7 +33,7 @@ class MigrationSchemaValidator
       run("bin/rails db:migrate:down VERSION=#{version}")
     end
 
-    git_command = "git diff #{merge_base} -- #{FILENAME}"
+    git_command = "git diff #{diff_target} -- #{FILENAME}"
     base_message = "rollback of added migrations does not revert #{FILENAME} to previous state"
 
     validate_clean_output!(git_command, base_message)
@@ -57,14 +57,18 @@ class MigrationSchemaValidator
 
   def committed_migrations
     @committed_migrations ||= begin
-      git_command = "git diff --name-only --diff-filter=A #{merge_base} -- #{MIGRATION_DIRS.join(' ')}"
+      git_command = "git diff --name-only --diff-filter=A #{diff_target} -- #{MIGRATION_DIRS.join(' ')}"
 
       run(git_command).split("\n")
     end
   end
 
+  def diff_target
+    @diff_target ||= pipeline_for_merged_results? ? target_branch : merge_base
+  end
+
   def merge_base
-    @merge_base ||= run("git merge-base #{target_branch} #{source_ref}")
+    run("git merge-base #{target_branch} #{source_ref}")
   end
 
   def target_branch
@@ -75,13 +79,16 @@ class MigrationSchemaValidator
     ENV['CI_COMMIT_SHA'] || 'HEAD'
   end
 
+  def pipeline_for_merged_results?
+    !ENV['CI_MERGE_REQUEST_SOURCE_BRANCH_SHA'].nil?
+  end
+
   def find_migration_version(filename)
     version_start = filename =~ /\d{#{VERSION_DIGITS}}/
 
     die "#{filename} has an invalid migration version" if version_start.nil?
 
-    filename.slice(version_start, VERSION_DIGITS)
-  end
+    filename.slice(version_start, VERSION_DIGITS) end
 
   def validate_clean_output!(command, base_message)
     command_output = run(command)
