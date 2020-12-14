@@ -3,7 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe ::IncidentManagement::OncallShifts::ReadService do
-  let_it_be_with_refind(:rotation) { create(:incident_management_oncall_rotation, :with_participant) }
+  let_it_be_with_refind(:rotation) { create(:incident_management_oncall_rotation) }
+  let_it_be(:participant) { create(:incident_management_oncall_participant, :with_developer_access, rotation: rotation) }
   let_it_be(:project) { rotation.project }
   let_it_be(:user_with_permissions) { create(:user) }
   let_it_be(:user_without_permissions) { create(:user) }

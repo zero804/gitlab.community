@@ -10845,6 +10845,41 @@ type IncidentManagementOncallRotation {
   ): OncallParticipantTypeConnection
 
   """
+  Blocks of time for which a participant is on-call.
+  """
+  shifts(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    End of timeframe.
+    """
+    endsAt: Time!
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    Start of timeframe.
+    """
+    startsAt: Time!
+  ): OncallShiftTypeConnection
+
+  """
   Start date of the on-call rotation.
   """
   startsAt: Time
@@ -15755,6 +15790,61 @@ type OncallScheduleUpdatePayload {
   The on-call schedule
   """
   oncallSchedule: IncidentManagementOncallSchedule
+}
+
+"""
+A block of time for which a user is on-call.
+"""
+type OncallShiftType {
+  """
+  End time of the on-call shift.
+  """
+  endsAt: Time
+
+  """
+  Participant assigned to the on-call slot.
+  """
+  participant: OncallParticipantType
+
+  """
+  Start time of the on-call shift.
+  """
+  startsAt: Time
+}
+
+"""
+The connection type for OncallShiftType.
+"""
+type OncallShiftTypeConnection {
+  """
+  A list of edges.
+  """
+  edges: [OncallShiftTypeEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [OncallShiftType]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type OncallShiftTypeEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: OncallShiftType
 }
 
 """
