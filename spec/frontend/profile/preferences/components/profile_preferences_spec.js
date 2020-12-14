@@ -35,49 +35,37 @@ describe('ProfilePreferences component', () => {
     });
   }
 
-  function findLocalizationAnchor() {
-    return wrapper.find('#localization');
-  }
+  const findLocalizationAnchor = () => wrapper.find('#localization');
 
-  function findUserLanguageOptionList() {
-    return wrapper.findAll('[data-testid="user-preferred-language-option"]');
-  }
+  const findUserLanguageOptionList = () =>
+    wrapper.findAll('[data-testid="user-preferred-language-option"]');
 
-  function findUserLanguageSelectedOption() {
-    return wrapper.find('[data-testid="user-preferred-language-option"]:checked');
-  }
+  const findUserLanguageSelectedOption = () =>
+    wrapper.find('[data-testid="user-preferred-language-option"]:checked');
 
-  function findUserFirstDayOfWeekOptionList() {
-    return wrapper.findAll('[data-testid="user-first-day-of-week-option"]');
-  }
+  const findUserFirstDayOfWeekOptionList = () =>
+    wrapper.findAll('[data-testid="user-first-day-of-week-option"]');
 
-  function findUserFirstDayOfWeekSelectedOption() {
-    return wrapper.find('[data-testid="user-first-day-of-week-option"]:checked');
-  }
+  const findUserFirstDayOfWeekSelectedOption = () =>
+    wrapper.find('[data-testid="user-first-day-of-week-option"]:checked');
 
-  function findUserTimeSettingsRule() {
-    return wrapper.find('[data-testid="user-time-settings-rule"]');
-  }
+  const findUserTimeSettingsRule = () => wrapper.find('[data-testid="user-time-settings-rule"]');
 
-  function findUserTimeSettingsHeading() {
-    return wrapper.find('[data-testid="user-time-settings-heading"]');
-  }
+  const findUserTimeSettingsHeading = () =>
+    wrapper.find('[data-testid="user-time-settings-heading"]');
 
-  function findUserTimeFormatOption() {
-    return wrapper.find('[data-testid="user-time-format-option"]');
-  }
+  const findUserTimeFormatOption = () => wrapper.find('[data-testid="user-time-format-option"]');
 
-  function findUserTimeRelativeOption() {
-    return wrapper.find('[data-testid="user-time-relative-option"]');
-  }
+  const findUserTimeRelativeOption = () =>
+    wrapper.find('[data-testid="user-time-relative-option"]');
 
-  function findIntegrationsRule() {
-    return wrapper.find('[data-testid="profile-preferences-integrations-rule"]');
-  }
+  const findIntegrationsRule = () =>
+    wrapper.find('[data-testid="profile-preferences-integrations-rule"]');
 
-  function findIntegrationsHeading() {
-    return wrapper.find('[data-testid="profile-preferences-integrations-heading"]');
-  }
+  const findIntegrationsHeading = () =>
+    wrapper.find('[data-testid="profile-preferences-integrations-heading"]');
+
+  const findIntegrationViewList = () => wrapper.findAll(IntegrationView);
 
   afterEach(() => {
     wrapper.destroy();
@@ -120,27 +108,23 @@ describe('ProfilePreferences component', () => {
     });
 
     it('should render user time settings', () => {
-      const userTimeSettingsRule = findUserTimeSettingsRule();
-      const userTimeSettingsHeading = findUserTimeSettingsHeading();
-      const userTimeFormatOption = findUserTimeFormatOption();
-      const userTimeTimeRelativeOption = findUserTimeRelativeOption();
-      expect(userTimeSettingsRule.exists()).toBe(true);
-      expect(userTimeSettingsHeading.exists()).toBe(true);
-      expect(userTimeFormatOption.exists()).toBe(true);
-      expect(userTimeTimeRelativeOption.exists()).toBe(true);
+      expect(findUserTimeSettingsRule().exists()).toBe(true);
+      expect(findUserTimeSettingsHeading().exists()).toBe(true);
+      expect(findUserTimeFormatOption().exists()).toBe(true);
+      expect(findUserTimeRelativeOption().exists()).toBe(true);
     });
 
-    it('allows the user to toggle their time format preference', () => {
+    it('allows the user to toggle their time format preference', async () => {
       const userTimeFormatOption = findUserTimeFormatOption();
       expect(userTimeFormatOption.element.checked).toBe(false);
-      userTimeFormatOption.trigger('click');
+      await userTimeFormatOption.trigger('click');
       expect(userTimeFormatOption.element.checked).toBe(true);
     });
 
-    it('allows the user to toggle their time display preference', () => {
+    it('allows the user to toggle their time display preference', async () => {
       const userTimeTimeRelativeOption = findUserTimeRelativeOption();
       expect(userTimeTimeRelativeOption.element.checked).toBe(false);
-      userTimeTimeRelativeOption.trigger('click');
+      await userTimeTimeRelativeOption.trigger('click');
       expect(userTimeTimeRelativeOption.element.checked).toBe(true);
     });
   });
@@ -148,38 +132,28 @@ describe('ProfilePreferences component', () => {
   describe('with `userTimeSettings` feature flag disabled', () => {
     it('should not render user time settings', () => {
       wrapper = createComponent();
-      const userTimeSettingsRule = findUserTimeSettingsRule();
-      const userTimeSettingsHeading = findUserTimeSettingsHeading();
-      const userTimeFormatOption = findUserTimeFormatOption();
-      const userTimeTimeRelativeOption = findUserTimeRelativeOption();
-      expect(userTimeSettingsRule.exists()).toBe(false);
-      expect(userTimeSettingsHeading.exists()).toBe(false);
-      expect(userTimeFormatOption.exists()).toBe(false);
-      expect(userTimeTimeRelativeOption.exists()).toBe(false);
+      expect(findUserTimeSettingsRule().exists()).toBe(false);
+      expect(findUserTimeSettingsHeading().exists()).toBe(false);
+      expect(findUserTimeFormatOption().exists()).toBe(false);
+      expect(findUserTimeRelativeOption().exists()).toBe(false);
     });
   });
 
   describe('Integrations section', () => {
     it('should not render', () => {
       wrapper = createComponent();
-      const views = wrapper.findAll(IntegrationView);
-      const divider = findIntegrationsRule();
-      const heading = findIntegrationsHeading();
 
-      expect(divider.exists()).toBe(false);
-      expect(heading.exists()).toBe(false);
-      expect(views).toHaveLength(0);
+      expect(findIntegrationsRule().exists()).toBe(false);
+      expect(findIntegrationsHeading().exists()).toBe(false);
+      expect(findIntegrationViewList()).toHaveLength(0);
     });
 
     it('should render', () => {
       wrapper = createComponent({ provide: { integrationViews } });
-      const divider = findIntegrationsRule();
-      const heading = findIntegrationsHeading();
-      const views = wrapper.findAll(IntegrationView);
 
-      expect(divider.exists()).toBe(true);
-      expect(heading.exists()).toBe(true);
-      expect(views).toHaveLength(integrationViews.length);
+      expect(findIntegrationsRule().exists()).toBe(true);
+      expect(findIntegrationsHeading().exists()).toBe(true);
+      expect(findIntegrationViewList()).toHaveLength(integrationViews.length);
     });
   });
 
