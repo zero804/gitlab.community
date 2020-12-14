@@ -165,10 +165,10 @@ RSpec.describe API::ComposerPackages do
     it_behaves_like 'rejects Composer access with unknown group id'
   end
 
-  describe 'GET /api/v4/group/:id/-/packages/composer/*package_name.json' do
+  describe 'GET /api/v4/group/:id/-/packages/composer/*package_name.json', focus: true do
     let(:package_name) { 'foobar' }
-    let(:sha) { '$1234' }
-    let(:url) { "/group/#{group.id}/-/packages/composer/#{package_name}#{sha}.json" }
+    let(:sha) { '1234' }
+    let(:url) { "/group/#{group.id}/-/packages/composer/#{package_name}$#{sha}.json" }
 
     subject { get api(url), headers: headers }
 
@@ -180,6 +180,11 @@ RSpec.describe API::ComposerPackages do
 
     context 'with valid project' do
       let!(:package) { create(:composer_package, :with_metadatum, name: package_name, project: project) }
+      let(:sha) { ::Gitlab::Composer::VersionJson.new([package]).sha }
+
+      before do
+        ::Gitlab::Composer::Cache.new.update(package)
+      end
 
       where(:project_visibility_level, :user_role, :member, :user_token, :shared_examples_name, :expected_status) do
         'PUBLIC'  | :developer  | true  | true  | 'Composer package api request' | :success
@@ -215,6 +220,11 @@ RSpec.describe API::ComposerPackages do
           include_context 'Composer user type', :developer, true do
             it_behaves_like 'process Composer api request', :developer, :not_found, true
           end
+        end
+      end
+
+      context 'when the checksum does not match' do
+        it 'updates recalculates and updates the checksum' do
         end
       end
     end

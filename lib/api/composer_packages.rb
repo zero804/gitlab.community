@@ -40,7 +40,7 @@ module API
           if params[:package_name].present?
             params[:package_name], params[:sha] = params[:package_name].split('$')
 
-            packages = packages.with_name(params[:package_name])
+            packages = packages.with_name(params[:package_name]).order_updated_desc
           end
 
           packages
@@ -97,7 +97,17 @@ module API
         not_found! if packages.empty?
         not_found! if params[:sha].blank?
 
-        presenter.package_versions
+        index = ::Gitlab::Composer::VersionJson.new(packages)
+
+        if index.sha != packages.first.composer_metadatum.params[:sha]
+          not_found!
+        end
+
+        if index.sha != params[:sha]
+          not_found!
+        end
+
+        index.json
       end
     end
 
