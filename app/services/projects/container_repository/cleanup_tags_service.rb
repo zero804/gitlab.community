@@ -29,12 +29,19 @@ module Projects
 
         tag_names = tags.map(&:name)
 
-        Projects::ContainerRepository::DeleteTagsService
-          .new(container_repository.project,
-               current_user,
-               tags: tag_names,
-               container_expiration_policy: params['container_expiration_policy'])
-          .execute(container_repository)
+        service = Projects::ContainerRepository::DeleteTagsService.new(
+          container_repository.project,
+          current_user,
+          tags: tag_names,
+          container_expiration_policy: params['container_expiration_policy']
+        )
+
+        service.execute(container_repository).tap do |result|
+          next unless result[:status] == :success && @chunked
+
+          result[:status] = :error
+          result[:chunked] = true
+        end
       end
 
       def without_latest(tags)

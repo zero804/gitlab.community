@@ -261,6 +261,73 @@ RSpec.describe Projects::ContainerRepository::CleanupTagsService do
         end
       end
     end
+
+    context 'chunking the tags list' do
+      let(:max_chunk_size) { 10 }
+      let(:delete_tags_service_status) { :success }
+      let(:params) do
+        { 'name_regex_delete' => '.*' }
+      end
+
+      shared_examples 'returning the response' do |status:, chunked: nil|
+        it 'returns the response' do
+          result = subject
+
+          expect(result).to match(a_hash_including({ status: status, chunked: chunked }.compact))
+        end
+      end
+
+      before do
+        stub_application_setting(container_registry_cleanup_tags_service_max_chunk_size: max_chunk_size)
+        allow_next_instance_of(Projects::ContainerRepository::DeleteTagsService) do |service|
+          expect(service).to receive(:execute).and_return(status: delete_tags_service_status)
+        end
+      end
+
+      context 'with smaller tags list' do
+        context 'with delete tags service returning a success' do
+          it_behaves_like 'returning the response', status: :success
+        end
+
+        context 'with delete tags service returning an error' do
+          let(:delete_tags_service_status) { :error }
+
+          it_behaves_like 'returning the response', status: :error
+        end
+      end
+
+      context 'with bigger tags list' do
+        let(:max_chunk_size) { 3 }
+
+        context 'with delete tags service returns a success' do
+          it_behaves_like 'returning the response', status: :error, chunked: true
+        end
+
+        context 'with delete tags service returns an error' do
+          let(:delete_tags_service_status) { :error }
+
+          it_behaves_like 'returning the response', status: :error
+        end
+
+        context 'with throttling feature flag disabled' do
+          before do
+            stub_feature_flags(container_registry_expiration_policies_throttling: false)
+          end
+
+          context 'with bigger tags list' do
+            context 'with delete tags service returns a success' do
+              it_behaves_like 'returning the response', status: :success
+            end
+
+            context 'with delete tags service returns an error' do
+              let(:delete_tags_service_status) { :error }
+
+              it_behaves_like 'returning the response', status: :error
+            end
+          end
+        end
+      end
+    end
   end
 
   private
