@@ -21818,6 +21818,8 @@ CREATE INDEX index_merge_requests_on_head_pipeline_id ON merge_requests USING bt
 
 CREATE INDEX index_merge_requests_on_latest_merge_request_diff_id ON merge_requests USING btree (latest_merge_request_diff_id);
 
+CREATE INDEX index_merge_requests_on_merge_commit_sha ON merge_requests USING btree (merge_commit_sha);
+
 CREATE INDEX index_merge_requests_on_merge_user_id ON merge_requests USING btree (merge_user_id) WHERE (merge_user_id IS NOT NULL);
 
 CREATE INDEX index_merge_requests_on_milestone_id ON merge_requests USING btree (milestone_id);
@@ -21827,6 +21829,8 @@ CREATE INDEX index_merge_requests_on_source_branch ON merge_requests USING btree
 CREATE INDEX index_merge_requests_on_source_project_id_and_source_branch ON merge_requests USING btree (source_project_id, source_branch);
 
 CREATE INDEX index_merge_requests_on_sprint_id ON merge_requests USING btree (sprint_id);
+
+CREATE INDEX index_merge_requests_on_squash_commit_sha ON merge_requests USING btree (squash_commit_sha);
 
 CREATE INDEX index_merge_requests_on_target_branch ON merge_requests USING btree (target_branch);
 
