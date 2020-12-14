@@ -88,7 +88,8 @@ class MigrationSchemaValidator
 
     die "#{filename} has an invalid migration version" if version_start.nil?
 
-    filename.slice(version_start, VERSION_DIGITS) end
+    filename.slice(version_start, VERSION_DIGITS)
+  end
 
   def validate_clean_output!(command, base_message)
     command_output = run(command)
