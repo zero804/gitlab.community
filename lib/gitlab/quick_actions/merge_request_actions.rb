@@ -117,6 +117,104 @@ module Gitlab
 
           @execution_message[:approve] = _('Approved the current merge request.')
         end
+
+        desc do
+          if quick_action_target.allows_multiple_reviewers?
+            _('Assign reviewer(s)')
+          else
+            _('Assign reviewer')
+          end
+        end
+        explanation do |users|
+          _('Assigns %{reviewer_users_sentence} as %{reviewer_text}.') % { reviewer_users_sentence: reviewer_users_sentence(users),
+                                                                           reviewer_text: 'reviewer'.pluralize(users.size) }
+        end
+        execution_message do |users = nil|
+          invalid_users = @invalid_users
+
+          if invalid_users.blank?
+            if users.blank?
+              _("Failed to assign a reviewer because no user was found.")
+            else
+              users = [users.first] unless quick_action_target.allows_multiple_reviewers?
+
+              _('Assigned %{reviewer_users_sentence} as %{reviewer_text}.') % { reviewer_users_sentence: reviewer_users_sentence(users),
+                                                                                reviewer_text: 'reviewer'.pluralize(users.size) }
+            end
+          else
+            _('%{invalid_users_sentence} %{does_text} have access to review this merge request.') % { invalid_users_sentence: reviewer_users_sentence(invalid_users),
+                                                                                                      does_text: invalid_users.size > 1 ? "don't" : "doesn't" }
+          end
+        end
+        params do
+          quick_action_target.allows_multiple_reviewers? ? '@user1 @user2' : '@user'
+        end
+        types MergeRequest
+        condition do
+          Feature.enabled?(:merge_request_reviewers, project, default_enabled: :yaml) &&
+            current_user.can?(:"admin_#{quick_action_target.to_ability_name}", project)
+        end
+        parse_params do |reviewer_param|
+          extract_users(reviewer_param)
+        end
+        command :assign_reviewer do |users|
+          next if users.empty?
+
+          if quick_action_target.allows_multiple_reviewers?
+            @invalid_users = users.select { |user| !user_can_review?(user) }
+
+            @updates[:reviewer_ids] ||= quick_action_target.reviewers.map(&:id)
+            @updates[:reviewer_ids] |= users.map(&:id) - @invalid_users.map(&:id)
+          else
+            if user_can_review?(users.first)
+              @updates[:reviewer_ids] = [users.first.id]
+              @invalid_users = []
+            else
+              @updates[:reviewer_ids] = []
+              @invalid_users = [users.first]
+            end
+          end
+        end
+
+        desc do
+          if quick_action_target.allows_multiple_reviewers?
+            _('Remove all or specific reviewer(s)')
+          else
+            _('Remove reviewer')
+          end
+        end
+        explanation do |users = nil|
+          reviewers = reviewers_for_removal(users)
+          _("Removes %{reviewer_text} %{reviewer_references}.") %
+            { reviewer_text: 'reviewer'.pluralize(reviewers.size), reviewer_references: reviewers.map(&:to_reference).to_sentence }
+        end
+        execution_message do |users = nil|
+          reviewers = reviewers_for_removal(users)
+          _("Removed %{reviewer_text} %{reviewer_references}.") %
+            { reviewer_text: 'reviewer'.pluralize(reviewers.size), reviewer_references: reviewers.map(&:to_reference).to_sentence }
+        end
+        params do
+          quick_action_target.allows_multiple_reviewers? ? '@user1 @user2' : ''
+        end
+        types MergeRequest
+        condition do
+          quick_action_target.persisted? &&
+            Feature.enabled?(:merge_request_reviewers, project, default_enabled: :yaml) &&
+            quick_action_target.reviewers.any? &&
+            current_user.can?(:"admin_#{quick_action_target.to_ability_name}", project)
+        end
+        parse_params do |unassign_reviewer_param|
+          # When multiple users are assigned, all will be unassigned if multiple reviewers are no longer allowed
+          extract_users(unassign_reviewer_param) if quick_action_target.allows_multiple_reviewers?
+        end
+        command :unassign_reviewer do |users = nil|
+          if quick_action_target.allows_multiple_reviewers? && users&.any?
+            @updates[:reviewer_ids] ||= quick_action_target.reviewers.map(&:id)
+            @updates[:reviewer_ids] -= users.map(&:id)
+          else
+            @updates[:reviewer_ids] = []
+          end
+        end
       end
 
       def merge_orchestration_service

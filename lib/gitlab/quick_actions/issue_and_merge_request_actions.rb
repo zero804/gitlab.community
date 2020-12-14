@@ -261,6 +261,27 @@ module Gitlab
           end
         end
 
+        def user_can_review?(user)
+          user.can?(:approve_merge_request, quick_action_target)
+        end
+
+        def reviewer_users_sentence(users)
+          if quick_action_target.allows_multiple_reviewers?
+            users
+          else
+            [users.first]
+          end.map(&:to_reference).to_sentence
+        end
+
+        def reviewers_for_removal(users)
+          reviewers = quick_action_target.reviewers
+          if users.present? && quick_action_target.allows_multiple_reviewers?
+            users
+          else
+            reviewers
+          end
+        end
+
         def can_copy_metadata?(source_issuable)
           source_issuable.present? && source_issuable.project_id == quick_action_target.project_id
         end

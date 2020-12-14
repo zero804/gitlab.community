@@ -4,9 +4,11 @@ require 'spec_helper'
 
 RSpec.describe QuickActions::InterpretService do
   let(:current_user) { create(:user) }
+  let(:developer) { create(:user) }
+  let(:developer2) { create(:user) }
   let(:user) { create(:user) }
-  let(:user2) { create(:user) }
-  let(:user3) { create(:user) }
+  let_it_be(:user2) { create(:user) }
+  let_it_be(:user3) { create(:user) }
   let_it_be_with_refind(:group) { create(:group) }
   let_it_be_with_refind(:project) { create(:project, :repository, :public, group: group) }
   let_it_be_with_reload(:issue) { create(:issue, project: project) }
@@ -17,6 +19,7 @@ RSpec.describe QuickActions::InterpretService do
                            multiple_merge_request_assignees: true)
 
     project.add_developer(current_user)
+    project.add_developer(developer)
   end
 
   shared_examples 'quick action is unavailable' do |action|
@@ -86,6 +89,49 @@ RSpec.describe QuickActions::InterpretService do
               _, updates = service.execute("/assign @#{user2.username} @#{user3.username}", merge_request)
 
               expect(updates[:assignee_ids]).to match_array([user2.id])
+            end
+          end
+        end
+      end
+    end
+
+    context 'assign_reviewer command' do
+      context 'with a merge request' do
+        before_all do
+          project.add_developer(user2)
+          project.add_developer(user3)
+        end
+
+        let(:merge_request) { create(:merge_request, source_project: project) }
+
+        it 'fetches reviewers and populates them if content contains /assign_reviewer' do
+          merge_request.update(reviewer_ids: [user.id])
+
+          _, updates = service.execute("/assign_reviewer @#{user2.username}\n/assign_reviewer @#{user3.username}", merge_request)
+
+          expect(updates[:reviewer_ids]).to match_array([user.id, user2.id, user3.id])
+        end
+
+        context 'assign command with multiple reviewers' do
+          it 'assigns multiple reviewers while respecting previous assignments' do
+            merge_request.update(reviewer_ids: [user.id])
+
+            _, updates = service.execute("/assign_reviewer @#{user.username}\n/assign_reviewer @#{user2.username} @#{user3.username}", merge_request)
+
+            expect(updates[:reviewer_ids]).to match_array([user.id, user2.id, user3.id])
+          end
+
+          context 'unlicensed' do
+            before do
+              stub_licensed_features(multiple_merge_request_reviewers: false)
+            end
+
+            it 'does not recognize /assign_reviewer with multiple user references' do
+              merge_request.update(reviewer_ids: [user.id])
+
+              _, updates = service.execute("/assign_reviewer @#{user2.username} @#{user3.username}", merge_request)
+
+              expect(updates[:reviewer_ids]).to match_array([user2.id])
             end
           end
         end
@@ -990,7 +1036,7 @@ RSpec.describe QuickActions::InterpretService do
       it 'includes only selected assignee references' do
         _, explanations = service.explain(content, issue)
 
-        expect(explanations).to eq(["Removes assignees @#{user.username} and @#{user3.username}."])
+        expect(explanations).to eq(["Removes assignees @#{user3.username} and @#{user.username}."])
       end
     end
 
