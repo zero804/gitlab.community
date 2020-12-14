@@ -3,6 +3,11 @@
 module Projects
   module ContainerRepository
     class CleanupTagsService < BaseService
+      def initialize(project, user = nil, params = {})
+        super
+        @chunked = false
+      end
+
       def execute(container_repository)
         return error('access denied') unless can_destroy?
         return error('invalid regex') unless valid_regex?
@@ -10,6 +15,7 @@ module Projects
         tags = container_repository.tags
         tags = without_latest(tags)
         tags = filter_by_name(tags)
+        tags = first_chunk_of(tags)
         tags = filter_keep_n(tags)
         tags = filter_by_older_than(tags)
 
@@ -82,6 +88,25 @@ module Projects
       rescue RegexpError => e
         ::Gitlab::ErrorTracking.log_exception(e, project_id: project.id)
         false
+      end
+
+      def first_chunk_of(tags)
+        return tags unless throttling_enabled?
+        return tags unless max_chunk_size
+
+        chunked = tags.first(max_chunk_size)
+
+        @chunked = tags.size > chunked.size
+
+        chunked
+      end
+
+      def throttling_enabled?
+        Feature.enabled?(:container_registry_expiration_policies_throttling)
+      end
+
+      def max_chunk_size
+        ::Gitlab::CurrentSettings.current_application_settings.container_registry_cleanup_tags_service_max_chunk_size
       end
     end
   end

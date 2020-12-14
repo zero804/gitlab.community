@@ -297,6 +297,9 @@ class ApplicationSetting < ApplicationRecord
   validates :container_registry_delete_tags_service_timeout,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
+  validates :container_registry_cleanup_tags_service_max_chunk_size,
+            numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+
   validates :container_registry_expiration_policies_worker_capacity,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 

@@ -9372,6 +9372,8 @@ CREATE TABLE application_settings (
     secret_detection_revocation_token_types_url text,
     cloud_license_enabled boolean DEFAULT false NOT NULL,
     disable_feed_token boolean DEFAULT false NOT NULL,
+    container_registry_cleanup_tags_service_max_chunk_size integer DEFAULT 200 NOT NULL,
+    CONSTRAINT app_settings_container_reg_cleanup_tags_max_chunk_size_positive CHECK ((container_registry_cleanup_tags_service_max_chunk_size >= 1)),
     CONSTRAINT app_settings_registry_exp_policies_worker_capacity_positive CHECK ((container_registry_expiration_policies_worker_capacity >= 0)),
     CONSTRAINT check_17d9558205 CHECK ((char_length((kroki_url)::text) <= 1024)),
     CONSTRAINT check_2dba05b802 CHECK ((char_length(gitpod_url) <= 255)),
