@@ -76,9 +76,6 @@ describe('AddRotationModal', () => {
           participants,
         };
       },
-      propsData: {
-        schedule,
-      },
       provide: {
         projectPath,
       },
