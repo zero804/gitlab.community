@@ -182,11 +182,15 @@ export default {
     clearDismissalError() {
       this.dismissalCommentErrorMessage = '';
     },
+    close() {
+      this.$refs.modal.close();
+    },
   },
 };
 </script>
 <template>
   <gl-modal
+    ref="modal"
     modal-id="modal-mrwidget-security-issue"
     :title="modal.title"
     data-qa-selector="vulnerability_modal_content"
@@ -273,6 +277,7 @@ export default {
         @openDismissalCommentBox="$emit('openDismissalCommentBox')"
         @revertDismissVulnerability="$emit('revertDismissVulnerability')"
         @downloadPatch="$emit('downloadPatch')"
+        @cancel="close"
       />
     </template>
   </gl-modal>
