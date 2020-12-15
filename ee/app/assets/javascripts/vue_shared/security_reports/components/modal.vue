@@ -9,8 +9,10 @@ import SolutionCard from 'ee/vue_shared/security_reports/components/solution_car
 import VulnerabilityDetails from 'ee/vue_shared/security_reports/components/vulnerability_details.vue';
 import { GlModal } from '@gitlab/ui';
 import { __ } from '~/locale';
+import { VULNERABILITY_MODAL_ID } from './constants';
 
 export default {
+  VULNERABILITY_MODAL_ID,
   components: {
     DismissalNote,
     DismissalCommentBoxToggle,
@@ -191,10 +193,11 @@ export default {
 <template>
   <gl-modal
     ref="modal"
-    modal-id="modal-mrwidget-security-issue"
+    :modal-id="$options.VULNERABILITY_MODAL_ID"
     :title="modal.title"
     data-qa-selector="vulnerability_modal_content"
     class="modal-security-report-dast"
+    v-bind="$attrs"
   >
     <slot>
       <vulnerability-details :vulnerability="vulnerability" class="js-vulnerability-details" />
