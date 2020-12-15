@@ -96,6 +96,9 @@ module Gitlab
       },
       pipelines_empty_state: {
         tracking_category: 'Growth::Activation::Experiment::PipelinesEmptyState'
+      },
+      trial_onboarding_issues: {
+        tracking_category: 'Growth::Conversion::Experiment::TrialOnboardingIssues'
       }
     }.freeze
 

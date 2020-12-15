@@ -23,21 +23,31 @@ module Registrations
       if @group.persisted?
         record_experiment_user(:trial_during_signup, trial_chosen: trial)
 
-        if experiment_enabled?(:trial_during_signup)
-          if trial && create_lead && apply_trial
-            record_experiment_conversion_event(:trial_during_signup)
-          end
+        url_params = { namespace_id: @group.id, trial: trial }
+        if trial_onboarding_flow?
+          apply_trial
+          url_params[:trial_flow] = params[:trial_flow]
         else
-          invite_members(@group)
+          if experiment_enabled?(:trial_during_signup)
+            if trial && create_lead && apply_trial
+              record_experiment_conversion_event(:trial_during_signup)
+            end
+          else
+            invite_members(@group)
+          end
         end
 
-        redirect_to new_users_sign_up_project_path(namespace_id: @group.id, trial: trial)
+        redirect_to new_users_sign_up_project_path(url_params)
       else
         render action: :new
       end
     end
 
     private
+
+    def trial_onboarding_flow?
+      params[:trial_flow] == 'true' && experiment_enabled?(:trial_onboarding_issues)
+    end
 
     def authorize_create_group!
       access_denied! unless can?(current_user, :create_group)

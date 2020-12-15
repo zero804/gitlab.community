@@ -5,6 +5,14 @@ module EE
     module WelcomeController
       extend ::Gitlab::Utils::Override
 
+      prepended do
+        skip_before_action :authenticate_user!, :required_signup_info, :check_two_factor_requirement, only: [:trial_getting_started]
+      end
+
+      def trial_getting_started
+        render :trial_getting_started, locals: { learn_gitlab_project: learn_gitlab_project }
+      end
+
       private
 
       override :update_params
@@ -20,6 +28,10 @@ module EE
         end
 
         clean_params
+      end
+
+      def learn_gitlab_project
+        ::Project.find(params[:learn_gitlab_project_id])
       end
     end
   end
