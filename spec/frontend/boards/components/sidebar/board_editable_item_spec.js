@@ -89,11 +89,11 @@ describe('boards sidebar remove issue', () => {
       createComponent({ canUpdate: true, props: { toggleHeader: true } });
       findEditButton().vm.$emit('click');
 
-      return wrapper.vm.$nextTick().then(() => {
-        expect(findEditButton().isVisible()).toBe(false);
-        expect(findTitle().isVisible()).toBe(false);
-        expect(findExpanded().isVisible()).toBe(true);
-      });
+      await wrapper.vm.$nextTick();
+
+      expect(findEditButton().isVisible()).toBe(false);
+      expect(findTitle().isVisible()).toBe(false);
+      expect(findExpanded().isVisible()).toBe(true);
     });
   });
 

@@ -28,7 +28,6 @@ export default {
   },
   computed: {
     ...mapGetters({ issue: 'activeIssue' }),
-
     pendingChangesStorageKey() {
       return this.getPendingChangesKey(this.issue);
     },
@@ -106,11 +105,9 @@ export default {
       if (this.title !== this.issue.title) {
         this.showChangesAlert = true;
         localStorage.setItem(this.pendingChangesStorageKey, this.title);
-
-        return;
+      } else {
+        this.$refs.sidebarItem.collapse();
       }
-
-      this.$refs.sidebarItem.collapse();
     },
   },
   i18n: {
