@@ -45879,7 +45879,7 @@
             },
             {
               "name": "id",
-              "description": "ID of the on-call participant",
+              "description": "ID of the on-call participant.",
               "args": [
 
               ],
@@ -45897,7 +45897,7 @@
             },
             {
               "name": "user",
-              "description": "The user who is participating",
+              "description": "The user who is participating.",
               "args": [
 
               ],
@@ -46041,7 +46041,7 @@
           "inputFields": [
             {
               "name": "projectPath",
-              "description": "The project to create the on-call schedule in",
+              "description": "The project to create the on-call schedule in.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46055,7 +46055,7 @@
             },
             {
               "name": "scheduleIid",
-              "description": "The iid of the on-call schedule to create the on-call rotation in",
+              "description": "The iid of the on-call schedule to create the on-call rotation in.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46069,7 +46069,7 @@
             },
             {
               "name": "name",
-              "description": "The name of the on-call rotation",
+              "description": "The name of the on-call rotation.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46083,7 +46083,7 @@
             },
             {
               "name": "startsAt",
-              "description": "The start date and time of the on-call rotation, in the timezone of the on-call schedule",
+              "description": "The start date and time of the on-call rotation, in the timezone of the on-call schedule.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46097,7 +46097,7 @@
             },
             {
               "name": "rotationLength",
-              "description": "The rotation length of the on-call rotation",
+              "description": "The rotation length of the on-call rotation.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46111,7 +46111,7 @@
             },
             {
               "name": "participants",
-              "description": "The usernames of users participating in the on-call rotation",
+              "description": "The usernames of users participating in the on-call rotation.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46193,7 +46193,7 @@
             },
             {
               "name": "oncallRotation",
-              "description": "The on-call rotation",
+              "description": "The on-call rotation.",
               "args": [
 
               ],
@@ -46221,7 +46221,7 @@
           "inputFields": [
             {
               "name": "date",
-              "description": "The date component of the date in YYYY-MM-DD format",
+              "description": "The date component of the date in YYYY-MM-DD format.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46235,7 +46235,7 @@
             },
             {
               "name": "time",
-              "description": "The time component of the date in 24hr HH:MM format",
+              "description": "The time component of the date in 24hr HH:MM format.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46260,7 +46260,7 @@
           "inputFields": [
             {
               "name": "length",
-              "description": "The rotation length of the on-call rotation",
+              "description": "The rotation length of the on-call rotation.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46274,7 +46274,7 @@
             },
             {
               "name": "unit",
-              "description": "The unit of the rotation length of the on-call rotation",
+              "description": "The unit of the rotation length of the on-call rotation.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
@@ -46730,7 +46730,7 @@
           "inputFields": [
             {
               "name": "username",
-              "description": "The username of the user to participate in the on-call rotation. i.e user_one",
+              "description": "The username of the user to participate in the on-call rotation. i.e user_one.",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
