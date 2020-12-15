@@ -12949,6 +12949,22 @@ CREATE SEQUENCE group_import_states_group_id_seq
 
 ALTER SEQUENCE group_import_states_group_id_seq OWNED BY group_import_states.group_id;
 
+CREATE TABLE group_package_settings (
+    group_id bigint NOT NULL,
+    maven_duplicates_allowed boolean DEFAULT true NOT NULL,
+    maven_duplicate_exception_regex text DEFAULT ''::text NOT NULL,
+    CONSTRAINT check_b0bab3d3d0 CHECK ((char_length(maven_duplicate_exception_regex) <= 255))
+);
+
+CREATE SEQUENCE group_package_settings_group_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE group_package_settings_group_id_seq OWNED BY group_package_settings.group_id;
+
 CREATE TABLE group_wiki_repositories (
     shard_id bigint NOT NULL,
     group_id bigint NOT NULL,
@@ -18442,6 +18458,8 @@ ALTER TABLE ONLY group_group_links ALTER COLUMN id SET DEFAULT nextval('group_gr
 
 ALTER TABLE ONLY group_import_states ALTER COLUMN group_id SET DEFAULT nextval('group_import_states_group_id_seq'::regclass);
 
+ALTER TABLE ONLY group_package_settings ALTER COLUMN group_id SET DEFAULT nextval('group_package_settings_group_id_seq'::regclass);
+
 ALTER TABLE ONLY historical_data ALTER COLUMN id SET DEFAULT nextval('historical_data_id_seq'::regclass);
 
 ALTER TABLE ONLY identities ALTER COLUMN id SET DEFAULT nextval('identities_id_seq'::regclass);
@@ -19656,6 +19674,9 @@ ALTER TABLE ONLY group_group_links
 
 ALTER TABLE ONLY group_import_states
     ADD CONSTRAINT group_import_states_pkey PRIMARY KEY (group_id);
+
+ALTER TABLE ONLY group_package_settings
+    ADD CONSTRAINT group_package_settings_pkey PRIMARY KEY (group_id);
 
 ALTER TABLE ONLY group_wiki_repositories
     ADD CONSTRAINT group_wiki_repositories_pkey PRIMARY KEY (group_id);
@@ -24935,6 +24956,9 @@ ALTER TABLE ONLY dependency_proxy_manifests
 
 ALTER TABLE ONLY resource_milestone_events
     ADD CONSTRAINT fk_rails_a788026e85 FOREIGN KEY (issue_id) REFERENCES issues(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY group_package_settings
+    ADD CONSTRAINT fk_rails_a85d451a42 FOREIGN KEY (group_id) REFERENCES namespaces(id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY term_agreements
     ADD CONSTRAINT fk_rails_a88721bcdf FOREIGN KEY (term_id) REFERENCES application_setting_terms(id);

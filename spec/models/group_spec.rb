@@ -28,6 +28,7 @@ RSpec.describe Group do
     it { is_expected.to have_many(:iterations) }
     it { is_expected.to have_many(:group_deploy_keys) }
     it { is_expected.to have_many(:services) }
+    it { is_expected.to have_one(:group_package_setting) }
     it { is_expected.to have_one(:dependency_proxy_setting) }
     it { is_expected.to have_many(:dependency_proxy_blobs) }
     it { is_expected.to have_many(:dependency_proxy_manifests) }
@@ -43,6 +44,23 @@ RSpec.describe Group do
 
       it_behaves_like 'members and requesters associations' do
         let(:namespace) { group }
+      end
+    end
+
+    context 'when creating a new group' do
+      it 'automatically creates a group package setting row' do
+        expect(group.group_package_setting).to be_an_instance_of(GroupPackageSetting)
+        expect(group.group_package_setting).to be_persisted
+      end
+
+      it 'does not create another group package setting if there is already one' do
+        group = build(:group)
+
+        expect do
+          group_package_setting = create(:group_package_setting, group: group)
+
+          expect(group.group_package_setting).to eq(group_package_setting)
+        end.to change { GroupPackageSetting.count }.by(1)
       end
     end
   end
