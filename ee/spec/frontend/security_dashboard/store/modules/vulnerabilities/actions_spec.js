@@ -222,7 +222,7 @@ describe('vulnerabilities actions', () => {
   });
 });
 
-describe('openModal', () => {
+describe('setModalData', () => {
   let state;
 
   beforeEach(() => {
@@ -232,7 +232,7 @@ describe('openModal', () => {
   it('should commit the SET_MODAL_DATA mutation', () => {
     const vulnerability = mockDataVulnerabilities[0];
 
-    return testAction(actions.openModal, { vulnerability }, state, [
+    return testAction(actions.setModalData, { vulnerability }, state, [
       {
         type: types.SET_MODAL_DATA,
         payload: { vulnerability },
