@@ -1,6 +1,7 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import IssueModal from 'ee/vue_shared/security_reports/components/modal.vue';
+import { VULNERABILITY_MODAL_ID } from 'ee/vue_shared/security_reports/components/constants';
 import Filters from './filters.vue';
 import SecurityDashboardLayout from './security_dashboard_layout.vue';
 import SecurityDashboardTable from './security_dashboard_table.vue';
@@ -99,7 +100,7 @@ export default {
       return this.undoDismiss(payload).then(this.hideModal);
     },
     hideModal() {
-      this.$root.$emit('bv::hide::modal', 'modal-mrwidget-security-issue');
+      this.$root.$emit('bv::hide::modal', VULNERABILITY_MODAL_ID);
     },
   },
 };
