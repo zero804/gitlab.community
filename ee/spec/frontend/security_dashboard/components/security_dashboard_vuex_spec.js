@@ -103,7 +103,7 @@ describe('Security Dashboard component', () => {
       ({ emittedModalEvent, eventPayload, expectedDispatchedAction, expectedActionPayload }) => {
         wrapper.vm.$store.state.vulnerabilities.modal.vulnerability = 'bar';
 
-        jest.spyOn(store, 'dispatch').mockImplementation();
+        jest.spyOn(store, 'dispatch').mockImplementation(() => Promise.resolve());
         wrapper.find(IssueModal).vm.$emit(emittedModalEvent, eventPayload);
 
         expect(store.dispatch).toHaveBeenCalledWith(
