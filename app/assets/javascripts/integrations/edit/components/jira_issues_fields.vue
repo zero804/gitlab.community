@@ -113,7 +113,7 @@ export default {
             v-if="enableJiraIssues && glFeatures.jiraForVulnerabilities"
             data-testid="jiraForVulnerabilities"
           >
-            <jira-issue-creation-vulnerabilities />
+            <jira-issue-creation-vulnerabilities :has-project-key="Boolean(projectKey)" />
           </div>
         </template>
         <gl-card v-else class="gl-mt-7">

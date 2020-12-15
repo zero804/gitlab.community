@@ -6,7 +6,9 @@ import JiraIssueCreationVulnerabilities from '~/integrations/edit/components/jir
 describe('JiraIssuesFields', () => {
   let wrapper;
 
-  const defaultProps = {};
+  const defaultProps = {
+    hasProjectKey: true,
+  };
 
   const createComponent = props => {
     wrapper = mount(JiraIssueCreationVulnerabilities, {
