@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { VULNERABILITY_MODAL_ID } from 'ee/vue_shared/security_reports/components/constants';
 import { mountComponentWithStore } from 'helpers/vue_mount_component_helper';
 import component from '~/reports/components/modal_open_name.vue';
 
@@ -11,7 +12,7 @@ describe('Modal open name', () => {
 
   const store = new Vuex.Store({
     actions: {
-      openModal: () => {},
+      setModalData: () => {},
     },
     state: {},
     mutations: {},
@@ -37,11 +38,13 @@ describe('Modal open name', () => {
     expect(vm.$el.textContent.trim()).toEqual('Issue');
   });
 
-  it('calls openModal actions when button is clicked', () => {
-    jest.spyOn(vm, 'openModal').mockImplementation(() => {});
+  it('calls setModalData actions and opens modal when button is clicked', () => {
+    jest.spyOn(vm, 'setModalData').mockImplementation(() => {});
+    jest.spyOn(vm.$root, '$emit');
 
     vm.$el.click();
 
-    expect(vm.openModal).toHaveBeenCalled();
+    expect(vm.setModalData).toHaveBeenCalled();
+    expect(vm.$root.$emit).toHaveBeenCalledWith('bv::show::modal', VULNERABILITY_MODAL_ID);
   });
 });
