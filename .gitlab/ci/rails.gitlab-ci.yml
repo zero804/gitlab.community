@@ -314,7 +314,7 @@ db:check-schema:
 db:check-migrations:
   extends:
     - .db-job-base
-    - .rails:rules:ee-mr-and-master-only
+    - .rails:rules:ee-and-foss-mr-with-migration
   script:
     - scripts/validate_migration_schema
   allow_failure: true
