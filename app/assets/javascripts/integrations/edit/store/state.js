@@ -8,5 +8,7 @@ export default ({ defaultState = null, customState = {} } = {}) => {
     isSaving: false,
     isTesting: false,
     isResetting: false,
+    isLoadingJiraIssueTypes: false,
+    jiraIssueTypes: [],
   };
 };

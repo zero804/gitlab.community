@@ -32,6 +32,9 @@ export default class IntegrationSettingsForm {
     eventHub.$on('saveIntegration', () => {
       this.saveIntegration();
     });
+    eventHub.$on('getJiraIssueTypes', () => {
+      this.getJiraIssueTypes();
+    });
   }
 
   saveIntegration() {
@@ -76,12 +79,38 @@ export default class IntegrationSettingsForm {
     }
   }
 
+  getJiraIssueTypes() {
+    // dispatch so loading state can be toggled
+    const {
+      $store: { dispatch },
+    } = this.vue;
+
+    dispatch('setIsLoadingJiraIssueTypes', true);
+
+    // eslint-disable-next-line no-jquery/no-serialize
+    this.fetchTestSettings(this.$form.serialize())
+      .then(({ data: { issuetypes } }) => {
+        // dispatch action - receivedJiraIssueTypesSuccess
+        this.vue.$store.dispatch('receivedJiraIssueTypesSuccess', issuetypes);
+      })
+      .catch(e => {
+        // dispatch action - receivedJiraIssueTypesError
+        debugger;
+      })
+      .finally(() => {
+        dispatch('setIsLoadingJiraIssueTypes', false);
+      });
+  }
+
+  fetchTestSettings(formData) {
+    return axios.put(this.testEndPoint, formData);
+  }
+
   /**
    * Test Integration config
    */
   testSettings(formData) {
-    return axios
-      .put(this.testEndPoint, formData)
+    return this.fetchTestSettings(formData)
       .then(({ data }) => {
         if (data.error) {
           toast(`${data.message} ${data.service_response}`);

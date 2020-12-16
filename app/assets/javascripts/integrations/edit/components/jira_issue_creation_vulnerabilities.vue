@@ -1,4 +1,5 @@
 <script>
+import { mapState } from 'vuex';
 import {
   GlButton,
   GlButtonGroup,
@@ -8,6 +9,8 @@ import {
   GlFormGroup,
   GlIcon,
 } from '@gitlab/ui';
+
+import eventHub from '../event_hub';
 
 export default {
   components: {
@@ -30,7 +33,16 @@ export default {
       // @TODO: set the initial value to be passed in via a prop
       // @TODO: rename this
       isEnabled: true,
+      selectedIssueType: {},
     };
+  },
+  computed: {
+    ...mapState(['jiraIssueTypes', 'isLoadingJiraIssueTypes']),
+  },
+  methods: {
+    handleLoadJiraIssueTypesClick() {
+      eventHub.$emit('getJiraIssueTypes');
+    },
   },
 };
 </script>
@@ -47,14 +59,33 @@ export default {
         }}
       </template>
     </gl-form-checkbox>
-    <gl-form-group v-if="isEnabled" :label="__('Jira issue type')" class="gl-mt-4 gl-pl-1 gl-ml-5">
+    <gl-form-group
+      v-show="isEnabled"
+      :label="__('Jira issue type')"
+      class="gl-mt-4 gl-pl-1 gl-ml-5"
+    >
       <p>{{ __('Define the type of Jira issue to create from a vulnerability.') }}</p>
       <div class="gl-display-flex gl-align-items-center">
         <gl-button-group class="gl-mr-3">
-          <gl-dropdown :disabled="!hasProjectKey" :text="__('Select issue type')">
-            <gl-dropdown-item>{{ __('Pizza') }}</gl-dropdown-item></gl-dropdown
+          <gl-dropdown
+            :disabled="!hasProjectKey"
+            :loading="isLoadingJiraIssueTypes"
+            :text="selectedIssueType.name || __('Select issue type')"
           >
-          <gl-button :disabled="!hasProjectKey" icon="retry" />
+            <gl-dropdown-item
+              v-for="jiraIssueType in jiraIssueTypes"
+              :key="jiraIssueType.id"
+              :is-checked="jiraIssueType === selectedIssueType"
+              @click="selectedIssueType = jiraIssueType"
+            >
+              {{ jiraIssueType.name }}
+            </gl-dropdown-item>
+          </gl-dropdown>
+          <gl-button
+            :disabled="!hasProjectKey"
+            icon="retry"
+            @click="handleLoadJiraIssueTypesClick"
+          />
         </gl-button-group>
         <p v-if="!hasProjectKey" class="gl-my-0">
           <gl-icon name="warning" class="gl-text-orange-500" />

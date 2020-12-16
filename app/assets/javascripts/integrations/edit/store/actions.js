@@ -26,3 +26,10 @@ export const fetchResetIntegration = ({ dispatch, getters }) => {
     .then(() => dispatch('receiveResetIntegrationSuccess'))
     .catch(() => dispatch('receiveResetIntegrationError'));
 };
+
+export const setIsLoadingJiraIssueTypes = ({ commit }, isLoadingJiraIssueTypes) => {
+  commit(types.SET_IS_LOADING_JIRA_ISSUE_TYPES, isLoadingJiraIssueTypes);
+};
+export const receivedJiraIssueTypesSuccess = ({ commit }, issueTypes) => {
+  commit(types.SET_JIRA_ISSUE_TYPES, issueTypes);
+};
