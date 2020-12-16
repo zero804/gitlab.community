@@ -435,7 +435,15 @@ RSpec.describe GroupPolicy do
               group.add_owner(current_user)
             end
 
-            it 'prevents access without a SAML session' do
+            it 'allows access without a SAML session' do
+              is_expected.to allow_action(:read_group)
+            end
+          end
+
+          context 'as an admin' do
+            let(:current_user) { admin }
+
+            it 'allows access without a SAML session' do
               is_expected.to allow_action(:read_group)
             end
           end
