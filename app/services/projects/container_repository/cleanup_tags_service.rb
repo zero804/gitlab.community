@@ -12,6 +12,8 @@ module Projects
         return error('access denied') unless can_destroy?
         return error('invalid regex') unless valid_regex?
 
+        @container_repository = container_repository
+
         tags = container_repository.tags
         tags = without_latest(tags)
         tags = filter_by_name(tags)
@@ -101,9 +103,12 @@ module Projects
         return tags unless throttling_enabled?
         return tags unless max_chunk_size
 
-        chunked = tags.first(max_chunk_size)
+        chunked = tags.sample(max_chunk_size)
 
-        @chunked = tags.size > chunked.size
+        if tags.size > chunked.size
+          @chunked = true
+          log_message("Tags to delete list chunked", tags_list_original_size: tags.size, tags_list_chunked_size: chunked.size)
+        end
 
         chunked
       end
@@ -114,6 +119,17 @@ module Projects
 
       def max_chunk_size
         ::Gitlab::CurrentSettings.current_application_settings.container_registry_cleanup_tags_service_max_chunk_size
+      end
+
+      def log_message(message, extra_payload = {})
+        data = extra_payload.merge(
+          service_class: self.to_s,
+          container_repository_id: @container_repository.id,
+          project_id: @container_repository.project_id,
+          message: message
+        )
+
+        log_info(data)
       end
     end
   end

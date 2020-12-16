@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Projects::ContainerRepository::CleanupTagsService do
+  using RSpec::Parameterized::TableSyntax
+
   let_it_be(:user) { create(:user) }
   let_it_be(:project, reload: true) { create(:project, :private) }
   let_it_be(:repository) { create(:container_repository, :root, project: project) }
@@ -30,6 +32,8 @@ RSpec.describe Projects::ContainerRepository::CleanupTagsService do
     stub_digest_config('sha256:configB', 5.days.ago)
     stub_digest_config('sha256:configC', 1.month.ago)
     stub_digest_config('sha256:configD', nil)
+
+    stub_feature_flags(container_registry_expiration_policies_throttling: false)
   end
 
   describe '#execute' do
@@ -263,8 +267,6 @@ RSpec.describe Projects::ContainerRepository::CleanupTagsService do
     end
 
     context 'chunking the tags list' do
-      let(:max_chunk_size) { 10 }
-      let(:delete_tags_service_status) { :success }
       let(:params) do
         { 'name_regex_delete' => '.*' }
       end
@@ -275,57 +277,39 @@ RSpec.describe Projects::ContainerRepository::CleanupTagsService do
 
           expect(result).to match(a_hash_including({ status: status, chunked: chunked }.compact))
         end
-      end
 
-      before do
-        stub_application_setting(container_registry_cleanup_tags_service_max_chunk_size: max_chunk_size)
-        allow_next_instance_of(Projects::ContainerRepository::DeleteTagsService) do |service|
-          expect(service).to receive(:execute).and_return(status: delete_tags_service_status)
-        end
-      end
-
-      context 'with smaller tags list' do
-        context 'with delete tags service returning a success' do
-          it_behaves_like 'returning the response', status: :success
-        end
-
-        context 'with delete tags service returning an error' do
-          let(:delete_tags_service_status) { :error }
-
-          it_behaves_like 'returning the response', status: :error
-        end
-      end
-
-      context 'with bigger tags list' do
-        let(:max_chunk_size) { 3 }
-
-        context 'with delete tags service returns a success' do
-          it_behaves_like 'returning the response', status: :error, chunked: true
-        end
-
-        context 'with delete tags service returns an error' do
-          let(:delete_tags_service_status) { :error }
-
-          it_behaves_like 'returning the response', status: :error, chunked: true
-        end
-
-        context 'with throttling feature flag disabled' do
-          before do
-            stub_feature_flags(container_registry_expiration_policies_throttling: false)
+        it 'logs a message when chunking a message' do
+          if chunked
+            expect(service).to receive(:log_message)
+          else
+            expect(service).not_to receive(:log_message)
           end
 
-          context 'with bigger tags list' do
-            context 'with delete tags service returns a success' do
-              it_behaves_like 'returning the response', status: :success
-            end
+          subject
+        end
+      end
 
-            context 'with delete tags service returns an error' do
-              let(:delete_tags_service_status) { :error }
+      where(:feature_flag_enabled, :max_chunk_size, :delete_tags_service_status, :expected_status, :expected_chunked) do
+        false | 10 | :success | :success | nil
+        false | 10 | :error   | :error   | nil
+        false | 3  | :success | :success | nil
+        false | 3  | :error   | :error   | nil
+        true  | 10 | :success | :success | nil
+        true  | 10 | :error   | :error   | nil
+        true  | 3  | :success | :error   | true
+        true  | 3  | :error   | :error   | true
+      end
 
-              it_behaves_like 'returning the response', status: :error
-            end
+      with_them do
+        before do
+          stub_feature_flags(container_registry_expiration_policies_throttling: feature_flag_enabled)
+          stub_application_setting(container_registry_cleanup_tags_service_max_chunk_size: max_chunk_size)
+          allow_next_instance_of(Projects::ContainerRepository::DeleteTagsService) do |service|
+            expect(service).to receive(:execute).and_return(status: delete_tags_service_status)
           end
         end
+
+        it_behaves_like 'returning the response', status: params[:expected_status], chunked: params[:expected_chunked]
       end
     end
   end
