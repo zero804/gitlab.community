@@ -43,7 +43,6 @@ module Types
             null: true,
             description: 'Blocks of time for which a participant is on-call.',
             resolver: ::Resolvers::IncidentManagement::OncallShiftsResolver
-
     end
   end
 end
