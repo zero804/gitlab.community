@@ -431,11 +431,12 @@ RSpec.describe GroupPolicy do
 
           context 'as a group owner' do
             before do
+              create(:group_saml_identity, user: current_user, saml_provider: saml_provider)
               group.add_owner(current_user)
             end
 
             it 'prevents access without a SAML session' do
-              is_expected.not_to allow_action(:read_group)
+              is_expected.to allow_action(:read_group)
             end
           end
 
