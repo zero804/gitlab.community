@@ -10877,7 +10877,7 @@ type IncidentManagementOncallRotation {
     Start of timeframe.
     """
     startsAt: Time!
-  ): OncallShiftTypeConnection
+  ): IncidentManagementOncallShiftConnection
 
   """
   Start date of the on-call rotation.
@@ -11008,6 +11008,61 @@ type IncidentManagementOncallScheduleEdge {
   The item at the end of the edge.
   """
   node: IncidentManagementOncallSchedule
+}
+
+"""
+A block of time for which a user is on-call.
+"""
+type IncidentManagementOncallShift {
+  """
+  End time of the on-call shift.
+  """
+  endsAt: Time
+
+  """
+  Participant assigned to the on-call slot.
+  """
+  participant: OncallParticipantType
+
+  """
+  Start time of the on-call shift.
+  """
+  startsAt: Time
+}
+
+"""
+The connection type for IncidentManagementOncallShift.
+"""
+type IncidentManagementOncallShiftConnection {
+  """
+  A list of edges.
+  """
+  edges: [IncidentManagementOncallShiftEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [IncidentManagementOncallShift]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type IncidentManagementOncallShiftEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: IncidentManagementOncallShift
 }
 
 type InstanceSecurityDashboard {
@@ -15790,61 +15845,6 @@ type OncallScheduleUpdatePayload {
   The on-call schedule
   """
   oncallSchedule: IncidentManagementOncallSchedule
-}
-
-"""
-A block of time for which a user is on-call.
-"""
-type OncallShiftType {
-  """
-  End time of the on-call shift.
-  """
-  endsAt: Time
-
-  """
-  Participant assigned to the on-call slot.
-  """
-  participant: OncallParticipantType
-
-  """
-  Start time of the on-call shift.
-  """
-  startsAt: Time
-}
-
-"""
-The connection type for OncallShiftType.
-"""
-type OncallShiftTypeConnection {
-  """
-  A list of edges.
-  """
-  edges: [OncallShiftTypeEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [OncallShiftType]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-}
-
-"""
-An edge in a connection.
-"""
-type OncallShiftTypeEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: OncallShiftType
 }
 
 """
