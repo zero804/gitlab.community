@@ -5,7 +5,7 @@ module Projects
     class CleanupTagsService < BaseService
       def initialize(project, user = nil, params = {})
         super
-        @chunked = false
+        @truncated = false
       end
 
       def execute(container_repository)
@@ -17,7 +17,7 @@ module Projects
         tags = container_repository.tags
         tags = without_latest(tags)
         tags = filter_by_name(tags)
-        tags = first_chunk_of(tags)
+        tags = truncate(tags)
         tags = filter_keep_n(tags)
         tags = filter_by_older_than(tags)
 
@@ -39,7 +39,7 @@ module Projects
         )
 
         service.execute(container_repository).tap do |result|
-          next unless @chunked
+          next unless @truncated
 
           result[:chunked] = true
           result[:status] = :error
@@ -99,18 +99,18 @@ module Projects
         false
       end
 
-      def first_chunk_of(tags)
+      def truncate(tags)
         return tags unless throttling_enabled?
         return tags unless max_chunk_size
 
-        chunked = tags.sample(max_chunk_size)
+        truncated = tags.sample(max_chunk_size)
 
-        if tags.size > chunked.size
-          @chunked = true
-          log_message("Tags to delete list chunked", tags_list_original_size: tags.size, tags_list_chunked_size: chunked.size)
+        if tags.size > truncated.size
+          @truncated = true
+          log_message("Tags to delete list truncated", tags_list_original_size: tags.size, tags_list_truncated_size: truncated.size)
         end
 
-        chunked
+        truncated
       end
 
       def throttling_enabled?
