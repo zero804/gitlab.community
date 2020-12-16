@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { VULNERABILITY_MODAL_ID } from 'ee/vue_shared/security_reports/components/constants';
 import { mountComponentWithStore } from 'helpers/vue_mount_component_helper';
 import component from '~/reports/components/modal_open_name.vue';
 
@@ -45,6 +44,6 @@ describe('Modal open name', () => {
     vm.$el.click();
 
     expect(vm.setModalData).toHaveBeenCalled();
-    expect(vm.$root.$emit).toHaveBeenCalledWith('bv::show::modal', VULNERABILITY_MODAL_ID);
+    expect(vm.$root.$emit).toHaveBeenCalledWith('bv::show::modal', 'modal-mrwidget-security-issue');
   });
 });
