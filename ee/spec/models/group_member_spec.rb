@@ -355,7 +355,7 @@ RSpec.describe GroupMember do
     context 'when the group member is deleted' do
       let_it_be(:group_member) { create(:group_member, :developer, group: group, expires_at: 1.day.from_now) }
 
-      it 'executes user_remove_from_group event webhooks when group member is deleted' do
+      it 'executes user_remove_from_group event webhook when group member is deleted' do
         WebMock.stub_request(:post, group_hook.url)
 
         member = group_member.destroy!
