@@ -121,5 +121,31 @@ module EE
         self.source.execute_hooks(data, :member_hooks)
       end
     end
+
+    override :post_update_hook
+    def post_update_hook
+      super
+
+      return unless self.source.feature_available?(:group_webhooks)
+      return unless GroupHook.where(group_id: self.source.self_and_ancestors).exists?
+
+      run_after_commit do
+        data = ::Gitlab::HookData::GroupMemberBuilder.new(self).build(:update)
+        self.source.execute_hooks(data, :member_hooks)
+      end
+    end
+
+    override :post_destroy_hook
+    def post_destroy_hook
+      super
+
+      return unless self.source.feature_available?(:group_webhooks)
+      return unless GroupHook.where(group_id: self.source.self_and_ancestors).exists?
+
+      run_after_commit do
+        data = ::Gitlab::HookData::GroupMemberBuilder.new(self).build(:destroy)
+        self.source.execute_hooks(data, :member_hooks)
+      end
+    end
   end
 end

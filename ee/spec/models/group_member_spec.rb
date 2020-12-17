@@ -297,6 +297,36 @@ RSpec.describe GroupMember do
       end
     end
 
+    context 'fires the webhook when a member is UPDATED' do
+      let_it_be(:group_member) { create(:group_member, :developer, group: group, expires_at: 1.day.from_now) }
+
+
+      it 'execute webhooks when user role is updated' do
+         WebMock.stub_request(:post, group_hook.url)
+
+        member = group.add_maintainer(user)
+
+        expect(WebMock).to have_requested(:post, group_hook.url).with(
+          headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
+          body: {
+            created_at: member.created_at&.xmlschema,
+            updated_at: member.updated_at&.xmlschema,
+            group_name: group.name,
+            group_path: group.path,
+            group_id: group.id,
+            user_username: user.username,
+            user_name: user.name,
+            user_email: user.email,
+            user_id: user.id,
+            group_access: 'Developer',
+            expires_at: member.expires_at&.xmlschema,
+            group_plan: 'gold',
+            event_name: 'user_update_for_group'
+          }.to_json
+        )
+      end
+    end
+
     context 'does not execute webhook' do
       before do
         WebMock.stub_request(:post, group_hook.url)
