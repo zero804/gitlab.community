@@ -304,7 +304,7 @@ RSpec.describe GroupMember do
       it 'executes user_update_for_group event webhook when user role is updated' do
         WebMock.stub_request(:post, group_hook.url)
 
-        member = ::Members::UpdateService.new(admin, { access_level: Gitlab::Access::MAINTAINER} ).execute(group_member, permission: :update)
+        member = ::Members::UpdateService.new(admin, { access_level: Gitlab::Access::MAINTAINER } ).execute(group_member, permission: :update)
 
         expect(WebMock).to have_requested(:post, group_hook.url).with(
           headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
