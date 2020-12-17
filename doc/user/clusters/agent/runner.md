@@ -17,13 +17,13 @@ These instructions to install the GitLab Runner assume the
    # The GitLab Server URL (with protocol) that want to register the runner against
    # ref: https://docs.gitlab.com/runner/commands/README.html#gitlab-runner-register
    #
-   gitlabUrl: https://gitlab.my.domain.com/
+   gitlabUrl: https://gitlab.my.domain.example.com/
 
    # The Registration Token for adding new Runners to the GitLab Server. This must
    # be retrieved from your GitLab Instance.
    # ref: https://docs.gitlab.com/ce/ci/runners/README.html
    #
-   runnerRegistrationToken: "XXXXXXXXXXXXXXXXXXXXXXYYYYYYYYYYYYYYYYYYYYYZZZZZZZZZZZZZZZZZZZZZ"
+   runnerRegistrationToken: "yrnZW46BrtBFqM7xDzE7dddd"
 
    # For RBAC support:
    rbac:
