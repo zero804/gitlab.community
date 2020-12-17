@@ -195,7 +195,6 @@ RSpec.describe 'Merge request > User sees versions', :js do
     end
   end
 
-
   describe 'compare with newer version' do
     before do
       page.within '.mr-version-compare-dropdown' do
@@ -219,7 +218,6 @@ RSpec.describe 'Merge request > User sees versions', :js do
       end
 
       expect(page).to have_content 'No changes between version 1 and version 1'
-
     end
   end
 
