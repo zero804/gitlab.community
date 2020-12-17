@@ -66,28 +66,45 @@ RSpec.describe 'Projects members', :js do
     end
   end
 
-  context 'with a group and a project invitee' do
+  context 'with a group, a project invitee, and a project requester' do
     before do
+      group.request_access(group_requester)
+      project.request_access(project_requester)
       group_invitee
       project_invitee
       visit project_project_members_path(project)
     end
 
-    it 'shows the project invitee, the project developer, and the group owner' do
+    it 'shows the group owner' do
+      page.within first('.content-list') do
+        # Group owner
+        expect(page).to have_content(user.name)
+        expect(page).to have_content(group.name)
+      end
+    end
+
+    it 'shows the project developer' do
+      page.within first('.content-list') do
+        # Project developer
+        expect(page).to have_content(developer.name)
+      end
+    end
+
+    it 'shows the project invitee' do
       click_link 'Invited'
+
       page.within first('.content-list') do
         expect(page).to have_content('test1@abc.com')
         expect(page).not_to have_content('test2@abc.com')
       end
+    end
 
-      click_link 'Members 2'
+    it 'shows the project requester' do
+      click_link 'Access requests'
+
       page.within first('.content-list') do
-        # Project developer
-        expect(page).to have_content(developer.name)
-
-        # Group owner
-        expect(page).to have_content(user.name)
-        expect(page).to have_content(group.name)
+        expect(page).to have_content(project_requester.name)
+        expect(page).not_to have_content(group_requester.name)
       end
     end
   end
@@ -99,34 +116,9 @@ RSpec.describe 'Projects members', :js do
     end
 
     it 'does not appear in the project members page' do
+      expect(page).not_to have_link('Access requests')
       page.within first('.content-list') do
         expect(page).not_to have_content(group_requester.name)
-      end
-    end
-  end
-
-  context 'with a group and a project requesters' do
-    before do
-      group.request_access(group_requester)
-      project.request_access(project_requester)
-      visit project_project_members_path(project)
-    end
-
-    it 'shows the project requester, the project developer, and the group owner' do
-      click_link 'Access requests'
-      page.within first('.content-list') do
-        expect(page).to have_content(project_requester.name)
-        expect(page).not_to have_content(group_requester.name)
-      end
-
-      click_link 'Members 2'
-      page.within first('.content-list') do
-        # Project developer
-        expect(page).to have_content(developer.name)
-
-        # Group owner
-        expect(page).to have_content(user.name)
-        expect(page).to have_content(group.name)
       end
     end
   end

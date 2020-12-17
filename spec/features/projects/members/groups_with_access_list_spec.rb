@@ -16,11 +16,10 @@ RSpec.describe 'Projects > Members > Groups with access list', :js do
     project.add_maintainer(user)
     sign_in(user)
     visit project_project_members_path(project)
+    click_groups_tab
   end
 
   it 'updates group access level' do
-    click_groups_tab
-
     click_button group_link.human_access
 
     page.within '.dropdown-menu' do
@@ -37,8 +36,6 @@ RSpec.describe 'Projects > Members > Groups with access list', :js do
   end
 
   it 'updates expiry date' do
-    click_groups_tab
-
     expires_at_field = "member_expires_at_#{group.id}"
     fill_in expires_at_field, with: 3.days.from_now.to_date
 
@@ -54,8 +51,6 @@ RSpec.describe 'Projects > Members > Groups with access list', :js do
     let(:additional_link_attrs) { { expires_at: 3.days.from_now.to_date } }
 
     it 'clears expiry date' do
-      click_groups_tab
-
       page.within(find('li.group_member')) do
         expect(page).to have_content('Expires in 3 days')
 
@@ -71,8 +66,6 @@ RSpec.describe 'Projects > Members > Groups with access list', :js do
   end
 
   it 'deletes group link' do
-    click_groups_tab
-
     page.within(first('.group_member')) do
       accept_confirm { find('.btn-danger').click }
     end
@@ -83,8 +76,6 @@ RSpec.describe 'Projects > Members > Groups with access list', :js do
 
   context 'search in existing members' do
     it 'finds no results' do
-      click_groups_tab
-
       page.within '.user-search-form' do
         fill_in 'search_groups', with: 'testing 123'
         find('.user-search-btn').click
@@ -96,8 +87,6 @@ RSpec.describe 'Projects > Members > Groups with access list', :js do
     end
 
     it 'finds results' do
-      click_groups_tab
-
       page.within '.user-search-form' do
         fill_in 'search_groups', with: group.name
         find('.user-search-btn').click
