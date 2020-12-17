@@ -2,7 +2,7 @@
 - @content_class = "limit-container-width" unless fluid_layout
 - user_theme_id = Gitlab::Themes.for_user(@user).id
 - user_fields = { preferred_language: @user.preferred_language, first_day_of_week: @user.first_day_of_week, time_format_in_24h: @user.time_format_in_24h, time_display_relative: @user.time_display_relative, gitpod_enabled: @user.gitpod_enabled, sourcegraph_enabled: @user.sourcegraph_enabled }
-- data_attributes = { language_choices: language_choices, first_day_of_week_choices_with_default: first_day_of_week_choices_with_default.to_json, integration_views: integration_views.to_json, user_fields: user_fields.to_json }
+- data_attributes = { language_choices: language_choices, first_day_of_week_choices_with_default: first_day_of_week_choices_with_default.to_json, integration_views: integration_views.to_json, user_fields: user_fields.to_json, profile_preferences_localization_help_path: help_page_path('user/profile/preferences', anchor: 'localization') }
 
 - Gitlab::Themes.each do |theme|
   = stylesheet_link_tag "themes/#{theme.css_filename}" if theme.css_filename

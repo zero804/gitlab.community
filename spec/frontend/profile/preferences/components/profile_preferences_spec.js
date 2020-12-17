@@ -8,17 +8,18 @@ import {
   firstDayOfWeekChoicesWithDefault,
   integrationViews,
   userFields,
-  featureFlags,
+  glFeatures,
 } from '../mock_data';
 
 describe('ProfilePreferences component', () => {
   let wrapper;
   const defaultProvide = {
+    profilePreferencesLocalizationHelpPath: '/foo',
     languageChoices,
     firstDayOfWeekChoicesWithDefault,
     integrationViews: [],
     userFields,
-    featureFlags: {},
+    glFeatures: {},
   };
 
   function createComponent(options = {}) {
@@ -104,7 +105,7 @@ describe('ProfilePreferences component', () => {
 
   describe('with `userTimeSettings` feature flag enabled', () => {
     beforeEach(() => {
-      wrapper = createComponent({ provide: { featureFlags } });
+      wrapper = createComponent({ provide: { glFeatures } });
     });
 
     it('should render user time settings', () => {
@@ -155,16 +156,5 @@ describe('ProfilePreferences component', () => {
       expect(findIntegrationsHeading().exists()).toBe(true);
       expect(findIntegrationViewList()).toHaveLength(integrationViews.length);
     });
-  });
-
-  it('should render ProfilePreferences properly', () => {
-    wrapper = createComponent({
-      provide: {
-        integrationViews,
-        featureFlags,
-      },
-    });
-
-    expect(wrapper.element).toMatchSnapshot();
   });
 });

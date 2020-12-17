@@ -1,42 +1,23 @@
 import Vue from 'vue';
+import createFlash from '~/flash';
 import ProfilePreferences from './components/profile_preferences.vue';
+import { parseDataset } from './utils';
 
 export default () => {
   const el = document.querySelector('#js-profile-preferences-app');
-  const { userTimeSettings } = gon?.features;
-  const featureFlags = {
-    userTimeSettings,
-  };
-  const shouldParse = [
-    'languageChoices',
-    'firstDayOfWeekChoicesWithDefault',
-    'integrationViews',
-    'userFields',
-  ];
 
-  const provide = Object.keys(el.dataset).reduce(
-    (memo, key) => {
-      let value = el.dataset[key];
-      if (shouldParse.includes(key)) {
-        try {
-          value = JSON.parse(value);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `Was not able to parse "${key}". The original value was:`,
-            value,
-            // eslint-disable-next-line @gitlab/require-i18n-strings
-            'Error:',
-            error,
-          );
-          value = null;
-        }
-      }
+  let provide;
+  try {
+    provide = parseDataset(el.dataset);
+  } catch (error) {
+    createFlash({
+      message: error.message,
+      captureError: true,
+      error,
+    });
 
-      return { ...memo, [key]: value };
-    },
-    { featureFlags },
-  );
+    return undefined;
+  }
 
   return new Vue({
     el,

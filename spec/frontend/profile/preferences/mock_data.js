@@ -23,6 +23,6 @@ export const userFields = {
   first_day_of_week: 1,
 };
 
-export const featureFlags = {
+export const glFeatures = {
   userTimeSettings: true,
 };
