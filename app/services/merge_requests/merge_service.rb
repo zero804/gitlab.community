@@ -90,7 +90,7 @@ module MergeRequests
     def try_merge
       merge = repository.merge(current_user, source, merge_request, commit_message)
 
-      if merge_request.squash_on_merge?
+      if merge_request.squash_on_merge? && Feature.enabled?(:persist_squash_commit_sha_for_squashes, project)
         merge_request.update_column(:squash_commit_sha, source)
       end
 
