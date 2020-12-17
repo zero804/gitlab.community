@@ -4,7 +4,7 @@ import { once } from 'lodash';
 import { componentNames } from 'ee/reports/components/issue_body';
 import { GlButton, GlSprintf, GlLink, GlModalDirective } from '@gitlab/ui';
 import FuzzingArtifactsDownload from 'ee/security_dashboard/components/fuzzing_artifacts_download.vue';
-import { VULNERABILITY_MODAL_ID } from 'ee/vue_shared/security_reports/components/constants';
+import vulnerabilityModalMixin from './mixins/vulnerability_modal_mixin';
 import glFeatureFlagsMixin from '~/vue_shared/mixins/gl_feature_flags_mixin';
 import ReportSection from '~/reports/components/report_section.vue';
 import SummaryRow from '~/reports/components/summary_row.vue';
@@ -46,7 +46,7 @@ export default {
   directives: {
     'gl-modal': GlModalDirective,
   },
-  mixins: [securityReportsMixin, glFeatureFlagsMixin()],
+  mixins: [securityReportsMixin, vulnerabilityModalMixin(), glFeatureFlagsMixin()],
   apollo: {
     dastSummary: {
       query: securityReportSummaryQuery,
@@ -397,15 +397,11 @@ export default {
       'setCreateVulnerabilityFeedbackMergeRequestPath',
       'setCreateVulnerabilityFeedbackDismissalPath',
       'setPipelineId',
-      'dismissVulnerability',
-      'revertDismissVulnerability',
       'createNewIssue',
       'createMergeRequest',
       'openDismissalCommentBox',
       'closeDismissalCommentBox',
       'downloadPatch',
-      'addDismissalComment',
-      'deleteDismissalComment',
       'showDismissalDeleteButtons',
       'hideDismissalDeleteButtons',
       'fetchContainerScanningDiff',
@@ -435,21 +431,6 @@ export default {
     }),
     hasIssuesForReportType(reportType) {
       return Boolean(this[reportType]?.newIssues.length || this[reportType]?.resolvedIssues.length);
-    },
-    handleDismissVulnerability(payload) {
-      return this.dismissVulnerability(payload).then(this.hideModal);
-    },
-    handleAddDismissalComment(payload) {
-      return this.addDismissalComment(payload).then(this.hideModal);
-    },
-    handleDeleteDismissalComment(payload) {
-      return this.deleteDismissalComment(payload).then(this.hideModal);
-    },
-    handleRevertDismissVulnerability(payload) {
-      return this.revertDismissVulnerability(payload).then(this.hideModal);
-    },
-    hideModal() {
-      this.$root.$emit('bv::hide::modal', VULNERABILITY_MODAL_ID);
     },
   },
   summarySlots: ['success', 'error', 'loading'],

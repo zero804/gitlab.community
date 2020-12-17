@@ -218,7 +218,7 @@ export const dismissVulnerability = (
           text: s__('SecurityReports|Undo dismiss'),
           onClick: (e, toastObject) => {
             if (vulnerability.dismissal_feedback) {
-              dispatch('undoDismiss', { vulnerability })
+              dispatch('revertDismissVulnerability', { vulnerability })
                 .then(() => dispatch('fetchVulnerabilities', { page }))
                 .catch(() => {});
               toastObject.goAway(0);
@@ -367,7 +367,7 @@ export const hideDismissalDeleteButtons = ({ commit }) => {
   commit(types.HIDE_DISMISSAL_DELETE_BUTTONS);
 };
 
-export const undoDismiss = ({ dispatch }, { vulnerability, flashError }) => {
+export const revertDismissVulnerability = ({ dispatch }, { vulnerability, flashError }) => {
   const { destroy_vulnerability_feedback_dismissal_path } = vulnerability.dismissal_feedback;
 
   dispatch('requestUndoDismiss');

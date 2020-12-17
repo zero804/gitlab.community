@@ -1,7 +1,7 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import IssueModal from 'ee/vue_shared/security_reports/components/modal.vue';
-import { VULNERABILITY_MODAL_ID } from 'ee/vue_shared/security_reports/components/constants';
+import vulnerabilityModalMixin from 'ee/vue_shared/security_reports/mixins/vulnerability_modal_mixin';
 import Filters from './filters.vue';
 import SecurityDashboardLayout from './security_dashboard_layout.vue';
 import SecurityDashboardTable from './security_dashboard_table.vue';
@@ -17,6 +17,7 @@ export default {
     FuzzingArtifactsDownload,
     LoadingError,
   },
+  mixins: [vulnerabilityModalMixin('vulnerabilities')],
   props: {
     vulnerabilitiesEndpoint: {
       type: String,
@@ -70,38 +71,19 @@ export default {
   },
   methods: {
     ...mapActions('vulnerabilities', [
-      'addDismissalComment',
-      'deleteDismissalComment',
       'closeDismissalCommentBox',
       'createIssue',
       'createMergeRequest',
-      'dismissVulnerability',
       'fetchVulnerabilities',
       'openDismissalCommentBox',
       'setPipelineId',
       'setVulnerabilitiesEndpoint',
       'showDismissalDeleteButtons',
       'hideDismissalDeleteButtons',
-      'undoDismiss',
       'downloadPatch',
     ]),
     ...mapActions('pipelineJobs', ['fetchPipelineJobs']),
     ...mapActions('filters', ['lockFilter', 'setHideDismissedToggleInitialState']),
-    handleDismissVulnerability(payload) {
-      return this.dismissVulnerability(payload).then(this.hideModal);
-    },
-    handleAddDismissalComment(payload) {
-      return this.addDismissalComment(payload).then(this.hideModal);
-    },
-    handleDeleteDismissalComment(payload) {
-      return this.deleteDismissalComment(payload).then(this.hideModal);
-    },
-    handleRevertDismissVulnerability(payload) {
-      return this.undoDismiss(payload).then(this.hideModal);
-    },
-    hideModal() {
-      this.$root.$emit('bv::hide::modal', VULNERABILITY_MODAL_ID);
-    },
   },
 };
 </script>
