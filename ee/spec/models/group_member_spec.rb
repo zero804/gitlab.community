@@ -241,14 +241,14 @@ RSpec.describe GroupMember do
   context 'group member webhooks', :sidekiq_inline do
     let_it_be(:group) { create(:group_with_plan, plan: :gold_plan) }
     let_it_be(:group_hook) { create(:group_hook, group: group, member_events: true) }
-    let(:user) { create(:user) }
+    let_it_be(:user) { create(:user) }
 
-    context 'fires the webhook when a member is added' do
+    context 'when a member is added to the group' do
       before do
         WebMock.stub_request(:post, group_hook.url)
       end
 
-      it 'execute webhooks' do
+      it 'executes user_add_to_group event webhook' do
         member = group.add_guest(user)
 
         expect(WebMock).to have_requested(:post, group_hook.url).with(
@@ -275,7 +275,7 @@ RSpec.describe GroupMember do
         let_it_be(:subgroup) { create(:group, parent: group) }
         let_it_be(:subgroup_hook) { create(:group_hook, group: subgroup, member_events: true) }
 
-        it 'fires webhook twice when parent group has member_events webhook enabled' do
+        it 'fires two webhooks when parent group has member_events webhook enabled' do
           WebMock.stub_request(:post, subgroup_hook.url)
 
           subgroup.add_guest(user)
@@ -284,7 +284,7 @@ RSpec.describe GroupMember do
           expect(WebMock).to have_requested(:post, group_hook.url)
         end
 
-        it 'fires webhook once when parent group has member_events webhook disabled' do
+        it 'fires one webhook when parent group has member_events webhook disabled' do
           group_hook = create(:group_hook, group: group, member_events: false)
 
           WebMock.stub_request(:post, subgroup_hook.url)
@@ -297,14 +297,14 @@ RSpec.describe GroupMember do
       end
     end
 
-    context 'fires the webhook when a member is UPDATED' do
-      let_it_be(:group_member) { create(:group_member, :developer, group: group, expires_at: 1.day.from_now) }
+    context 'when a group member is updated' do
+      let_it_be(:admin) { create(:user, :admin) }
+      let(:group_member) { create(:group_member, :developer, group: group, expires_at: 1.day.from_now) }
 
+      it 'executes user_update_for_group event webhook when user role is updated' do
+        WebMock.stub_request(:post, group_hook.url)
 
-      it 'execute webhooks when user role is updated' do
-         WebMock.stub_request(:post, group_hook.url)
-
-        member = group.add_maintainer(user)
+        member = ::Members::UpdateService.new(admin, { access_level: Gitlab::Access::MAINTAINER} ).execute(group_member, permission: :update)
 
         expect(WebMock).to have_requested(:post, group_hook.url).with(
           headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
@@ -314,14 +314,68 @@ RSpec.describe GroupMember do
             group_name: group.name,
             group_path: group.path,
             group_id: group.id,
-            user_username: user.username,
-            user_name: user.name,
-            user_email: user.email,
-            user_id: user.id,
+            user_username: member.user.username,
+            user_name: member.user.name,
+            user_email: member.user.email,
+            user_id: member.user.id,
+            group_access: 'Maintainer',
+            expires_at: member.expires_at&.xmlschema,
+            group_plan: 'gold',
+            event_name: 'user_update_for_group'
+          }.to_json
+        )
+      end
+
+      it 'executes user_update_for_group event webhook when user expiration date is updated' do
+        WebMock.stub_request(:post, group_hook.url)
+
+        member = ::Members::UpdateService.new(admin, { expires_at: 2.days.from_now } ).execute(group_member, permission: :update)
+
+        expect(WebMock).to have_requested(:post, group_hook.url).with(
+          headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
+          body: {
+            created_at: member.created_at&.xmlschema,
+            updated_at: member.updated_at&.xmlschema,
+            group_name: group.name,
+            group_path: group.path,
+            group_id: group.id,
+            user_username: member.user.username,
+            user_name: member.user.name,
+            user_email: member.user.email,
+            user_id: member.user.id,
             group_access: 'Developer',
             expires_at: member.expires_at&.xmlschema,
             group_plan: 'gold',
             event_name: 'user_update_for_group'
+          }.to_json
+        )
+      end
+    end
+
+    context 'when the group member is deleted' do
+      let_it_be(:group_member) { create(:group_member, :developer, group: group, expires_at: 1.day.from_now) }
+
+      it 'executes user_remove_from_group event webhooks when group member is deleted' do
+        WebMock.stub_request(:post, group_hook.url)
+
+        member = group_member.destroy!
+
+        expect(WebMock).to have_requested(:post, group_hook.url).with(
+          headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
+          body: {
+            created_at: member.created_at&.xmlschema,
+            updated_at: member.updated_at&.xmlschema,
+            group_name: group.name,
+            group_path: group.path,
+            group_id: group.id,
+            user_username: member.user.username,
+            user_name: member.user.name,
+            user_email: member.user.email,
+            user_id: member.user.id,
+            group_access: 'Developer',
+            expires_at: member.expires_at&.xmlschema,
+            group_plan: 'gold',
+            event_name: 'user_remove_from_group'
           }.to_json
         )
       end
