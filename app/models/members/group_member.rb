@@ -76,8 +76,6 @@ class GroupMember < Member
   end
 
   def post_destroy_hook
-    run_after_commit_or_now { notification_service.new_group_member(self) }
-
     super
   end
 

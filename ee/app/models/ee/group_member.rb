@@ -113,37 +113,29 @@ module EE
     def post_create_hook
       super
 
-      return unless self.source.feature_available?(:group_webhooks)
-      return unless GroupHook.where(group_id: self.source.self_and_ancestors).exists?
-
-      run_after_commit do
-        data = ::Gitlab::HookData::GroupMemberBuilder.new(self).build(:create)
-        self.source.execute_hooks(data, :member_hooks)
-      end
+      execute_hook_for(:create)
     end
 
     override :post_update_hook
     def post_update_hook
       super
 
-      return unless self.source.feature_available?(:group_webhooks)
-      return unless GroupHook.where(group_id: self.source.self_and_ancestors).exists?
-
-      run_after_commit do
-        data = ::Gitlab::HookData::GroupMemberBuilder.new(self).build(:update)
-        self.source.execute_hooks(data, :member_hooks)
-      end
+      execute_hook_for(:update)
     end
 
     override :post_destroy_hook
     def post_destroy_hook
       super
 
+      execute_hook_for(:destroy)
+    end
+
+    def execute_hook_for(event)
       return unless self.source.feature_available?(:group_webhooks)
       return unless GroupHook.where(group_id: self.source.self_and_ancestors).exists?
 
       run_after_commit do
-        data = ::Gitlab::HookData::GroupMemberBuilder.new(self).build(:destroy)
+        data = ::Gitlab::HookData::GroupMemberBuilder.new(self).build(event)
         self.source.execute_hooks(data, :member_hooks)
       end
     end
