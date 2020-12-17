@@ -134,6 +134,6 @@ export default {
     </gl-card>
     <delete-schedule-modal :schedule="schedule" :modal-id="$options.deleteScheduleModalId" />
     <edit-schedule-modal :schedule="schedule" :modal-id="$options.editScheduleModalId" />
-    <add-rotation-modal :modal-id="$options.addRotationModalId" />
+    <add-rotation-modal :schedule="schedule" :modal-id="$options.addRotationModalId" />
   </div>
 </template>
