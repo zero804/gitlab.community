@@ -113,24 +113,26 @@ module EE
     def post_create_hook
       super
 
-      execute_hook_for(:create)
+      execute_hooks_for(:create)
     end
 
     override :post_update_hook
     def post_update_hook
       super
 
-      execute_hook_for(:update)
+      if saved_change_to_access_level? || saved_change_to_expires_at?
+        execute_hooks_for(:update)
+      end
     end
 
     override :post_destroy_hook
     def post_destroy_hook
       super
 
-      execute_hook_for(:destroy)
+      execute_hooks_for(:destroy)
     end
 
-    def execute_hook_for(event)
+    def execute_hooks_for(event)
       return unless self.source.feature_available?(:group_webhooks)
       return unless GroupHook.where(group_id: self.source.self_and_ancestors).exists?
 

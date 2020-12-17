@@ -1,5 +1,5 @@
 ---
-title: Fire webhook when updating or removing a group member
+title: Add support for member update & destroy events in Group webhooks
 merge_request: 50217
 author:
 type: added

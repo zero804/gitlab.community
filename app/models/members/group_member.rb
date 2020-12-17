@@ -68,14 +68,10 @@ class GroupMember < Member
   end
 
   def post_update_hook
-    if saved_change_to_access_level? || saved_change_to_expires_at?
+    if saved_change_to_access_level?
       run_after_commit { notification_service.update_group_member(self) }
     end
 
-    super
-  end
-
-  def post_destroy_hook
     super
   end
 

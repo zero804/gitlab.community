@@ -244,30 +244,19 @@ RSpec.describe GroupMember do
     let_it_be(:user) { create(:user) }
 
     context 'when a member is added to the group' do
+      let(:group_member) { create(:group_member, group: group) }
+
       before do
         WebMock.stub_request(:post, group_hook.url)
       end
 
       it 'executes user_add_to_group event webhook' do
-        member = group.add_guest(user)
+        binding.pry
+        group.add_guest(group_member.user)
 
         expect(WebMock).to have_requested(:post, group_hook.url).with(
           headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
-          body: {
-            created_at: member.created_at&.xmlschema,
-            updated_at: member.updated_at&.xmlschema,
-            group_name: group.name,
-            group_path: group.path,
-            group_id: group.id,
-            user_username: user.username,
-            user_name: user.name,
-            user_email: user.email,
-            user_id: user.id,
-            group_access: 'Guest',
-            expires_at: member.expires_at&.xmlschema,
-            group_plan: 'gold',
-            event_name: 'user_add_to_group'
-          }.to_json
+          body: webhook_body('user_add_to_group')
         )
       end
 
@@ -298,56 +287,27 @@ RSpec.describe GroupMember do
     end
 
     context 'when a group member is updated' do
-      let_it_be(:admin) { create(:user, :admin) }
       let(:group_member) { create(:group_member, :developer, group: group, expires_at: 1.day.from_now) }
 
       it 'executes user_update_for_group event webhook when user role is updated' do
         WebMock.stub_request(:post, group_hook.url)
 
-        member = ::Members::UpdateService.new(admin, { access_level: Gitlab::Access::MAINTAINER } ).execute(group_member, permission: :update)
+        group_member.update!(access_level: Gitlab::Access::MAINTAINER)
 
         expect(WebMock).to have_requested(:post, group_hook.url).with(
           headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
-          body: {
-            created_at: member.created_at&.xmlschema,
-            updated_at: member.updated_at&.xmlschema,
-            group_name: group.name,
-            group_path: group.path,
-            group_id: group.id,
-            user_username: member.user.username,
-            user_name: member.user.name,
-            user_email: member.user.email,
-            user_id: member.user.id,
-            group_access: 'Maintainer',
-            expires_at: member.expires_at&.xmlschema,
-            group_plan: 'gold',
-            event_name: 'user_update_for_group'
-          }.to_json
+          body: webhook_body('user_update_for_group')
         )
       end
 
       it 'executes user_update_for_group event webhook when user expiration date is updated' do
         WebMock.stub_request(:post, group_hook.url)
 
-        member = ::Members::UpdateService.new(admin, { expires_at: 2.days.from_now } ).execute(group_member, permission: :update)
+        group_member.update!(expires_at: 2.days.from_now)
 
         expect(WebMock).to have_requested(:post, group_hook.url).with(
           headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
-          body: {
-            created_at: member.created_at&.xmlschema,
-            updated_at: member.updated_at&.xmlschema,
-            group_name: group.name,
-            group_path: group.path,
-            group_id: group.id,
-            user_username: member.user.username,
-            user_name: member.user.name,
-            user_email: member.user.email,
-            user_id: member.user.id,
-            group_access: 'Developer',
-            expires_at: member.expires_at&.xmlschema,
-            group_plan: 'gold',
-            event_name: 'user_update_for_group'
-          }.to_json
+          body: webhook_body('user_update_for_group')
         )
       end
     end
@@ -358,30 +318,18 @@ RSpec.describe GroupMember do
       it 'executes user_remove_from_group event webhook when group member is deleted' do
         WebMock.stub_request(:post, group_hook.url)
 
-        member = group_member.destroy!
+        group_member.destroy!
 
         expect(WebMock).to have_requested(:post, group_hook.url).with(
           headers: { 'Content-Type' => 'application/json', 'User-Agent' => "GitLab/#{Gitlab::VERSION}", 'X-Gitlab-Event' => 'Member Hook' },
-          body: {
-            created_at: member.created_at&.xmlschema,
-            updated_at: member.updated_at&.xmlschema,
-            group_name: group.name,
-            group_path: group.path,
-            group_id: group.id,
-            user_username: member.user.username,
-            user_name: member.user.name,
-            user_email: member.user.email,
-            user_id: member.user.id,
-            group_access: 'Developer',
-            expires_at: member.expires_at&.xmlschema,
-            group_plan: 'gold',
-            event_name: 'user_remove_from_group'
-          }.to_json
+          body: webhook_body('user_remove_from_group')
         )
       end
     end
 
     context 'does not execute webhook' do
+      let_it_be(:user) { create(:user) }
+
       before do
         WebMock.stub_request(:post, group_hook.url)
       end
@@ -402,5 +350,23 @@ RSpec.describe GroupMember do
         expect(WebMock).not_to have_requested(:post, group_hook.url)
       end
     end
+  end
+
+  def webhook_body(event)
+    {
+      created_at: group_member.created_at&.xmlschema,
+      updated_at: group_member.updated_at&.xmlschema,
+      group_name: group.name,
+      group_path: group.path,
+      group_id: group.id,
+      user_username: group_member.user.username,
+      user_name: group_member.user.name,
+      user_email: group_member.user.email,
+      user_id: group_member.user.id,
+      group_access: group_member.human_access,
+      expires_at: group_member.expires_at&.xmlschema,
+      group_plan: 'gold',
+      event_name: event
+    }.to_json
   end
 end
