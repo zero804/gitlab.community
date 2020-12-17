@@ -1,0 +1,5 @@
+---
+title: Fire webhook when updating or removing a group member
+merge_request: 50217
+author:
+type: added
