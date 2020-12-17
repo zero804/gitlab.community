@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'Projects members' do
+RSpec.describe 'Projects members', :js do
   let(:user) { create(:user) }
   let(:developer) { create(:user) }
   let(:group) { create(:group, :public) }
@@ -74,10 +74,14 @@ RSpec.describe 'Projects members' do
     end
 
     it 'shows the project invitee, the project developer, and the group owner' do
+      click_link 'Invited'
       page.within first('.content-list') do
         expect(page).to have_content('test1@abc.com')
         expect(page).not_to have_content('test2@abc.com')
+      end
 
+      click_link 'Members 2'
+      page.within first('.content-list') do
         # Project developer
         expect(page).to have_content(developer.name)
 
@@ -109,12 +113,14 @@ RSpec.describe 'Projects members' do
     end
 
     it 'shows the project requester, the project developer, and the group owner' do
+      click_link 'Access requests'
       page.within first('.content-list') do
         expect(page).to have_content(project_requester.name)
         expect(page).not_to have_content(group_requester.name)
       end
 
-      page.within all('.content-list').last do
+      click_link 'Members 2'
+      page.within first('.content-list') do
         # Project developer
         expect(page).to have_content(developer.name)
 
