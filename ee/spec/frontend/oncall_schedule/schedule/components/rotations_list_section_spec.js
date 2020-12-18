@@ -4,6 +4,7 @@ import RotationsListSection from 'ee/oncall_schedules/components/schedule/compon
 import CurrentDayIndicator from 'ee/oncall_schedules/components/schedule/components/current_day_indicator.vue';
 import { getTimeframeForWeeksView } from 'ee/oncall_schedules/components/schedule/utils';
 import { PRESET_TYPES } from 'ee/oncall_schedules/components/schedule/constants';
+import mockRotations from '../../mocks/mock_rotation.json';
 
 describe('RotationsListSectionComponent', () => {
   let wrapper;
@@ -18,7 +19,7 @@ describe('RotationsListSectionComponent', () => {
       propsData: {
         presetType,
         timeframe,
-        rotations: [],
+        rotations: mockRotations,
       },
       stubs: {
         GlCard,
@@ -44,7 +45,7 @@ describe('RotationsListSectionComponent', () => {
   });
 
   it('renders timeline cell items based on timeframe data', () => {
-    expect(findTimelineCells().length).toBe(mockTimeframeWeeks.length);
+    expect(findTimelineCells().length).toBe(mockTimeframeWeeks.length * 2);
   });
 
   it('renders current day indicator in the first timeline cell', () => {
