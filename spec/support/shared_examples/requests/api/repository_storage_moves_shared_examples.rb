@@ -12,7 +12,7 @@ RSpec.shared_examples 'repository_storage_moves API' do |container_type|
       get api(url, user)
     end
 
-    it 'returns a container repository storage move' do
+    it 'returns a container repository storage move', :aggregate_failures do
       get_container_repository_storage_move
 
       expect(response).to have_gitlab_http_status(:ok)
@@ -42,7 +42,7 @@ RSpec.shared_examples 'repository_storage_moves API' do |container_type|
       get api(url, user)
     end
 
-    it 'returns container repository storage moves' do
+    it 'returns container repository storage moves', :aggregate_failures do
       get_container_repository_storage_moves
 
       expect(response).to have_gitlab_http_status(:ok)
@@ -120,7 +120,7 @@ RSpec.shared_examples 'repository_storage_moves API' do |container_type|
       stub_storage_settings('test_second_storage' => { 'path' => 'tmp/tests/extra_storage' })
     end
 
-    it 'schedules a container repository storage move' do
+    it 'schedules a container repository storage move', :aggregate_failures do
       create_container_repository_storage_move
 
       storage_move = container.repository_storage_moves.last
@@ -138,7 +138,7 @@ RSpec.shared_examples 'repository_storage_moves API' do |container_type|
       it { expect { create_container_repository_storage_move }.to be_denied_for(:user) }
     end
 
-    context 'destination_storage_name is missing' do
+    context 'destination_storage_name is missing', :aggregate_failures do
       let(:destination_storage_name) { nil }
 
       it 'schedules a container repository storage move' do
