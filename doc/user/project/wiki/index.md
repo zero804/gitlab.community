@@ -204,13 +204,13 @@ otherwise they will not display when pushed to GitLab:
 
 ## Customizing sidebar
 
-On the project's Wiki page, there is a right side navigation that renders the full Wiki pages list by default, with hierarchy.
+> - The button to edit the sidebar was [introduced](https://gitlab.com/gitlab-org/gitlab/-/issues/23109) in GitLab 13.8.
 
-To customize the sidebar, you can create a file named `_sidebar` to fully replace the default navigation.
+On the project's wiki page, there is a right side navigation that renders the full wiki pages list by default, with hierarchy.
 
-WARNING:
-Unless you link the `_sidebar` file from your custom nav, to edit it you'll have to access it directly
-from the browser's address bar by typing: `https://gitlab.com/<namespace>/<project_name>/-/wikis/_sidebar` (for self-managed GitLab instances, replace `gitlab.com` with your instance's URL).
+To customize the sidebar, you can click on **Edit sidebar** if you have editing permissions.
+
+This creates a file named `_sidebar` in the repository which fully replaces the default sidebar navigation.
 
 Example for `_sidebar` (using Markdown format):
 
