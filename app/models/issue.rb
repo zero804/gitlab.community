@@ -434,6 +434,10 @@ class Issue < ApplicationRecord
     moved_to || duplicated_to
   end
 
+  def email_participants_downcase
+    issue_email_participants.pluck(IssueEmailParticipant.arel_table[:email].lower)
+  end
+
   private
 
   def ensure_metrics
