@@ -65,12 +65,13 @@ export default {
         'issue-title-pending-changes',
       );
     },
-    setPendingState() {
+    async setPendingState() {
       const pendingChanges = localStorage.getItem(this.pendingChangesStorageKey);
 
       if (pendingChanges) {
         this.title = pendingChanges;
         this.showChangesAlert = true;
+        await this.$nextTick();
         this.$refs.sidebarItem.expand();
       } else {
         this.showChangesAlert = false;
@@ -85,7 +86,7 @@ export default {
     async setTitle() {
       this.$refs.sidebarItem.collapse();
 
-      if (this.title === this.issue.title) {
+      if (!this.title || this.title === this.issue.title) {
         return;
       }
 
@@ -150,7 +151,13 @@ export default {
         </gl-form-group>
 
         <div class="gl-display-flex gl-w-full gl-justify-content-space-between gl-mt-5">
-          <gl-button variant="success" size="small" data-testid="submit-button" @click="setTitle">
+          <gl-button
+            variant="success"
+            size="small"
+            data-testid="submit-button"
+            :disabled="!title"
+            @click="setTitle"
+          >
             {{ $options.i18n.submitButton }}
           </gl-button>
 

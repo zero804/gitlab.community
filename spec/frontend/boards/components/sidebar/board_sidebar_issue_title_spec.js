@@ -6,7 +6,18 @@ import createFlash from '~/flash';
 import { createStore } from '~/boards/stores';
 
 const TEST_TITLE = 'New issue title';
-const TEST_ISSUE = { id: 'gid://gitlab/Issue/1', iid: 9, title: 'Issue 1', referencePath: 'h/b#2' };
+const TEST_ISSUE_A = {
+  id: 'gid://gitlab/Issue/1',
+  iid: 8,
+  title: 'Issue 1',
+  referencePath: 'h/b#1',
+};
+const TEST_ISSUE_B = {
+  id: 'gid://gitlab/Issue/2',
+  iid: 9,
+  title: 'Issue 2',
+  referencePath: 'h/b#2',
+};
 
 jest.mock('~/flash');
 
@@ -21,10 +32,10 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
     wrapper = null;
   });
 
-  const createWrapper = ({ title = 'Issue 1' } = {}) => {
+  const createWrapper = (issue = TEST_ISSUE_A) => {
     store = createStore();
-    store.state.issues = { [TEST_ISSUE.id]: { ...TEST_ISSUE, title } };
-    store.state.activeId = TEST_ISSUE.id;
+    store.state.issues = { [issue.id]: { ...issue } };
+    store.dispatch('setActiveId', { id: issue.id });
 
     wrapper = shallowMount(BoardSidebarIssueTitle, {
       store,
@@ -48,8 +59,8 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
   it('renders title and reference', () => {
     createWrapper();
 
-    expect(findTitle().text()).toContain(TEST_ISSUE.title);
-    expect(findCollapsed().text()).toContain(TEST_ISSUE.referencePath);
+    expect(findTitle().text()).toContain(TEST_ISSUE_A.title);
+    expect(findCollapsed().text()).toContain(TEST_ISSUE_A.referencePath);
   });
 
   it('does not render alert', () => {
@@ -63,7 +74,7 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
       createWrapper();
 
       jest.spyOn(wrapper.vm, 'setActiveIssueTitle').mockImplementation(() => {
-        store.state.issues[TEST_ISSUE.id].title = TEST_TITLE;
+        store.state.issues[TEST_ISSUE_A.id].title = TEST_TITLE;
       });
       findFormInput().vm.$emit('input', TEST_TITLE);
       findForm().vm.$emit('submit', { preventDefault: () => {} });
@@ -83,6 +94,21 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
     });
   });
 
+  describe('when submitting and invalid title', () => {
+    beforeEach(async () => {
+      createWrapper();
+
+      jest.spyOn(wrapper.vm, 'setActiveIssueTitle').mockImplementation(() => {});
+      findFormInput().vm.$emit('input', '');
+      findForm().vm.$emit('submit', { preventDefault: () => {} });
+      await wrapper.vm.$nextTick();
+    });
+
+    it('commits change to the server', () => {
+      expect(wrapper.vm.setActiveIssueTitle).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when abandoning the form without saving', () => {
     beforeEach(async () => {
       createWrapper();
@@ -96,15 +122,31 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
     it('does not collapses sidebar and shows alert', () => {
       expect(findCollapsed().isVisible()).toBe(false);
       expect(findAlert().exists()).toBe(true);
+      expect(localStorage.getItem(`${TEST_ISSUE_A.id}/issue-title-pending-changes`)).toBe(
+        TEST_TITLE,
+      );
+    });
+  });
+
+  describe('when accessing the form with pending changes', () => {
+    beforeAll(() => {
+      localStorage.setItem(`${TEST_ISSUE_A.id}/issue-title-pending-changes`, TEST_TITLE);
+
+      createWrapper();
+    });
+
+    it('expands item and shows alert', async () => {
+      expect(findCollapsed().isVisible()).toBe(false);
+      expect(findAlert().exists()).toBe(true);
     });
   });
 
   describe('when cancel button is clicked', () => {
     beforeEach(async () => {
-      createWrapper({ title: 'Issue 2' });
+      createWrapper(TEST_ISSUE_B);
 
       jest.spyOn(wrapper.vm, 'setActiveIssueTitle').mockImplementation(() => {
-        store.state.issues[TEST_ISSUE.id].title = TEST_TITLE;
+        store.state.issues[TEST_ISSUE_B.id].title = TEST_TITLE;
       });
       findFormInput().vm.$emit('input', TEST_TITLE);
       findCancelButton().vm.$emit('click');
@@ -114,25 +156,25 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
     it('collapses sidebar and render former title', () => {
       expect(wrapper.vm.setActiveIssueTitle).not.toHaveBeenCalled();
       expect(findCollapsed().isVisible()).toBe(true);
-      expect(findTitle().text()).toBe('Issue 2');
+      expect(findTitle().text()).toBe(TEST_ISSUE_B.title);
     });
   });
 
   describe('when the mutation fails', () => {
     beforeEach(async () => {
-      createWrapper({ title: TEST_TITLE });
+      createWrapper(TEST_ISSUE_B);
 
       jest.spyOn(wrapper.vm, 'setActiveIssueTitle').mockImplementation(() => {
         throw new Error(['failed mutation']);
       });
-      findFormInput().vm.$emit('input', '');
+      findFormInput().vm.$emit('input', 'Invalid title');
       findForm().vm.$emit('submit', { preventDefault: () => {} });
       await wrapper.vm.$nextTick();
     });
 
     it('collapses sidebar and renders former issue title', () => {
       expect(findCollapsed().isVisible()).toBe(true);
-      expect(findTitle().text()).toContain(TEST_TITLE);
+      expect(findTitle().text()).toContain(TEST_ISSUE_B.title);
       expect(createFlash).toHaveBeenCalled();
     });
   });
