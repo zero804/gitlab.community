@@ -29,7 +29,7 @@ The GitLab University curriculum is composed of GitLab videos, screencasts, pres
 ### 1.1. Version Control and Git
 
 1. [Version Control Systems](https://docs.google.com/presentation/d/16sX7hUrCZyOFbpvnrAFrg6tVO5_yT98IgdAqOmXwBho/edit#slide=id.g72f2e4906_2_29)
-1. [Katakoda: Learn Git Version Control using Interactive Browser-Based Scenarios](https://www.katacoda.com/courses/git)
+1. [Katacoda: Learn Git Version Control using Interactive Browser-Based Scenarios](https://www.katacoda.com/courses/git)
 
 ### 1.2. GitLab Basics
 
@@ -51,7 +51,7 @@ The GitLab University curriculum is composed of GitLab videos, screencasts, pres
 1. [Creating a Project in GitLab - Video](https://www.youtube.com/watch?v=7p0hrpNaJ14)
 1. [How to Create Files and Directories](https://about.gitlab.com/blog/2016/02/10/feature-highlight-create-files-and-directories-from-files-page/)
 1. [GitLab To-Do List](https://about.gitlab.com/blog/2016/03/02/gitlab-todos-feature-highlight/)
-1. [GitLab's Work in Progress (WIP) Flag](https://about.gitlab.com/blog/2016/01/08/feature-highlight-wip/)
+1. [GitLab Work in Progress (WIP) Flag](https://about.gitlab.com/blog/2016/01/08/feature-highlight-wip/)
 
 ### 1.5. Migrating from other Source Control
 
@@ -201,7 +201,7 @@ The GitLab University curriculum is composed of GitLab videos, screencasts, pres
 
 ## 5. Resources for GitLab Team Members
 
-NOTE: **Note:**
+NOTE:
 Some content can only be accessed by GitLab team members.
 
 1. [Sales Path](https://about.gitlab.com/handbook/sales/onboarding/)

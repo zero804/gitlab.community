@@ -50,6 +50,8 @@ import {
 } from '../constants';
 import { diffViewerModes } from '~/ide/constants';
 import { isCollapsed } from '../utils/diff_file';
+import { getDerivedMergeRequestInformation } from '../utils/merge_request';
+import { markFileReview, setReviewsForMergeRequest } from '../utils/file_reviews';
 
 export const setBaseConfig = ({ commit }, options) => {
   const {
@@ -61,6 +63,7 @@ export const setBaseConfig = ({ commit }, options) => {
     dismissEndpoint,
     showSuggestPopover,
     viewDiffsFileByFile,
+    mrReviews,
   } = options;
   commit(types.SET_BASE_CONFIG, {
     endpoint,
@@ -71,6 +74,7 @@ export const setBaseConfig = ({ commit }, options) => {
     dismissEndpoint,
     showSuggestPopover,
     viewDiffsFileByFile,
+    mrReviews,
   });
 };
 
@@ -114,7 +118,8 @@ export const fetchDiffFilesBatch = ({ commit, state, dispatch }) => {
         }
 
         if (
-          (diffsGradualLoad && totalLoaded === pagination.total_pages) ||
+          (diffsGradualLoad &&
+            (totalLoaded === pagination.total_pages || pagination.total_pages === null)) ||
           (!diffsGradualLoad && !pagination.next_page)
         ) {
           commit(types.SET_RETRIEVING_BATCHES, false);
@@ -184,13 +189,19 @@ export const fetchDiffFilesMeta = ({ commit, state }) => {
     .get(mergeUrlParams(urlParams, state.endpointMetadata))
     .then(({ data }) => {
       const strippedData = { ...data };
-
       delete strippedData.diff_files;
+
       commit(types.SET_LOADING, false);
       commit(types.SET_MERGE_REQUEST_DIFFS, data.merge_request_diffs || []);
-      commit(types.SET_DIFF_DATA, strippedData);
+      commit(types.SET_DIFF_METADATA, strippedData);
 
-      worker.postMessage(prepareDiffData(data, state.diffFiles));
+      worker.postMessage(
+        prepareDiffData({
+          diff: data,
+          priorFiles: state.diffFiles,
+          meta: true,
+        }),
+      );
 
       return data;
     })
@@ -734,3 +745,13 @@ export const setFileByFile = ({ commit }, { fileByFile }) => {
     mergeUrlParams({ [DIFF_FILE_BY_FILE_COOKIE_NAME]: fileViewMode }, window.location.href),
   );
 };
+
+export function reviewFile({ commit, state, getters }, { file, reviewed = true }) {
+  const { mrPath } = getDerivedMergeRequestInformation({ endpoint: file.load_collapsed_diff_url });
+  const reviews = setReviewsForMergeRequest(
+    mrPath,
+    markFileReview(getters.fileReviews(state), file, reviewed),
+  );
+
+  commit(types.SET_MR_FILE_REVIEWS, reviews);
+}

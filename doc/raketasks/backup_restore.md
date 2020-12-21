@@ -268,9 +268,9 @@ You can exclude specific directories from the backup by adding the environment v
 - `pages` (Pages content)
 - `repositories` (Git repositories data)
 
-All wikis will be backed up as part of the `repositories` group. Non-existent wikis will be skipped during a backup.
+All wikis are backed up as part of the `repositories` group. Non-existent wikis are skipped during a backup.
 
-NOTE: **Note:**
+NOTE:
 When [backing up and restoring Helm Charts](https://docs.gitlab.com/charts/architecture/backup-restore.html), there is an additional option `packages`, which refers to any packages managed by the GitLab [package registry](../user/packages/package_registry/index.md).
 For more information see [command line arguments](https://docs.gitlab.com/charts/architecture/backup-restore.html#command-line-arguments).
 
@@ -627,7 +627,7 @@ backups are copied to, and is created if it does not exist. If the
 directory that you want to copy the tarballs to is the root of your mounted
 directory, use `.` instead.
 
-Because file system performance may affect GitLab's overall performance,
+Because file system performance may affect overall GitLab performance,
 [GitLab doesn't recommend using EFS for storage](../administration/nfs.md#avoid-using-awss-elastic-file-system-efs).
 
 For Omnibus GitLab packages:
@@ -671,7 +671,7 @@ For installations from source:
 
 The backup archives created by GitLab (`1393513186_2014_02_27_gitlab_backup.tar`)
 have the owner/group `git`/`git` and 0600 permissions by default. This is
-meant to avoid other system users reading GitLab's data. If you need the backup
+meant to avoid other system users reading GitLab data. If you need the backup
 archives to have different permissions, you can use the `archive_permissions`
 setting.
 
@@ -840,11 +840,22 @@ Read more about [configuring NFS mounts](../administration/nfs.md)
 
 ### Restore for installation from source
 
+First, ensure your backup tar file is in the backup directory described in the
+`gitlab.yml` configuration:
+
+```yaml
+## Backup settings
+backup:
+  path: "tmp/backups"   # Relative paths are relative to Rails.root (default: tmp/backups/)
+```
+
+The default is `/home/git/gitlab/tmp/backups`, and it needs to be owned by the `git` user. Now, you can begin the backup procedure:
+
 ```shell
 # Stop processes that are connected to the database
 sudo service gitlab stop
 
-bundle exec rake gitlab:backup:restore RAILS_ENV=production
+sudo -u git -H bundle exec rake gitlab:backup:restore RAILS_ENV=production
 ```
 
 Example output:
@@ -948,7 +959,7 @@ installed version of GitLab, the restore command aborts with an error
 message. Install the [correct GitLab version](https://packages.gitlab.com/gitlab/),
 and then try again.
 
-NOTE: **Note:**
+NOTE:
 There is a known issue with restore not working with `pgbouncer`. [Read more about backup and restore with `pgbouncer`](#backup-and-restore-for-installations-using-pgbouncer).
 
 ### Restore for Docker image and GitLab Helm chart installations

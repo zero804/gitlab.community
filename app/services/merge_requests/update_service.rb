@@ -11,7 +11,7 @@ module MergeRequests
       params.delete(:target_project_id)
       params.delete(:source_branch)
 
-      if merge_request.closed_without_fork?
+      if merge_request.closed_or_merged_without_fork?
         params.delete(:target_branch)
         params.delete(:force_remove_source_branch)
       end
@@ -132,21 +132,9 @@ module MergeRequests
     def merge_from_quick_action(merge_request)
       last_diff_sha = params.delete(:merge)
 
-      if Feature.enabled?(:merge_orchestration_service, merge_request.project, default_enabled: true)
-        MergeRequests::MergeOrchestrationService
-          .new(project, current_user, { sha: last_diff_sha })
-          .execute(merge_request)
-      else
-        return unless merge_request.mergeable_with_quick_action?(current_user, last_diff_sha: last_diff_sha)
-
-        merge_request.update(merge_error: nil)
-
-        if merge_request.head_pipeline_active?
-          AutoMergeService.new(project, current_user, { sha: last_diff_sha }).execute(merge_request, AutoMergeService::STRATEGY_MERGE_WHEN_PIPELINE_SUCCEEDS)
-        else
-          merge_request.merge_async(current_user.id, { sha: last_diff_sha })
-        end
-      end
+      MergeRequests::MergeOrchestrationService
+        .new(project, current_user, { sha: last_diff_sha })
+        .execute(merge_request)
     end
 
     override :quick_action_options

@@ -79,7 +79,7 @@ Prerequisites:
 - The project ID, which is on the project's home page.
 - A [personal access token](../../../user/profile/personal_access_tokens.md) with the scope set to `api`.
 
-  NOTE: **Note:**
+  NOTE:
   [Deploy tokens](../../project/deploy_tokens/index.md) are
   [not yet supported](https://gitlab.com/gitlab-org/gitlab/-/issues/240897) for use with Composer.
 
@@ -132,6 +132,13 @@ A more detailed Composer CI/CD file is also available as a `.gitlab-ci.yml` temp
 WARNING:
 Do not save unless you want to overwrite the existing CI/CD file.
 
+## Publishing packages with the same name or version
+
+When you publish:
+
+- The same package with different data, it overwrites the existing package.
+- The same package with the same data, a `404 Bad request` error occurs.
+
 ## Install a Composer package
 
 Install a package from the Package Registry so you can use it as a dependency.
@@ -142,7 +149,7 @@ Prerequisites:
 - The group ID, which is on the group's home page.
 - A [personal access token](../../../user/profile/personal_access_tokens.md) with the scope set to, at minimum, `read_api`.
 
-  NOTE: **Note:**
+  NOTE:
   [Deploy tokens](../../project/deploy_tokens/index.md) are
   [not yet supported](https://gitlab.com/gitlab-org/gitlab/-/issues/240897) for use with Composer.
 
@@ -251,7 +258,7 @@ To install a package:
    composer config --unset gitlab-domains
    ```
 
-   NOTE: **Note:**
+   NOTE:
    On GitLab.com, Composer uses the GitLab token from `auth.json` as a private token by default.
    Without the `gitlab-domains` definition in `composer.json`, Composer uses the GitLab token
    as basic-auth, with the token as a username and a blank password. This results in a 401 error.

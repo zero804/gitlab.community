@@ -7,7 +7,7 @@ type: reference, index, howto
 
 # Project settings
 
-NOTE: **Note:**
+NOTE:
 Only project maintainers and administrators have the [permissions](../../permissions.md#project-members-permissions)
 to access a project settings.
 
@@ -31,13 +31,13 @@ The project description also partially supports [standard Markdown](../../markdo
 
 You can select a framework label to identify that your project has certain compliance requirements or needs additional oversight. Available labels include:
 
-- GDPR - General Data Protection Regulation
-- HIPAA - Health Insurance Portability and Accountability Act
-- PCI-DSS - Payment Card Industry-Data Security Standard
-- SOC 2 - Service Organization Control 2
-- SOX - Sarbanes-Oxley
+- GDPR (General Data Protection Regulation)
+- HIPAA (Health Insurance Portability and Accountability Act)
+- PCI-DSS (Payment Card Industry-Data Security Standard)
+- SOC 2 (Service Organization Control 2)
+- SOX (Sarbanes-Oxley)
 
-NOTE: **Note:**
+NOTE:
 Compliance framework labels do not affect your project settings.
 
 ### Sharing and permissions
@@ -68,11 +68,13 @@ Use the switches to enable or disable the following features:
 | **Container Registry**            |                           | Activates a [registry](../../packages/container_registry/) for your Docker images                                                                                                              |
 | **Git Large File Storage**        |                           | Enables the use of [large files](../../../topics/git/lfs/index.md#git-large-file-storage-lfs)                                                                                    |
 | **Packages**                      |                           | Supports configuration of a [package registry](../../../administration/packages/index.md#gitlab-package-registry-administration) functionality                                    |
+| **Analytics**                     | ✓                         | Enables [analytics](../../analytics/)                                                                                                                                                          |
 | **Wiki**                          | ✓                         | Enables a separate system for [documentation](../wiki/)                                                                                                                                        |
 | **Snippets**                      | ✓                         | Enables [sharing of code and text](../../snippets.md)                                                                                                                                          |
 | **Pages**                         | ✓                         | Allows you to [publish static websites](../pages/)                                                                                                                                             |
 | **Metrics Dashboard**             | ✓                         | Control access to [metrics dashboard](../integrations/prometheus.md)
-| **Requirements**                  | ✓                         | Control access to [Requirements Management](../requirements/index.md)
+| **Requirements**                  | ✓                         | Control access to [Requirements Management](../requirements/index.md) |
+| **Operations Dashboard**          | ✓                         | Control access to [operations dashboard](../../../operations/index.md)
 
 Some features depend on others:
 
@@ -81,7 +83,7 @@ Some features depend on others:
   - **Issue Boards**
   - [**Service Desk**](#service-desk)
 
-  NOTE: **Note:**
+  NOTE:
   When the **Issues** option is disabled, you can still access **Milestones**
   from merge requests.
 
@@ -186,7 +188,7 @@ Next, to unarchive the project:
 
 #### Renaming a repository
 
-NOTE: **Note:**
+NOTE:
 Only project maintainers and administrators have the [permissions](../../permissions.md#project-members-permissions) to rename a
 repository. Not to be confused with a project's name where it can also be
 changed from the [general project settings](#general-project-settings).
@@ -207,7 +209,7 @@ old URL won't be able to push or pull. Read more about what happens with the
 
 #### Transferring an existing project into another namespace
 
-NOTE: **Note:**
+NOTE:
 Only project owners and administrators have the [permissions](../../permissions.md#project-members-permissions)
 to transfer a project.
 
@@ -229,13 +231,13 @@ Once done, you will be taken to the new project's namespace. At this point,
 read what happens with the
 [redirects from the old project to the new one](../index.md#redirects-when-changing-repository-paths).
 
-NOTE: **Note:**
+NOTE:
 GitLab administrators can use the administration interface to move any project to any
 namespace if needed.
 
 #### Delete a project
 
-NOTE: **Note:**
+NOTE:
 Only project owners and administrators have [permissions](../../permissions.md#project-members-permissions) to delete a project.
 
 To delete a project:
@@ -283,7 +285,7 @@ To do so:
 1. Under **Remove fork relationship**, click the likewise-labeled button.
 1. Confirm the action by typing the project's path as instructed.
 
-NOTE: **Note:**
+NOTE:
 Only project owners have the [permissions](../../permissions.md#project-members-permissions)
 to remove a fork relationship.
 

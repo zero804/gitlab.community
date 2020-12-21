@@ -13,12 +13,12 @@ to deploy features in an early stage of development so that they can be
 incrementally rolled out.
 
 Before making them permanently available, features can be deployed behind
-flags for a [number of reasons](../development/feature_flags/process.md#when-to-use-feature-flags), such as:
+flags for a [number of reasons](../development/feature_flags/index.md#when-to-use-feature-flags), such as:
 
 - To test the feature.
 - To get feedback from users and customers while in an early stage of the development of the feature.
 - To evaluate users adoption.
-- To evaluate how it impacts GitLab's performance.
+- To evaluate how it impacts the performance of GitLab.
 - To build it in smaller pieces throughout releases.
 
 Features behind flags can be gradually rolled out, typically:

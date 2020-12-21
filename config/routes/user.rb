@@ -55,10 +55,10 @@ end
 
 constraints(::Constraints::UserUrlConstrainer.new) do
   # Get all SSH keys of user
-  get ':username.keys' => 'profiles/keys#get_keys', constraints: { username: Gitlab::PathRegex.root_namespace_route_regex }
+  get ':username.keys' => 'users#ssh_keys', constraints: { username: Gitlab::PathRegex.root_namespace_route_regex }
 
   # Get all GPG keys of user
-  get ':username.gpg' => 'profiles/gpg_keys#get_keys', constraints: { username: Gitlab::PathRegex.root_namespace_route_regex }
+  get ':username.gpg' => 'users#gpg_keys', constraints: { username: Gitlab::PathRegex.root_namespace_route_regex }
 
   scope(path: ':username',
         as: :user,

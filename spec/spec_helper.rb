@@ -142,7 +142,9 @@ RSpec.configure do |config|
   config.include TestEnv
   config.include FileReadHelpers
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
   config.include Devise::Test::IntegrationHelpers, type: :feature
+  config.include Devise::Test::IntegrationHelpers, type: :request
   config.include LoginHelpers, type: :feature
   config.include SearchHelpers, type: :feature
   config.include WaitHelpers, type: :feature
@@ -150,7 +152,6 @@ RSpec.configure do |config|
   config.include EmailHelpers, :mailer, type: :mailer
   config.include Warden::Test::Helpers, type: :request
   config.include Gitlab::Routing, type: :routing
-  config.include Devise::Test::ControllerHelpers, type: :view
   config.include ApiHelpers, :api
   config.include CookieHelper, :js
   config.include InputHelper, :js
@@ -230,6 +231,10 @@ RSpec.configure do |config|
       # tests, until we introduce it in user settings
       stub_feature_flags(forti_authenticator: false)
 
+      # Using FortiToken Cloud as OTP provider is disabled by default in
+      # tests, until we introduce it in user settings
+      stub_feature_flags(forti_token_cloud: false)
+
       enable_rugged = example.metadata[:enable_rugged].present?
 
       # Disable Rugged features by default
@@ -285,20 +290,11 @@ RSpec.configure do |config|
     admin_mode_mock_dirs = %w(
       ./ee/spec/elastic_integration
       ./ee/spec/finders
-      ./ee/spec/lib
-      ./ee/spec/requests/admin
       ./ee/spec/serializers
       ./ee/spec/support/shared_examples/finders/geo
       ./ee/spec/support/shared_examples/graphql/geo
       ./spec/finders
-      ./spec/frontend
-      ./spec/helpers
-      ./spec/lib
-      ./spec/requests
       ./spec/serializers
-      ./spec/support/shared_examples/requests
-      ./spec/support/shared_examples/lib/gitlab
-      ./spec/views
       ./spec/workers
     )
 

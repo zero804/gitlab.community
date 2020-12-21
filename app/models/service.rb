@@ -11,7 +11,7 @@ class Service < ApplicationRecord
   include EachBatch
 
   SERVICE_NAMES = %w[
-    alerts asana assembla bamboo bugzilla buildkite campfire confluence custom_issue_tracker datadog discord
+    asana assembla bamboo bugzilla buildkite campfire confluence custom_issue_tracker datadog discord
     drone_ci emails_on_push ewm external_wiki flowdock hangouts_chat hipchat irker jira
     mattermost mattermost_slash_commands microsoft_teams packagist pipelines_email
     pivotaltracker prometheus pushover redmine slack slack_slash_commands teamcity unify_circuit webex_teams youtrack
@@ -19,11 +19,12 @@ class Service < ApplicationRecord
 
   PROJECT_SPECIFIC_SERVICE_NAMES = %w[
     jenkins
+    alerts
   ].freeze
 
   # Fake services to help with local development.
   DEV_SERVICE_NAMES = %w[
-    mock_ci mock_deployment mock_monitoring
+    mock_ci mock_monitoring
   ].freeze
 
   serialize :properties, JSON # rubocop:disable Cop/ActiveRecordSerialize

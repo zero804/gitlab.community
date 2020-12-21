@@ -102,6 +102,7 @@ To authenticate to the Package Registry, you must use one of the following:
 - It's not recommended, but you can use [OAuth tokens](../../../api/oauth2.md#resource-owner-password-credentials-flow).
   Standard OAuth tokens cannot authenticate to the GitLab NPM Registry. You must use a personal access token with OAuth headers.
 - A [CI job token](#authenticate-with-a-ci-job-token).
+- Your NPM package name must be in the format of [@scope:package-name](#package-naming-convention). It must match exactly, including the case.
 
 ### Authenticate with a personal access token or deploy token
 
@@ -240,6 +241,7 @@ Prerequisites:
 
 - [Authenticate](#authenticate-to-the-package-registry) to the Package Registry.
 - Set a [project-level NPM endpoint](#use-the-gitlab-endpoint-for-npm-packages).
+- Your NPM package name must be in the format of [@scope:package-name](#package-naming-convention). It must match exactly, including the case.
 
 To upload an NPM package to your project, run this command:
 
@@ -455,3 +457,34 @@ If you get this error, ensure that:
 - The scoped packages URL includes a trailing slash:
   - Correct: `//gitlab.example.com/api/v4/packages/npm/`
   - Incorrect: `//gitlab.example.com/api/v4/packages/npm`
+
+### `npm publish` returns `npm ERR! 400 Bad Request`
+
+If you get this error, your package name may not meet the
+[@scope:package-name package naming convention](#package-naming-convention).
+
+Ensure the name meets the convention exactly, including the case.
+Then try to publish again.
+
+### `npm publish` returns `npm ERR! 500 Internal Server Error - PUT`
+
+This is a [known issue](https://gitlab.com/gitlab-org/gitlab/-/issues/238950) in GitLab
+13.3.x and later. The error in the logs will appear as:
+
+```plaintext
+>NoMethodError - undefined method `preferred_language' for #<Rack::Response
+```
+
+This might be accompanied by another error:
+
+```plaintext
+>Errno::EACCES","exception.message":"Permission denied
+```
+
+This is usually a permissions issue with either:
+
+- `'packages_storage_path'` default `/var/opt/gitlab/gitlab-rails/shared/packages/`.
+- The remote bucket if [object storage](../../../administration/packages/#using-object-storage)
+  is used.
+
+In the latter case, ensure the bucket exists and the GitLab has write access to it.

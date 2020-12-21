@@ -3,7 +3,8 @@ import { pick } from 'lodash';
 import boardListsQuery from 'ee_else_ce/boards/graphql/board_lists.query.graphql';
 import createGqClient, { fetchPolicies } from '~/lib/graphql';
 import { getIdFromGraphQLId } from '~/graphql_shared/utils';
-import { BoardType, ListType, inactiveId, DEFAULT_LABELS } from '~/boards/constants';
+import { convertObjectPropsToCamelCase, urlParamsToObject } from '~/lib/utils/common_utils';
+import { BoardType, ListType, inactiveId } from '~/boards/constants';
 import * as types from './mutation_types';
 import {
   formatBoardLists,
@@ -12,8 +13,8 @@ import {
   formatListsPageInfo,
   formatIssue,
 } from '../boards_util';
-import boardStore from '~/boards/stores/boards_store';
-
+import createFlash from '~/flash';
+import { __ } from '~/locale';
 import updateAssigneesMutation from '~/vue_shared/components/sidebar/queries/updateAssignees.mutation.graphql';
 import listsIssuesQuery from '../graphql/lists_issues.query.graphql';
 import boardLabelsQuery from '../graphql/board_labels.query.graphql';
@@ -64,6 +65,18 @@ export default {
     commit(types.SET_FILTERS, filterParams);
   },
 
+  performSearch({ dispatch }) {
+    dispatch(
+      'setFilters',
+      convertObjectPropsToCamelCase(urlParamsToObject(window.location.search)),
+    );
+
+    if (gon.features.graphqlBoardLists) {
+      dispatch('fetchLists');
+      dispatch('resetIssues');
+    }
+  },
+
   fetchLists: ({ commit, state, dispatch }) => {
     const { endpoints, boardType, filterParams } = state;
     const { fullPath, boardId } = endpoints;
@@ -88,7 +101,6 @@ export default {
         if (!lists.nodes.find(l => l.listType === ListType.backlog) && !hideBacklogList) {
           dispatch('createList', { backlog: true });
         }
-        dispatch('generateDefaultLists');
       })
       .catch(() => commit(types.RECEIVE_BOARD_LISTS_FAILURE));
   },
@@ -119,14 +131,8 @@ export default {
   },
 
   addList: ({ commit }, list) => {
-    // Temporarily using positioning logic from boardStore
-    commit(
-      types.RECEIVE_ADD_LIST_SUCCESS,
-      boardStore.updateListPosition({ ...list, doNotFetchIssues: true }),
-    );
+    commit(types.RECEIVE_ADD_LIST_SUCCESS, list);
   },
-
-  showPromotionList: () => {},
 
   fetchLabels: ({ state, commit }, searchTerm) => {
     const { endpoints, boardType } = state;
@@ -149,31 +155,6 @@ export default {
         return labels.nodes;
       })
       .catch(() => commit(types.RECEIVE_LABELS_FAILURE));
-  },
-
-  generateDefaultLists: async ({ state, commit, dispatch }) => {
-    if (state.disabled) {
-      return;
-    }
-    if (
-      Object.entries(state.boardLists).find(
-        ([, list]) => list.type !== ListType.backlog && list.type !== ListType.closed,
-      )
-    ) {
-      return;
-    }
-
-    const fetchLabelsAndCreateList = label => {
-      return dispatch('fetchLabels', label)
-        .then(res => {
-          if (res.length > 0) {
-            dispatch('createList', { labelId: res[0].id });
-          }
-        })
-        .catch(() => commit(types.GENERATE_DEFAULT_LISTS_FAILURE));
-    };
-
-    await Promise.all(DEFAULT_LABELS.map(fetchLabelsAndCreateList));
   },
 
   moveList: (
@@ -341,6 +322,9 @@ export default {
         });
 
         return nodes;
+      })
+      .catch(() => {
+        createFlash({ message: __('An error occurred while updating assignees.') });
       })
       .finally(() => {
         commit(types.SET_ASSIGNEE_LOADING, false);

@@ -124,6 +124,11 @@ export default {
       required: false,
       default: false,
     },
+    mrReviews: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
   },
   data() {
     const treeWidth =
@@ -161,7 +166,12 @@ export default {
       'hasConflicts',
       'viewDiffsFileByFile',
     ]),
-    ...mapGetters('diffs', ['whichCollapsedTypes', 'isParallelView', 'currentDiffIndex']),
+    ...mapGetters('diffs', [
+      'whichCollapsedTypes',
+      'isParallelView',
+      'currentDiffIndex',
+      'fileReviews',
+    ]),
     ...mapGetters(['isNotesFetched', 'getNoteableData']),
     diffs() {
       if (!this.viewDiffsFileByFile) {
@@ -261,6 +271,7 @@ export default {
       dismissEndpoint: this.dismissEndpoint,
       showSuggestPopover: this.showSuggestPopover,
       viewDiffsFileByFile: fileByFile(this.fileByFileUserPreference),
+      mrReviews: this.mrReviews || {},
     });
 
     if (this.shouldShow) {
@@ -283,10 +294,7 @@ export default {
   },
   created() {
     this.adjustView();
-
-    notesEventHub.$once('fetchDiffData', this.fetchData);
-    notesEventHub.$on('refetchDiffData', this.refetchDiffData);
-    eventHub.$on(EVT_VIEW_FILE_BY_FILE, this.fileByFileListener);
+    this.subscribeToEvents();
 
     this.CENTERED_LIMITED_CONTAINER_CLASSES = CENTERED_LIMITED_CONTAINER_CLASSES;
 
@@ -307,11 +315,7 @@ export default {
   },
   beforeDestroy() {
     diffsApp.deinstrument();
-
-    eventHub.$off(EVT_VIEW_FILE_BY_FILE, this.fileByFileListener);
-    notesEventHub.$off('refetchDiffData', this.refetchDiffData);
-    notesEventHub.$off('fetchDiffData', this.fetchData);
-
+    this.unsubscribeFromEvents();
     this.removeEventListeners();
   },
   methods: {
@@ -331,6 +335,16 @@ export default {
       'navigateToDiffFileIndex',
       'setFileByFile',
     ]),
+    subscribeToEvents() {
+      notesEventHub.$once('fetchDiffData', this.fetchData);
+      notesEventHub.$on('refetchDiffData', this.refetchDiffData);
+      eventHub.$on(EVT_VIEW_FILE_BY_FILE, this.fileByFileListener);
+    },
+    unsubscribeFromEvents() {
+      eventHub.$off(EVT_VIEW_FILE_BY_FILE, this.fileByFileListener);
+      notesEventHub.$off('refetchDiffData', this.refetchDiffData);
+      notesEventHub.$off('fetchDiffData', this.fetchData);
+    },
     fileByFileListener({ setting } = {}) {
       this.setFileByFile({ fileByFile: setting });
     },
@@ -516,6 +530,7 @@ export default {
               v-for="(file, index) in diffs"
               :key="file.newPath"
               :file="file"
+              :reviewed="fileReviews[index]"
               :is-first-file="index === 0"
               :is-last-file="index === diffs.length - 1"
               :help-page-path="helpPagePath"

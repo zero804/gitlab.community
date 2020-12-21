@@ -42,6 +42,29 @@ The API of this method is similar to `in_batches`, though it doesn't support
 all of the arguments that `in_batches` supports. You should always use
 `each_batch` _unless_ you have a specific need for `in_batches`.
 
+## Avoid iterating over non-unique columns
+
+One should proceed with extra caution, and possibly avoid iterating over a column that can contain duplicate values.
+When you iterate over an attribute that is not unique, even with the applied max batch size, there is no guarantee that the resulting batches will not surpass it.
+The following snippet demonstrates this situation, whe one attempt to select `Ci::Build` entries for users with `id` between `1` and `10,s000`, database returns `1 215 178`
+matching rows
+
+```ruby
+[ gstg ] production> Ci::Build.where(user_id: (1..10_000)).size
+=> 1215178
+```
+
+This happens because built relation is translated into following query
+
+```ruby
+[ gstg ] production> puts Ci::Build.where(user_id: (1..10_000)).to_sql
+SELECT "ci_builds".* FROM "ci_builds" WHERE "ci_builds"."type" = 'Ci::Build' AND "ci_builds"."user_id" BETWEEN 1 AND 10000
+=> nil
+```
+
+And queries which filters non-unique column by range `WHERE "ci_builds"."user_id" BETWEEN ? AND ?`, even though the range size is limited to certain threshold (`10,000` in previous example) this threshold does not translates to the size of returned dataset. That happens because when taking `n` possible values of attributes,
+one can't tell for sure that the number of records that contains them will be less than `n`.
+
 ## Column definition
 
 `EachBatch` uses the primary key of the model by default for the iteration. This works most of the cases, however in some cases, you might want to use a different column for the iteration.
@@ -54,14 +77,16 @@ end
 
 The query above iterates over the project creators and prints them out without duplications.
 
-NOTE: **Note:**
-In case the column is not unique (no unique index definition), calling the `distinct` method on the relation is necessary.
+NOTE:
+In case the column is not unique (no unique index definition), calling the `distinct` method on the relation is necessary. Using not unique column without `distinct` may result in `each_batch` falling into endless loop as described at following [issue](https://gitlab.com/gitlab-org/gitlab/-/issues/285097)
 
 ## `EachBatch` in data migrations
 
 When dealing with data migrations the preferred way to iterate over large volume of data is using `EachBatch`.
 
-A special case of data migration is a background migration where the actual data modification is executed in a background job. The migration code that determines the data ranges (slices) and schedules the background jobs uses `each_batch`. More info: [background migration scheduling](background_migrations.md#scheduling)
+A special case of data migration is a [background migration](background_migrations.md#scheduling)
+where the actual data modification is executed in a background job. The migration code that determines
+the data ranges (slices) and schedules the background jobs uses `each_batch`.
 
 ## Efficient usage of `each_batch`
 
@@ -162,7 +187,7 @@ Selecting only the `id` column and ordering by `id` is going to "force" the data
 
 ![Reading the index with extra filter](img/each_batch_users_table_filter_v13_7.png)
 
-NOTE: **Important:**
+NOTE:
 The number of scanned rows depends on the data distribution in the table.
 
 - Best case scenario: the first user was never logged in. The database reads only one row.
@@ -172,7 +197,7 @@ In this particular example the database had to read 10 rows (regardless of our b
 
 #### Improve filtering with `each_batch`
 
-##### Specialized conditinal index
+##### Specialized conditional index
 
 ```sql
 CREATE INDEX index_on_users_never_logged_in ON users (id) WHERE sign_in_count = 0
@@ -195,7 +220,7 @@ To address this problem, we have two options:
 - Create another, conditional index to cover the new query.
 - Replace the index with more generalized configuration.
 
-NOTE: **Note:**
+NOTE:
 Having multiple indexes on the same table and on the same columns could be a performance bottleneck when writing data.
 
 Let's consider the following index (avoid):
@@ -230,7 +255,7 @@ CREATE INDEX index_on_users_never_logged_in ON users (sign_in_count)
 
 Since `each_batch` builds range queries based on the `id` column, this index cannot be used efficiently. The DB reads the rows from the table or uses a bitmap search where the primary key index is also read.
 
-##### "Slow" iteraton
+##### "Slow" iteration
 
 Slow iteration means that we use a good index configuration to iterate over the table and apply filtering on the yielded relation.
 
@@ -266,7 +291,7 @@ on the query which often ends up in statement timeouts. We have an unknown numbe
 issues, the execution time and the accessed database rows depends on the data distribution in the
 `issues` table.
 
-NOTE: **Note:**
+NOTE:
 Using subqueries works only when the subquery returns a small number of rows.
 
 #### Improving Subqueries
@@ -369,4 +394,4 @@ end
 
 ### `EachBatch` vs `BatchCount`
 
-When adding new counters for usage ping, the preferred way to count records is using the `Gitlab::Database::BatchCount` class. The iteration logic implemented in `BatchCount` has similar performance characterisics like `EachBatch`. Most of the tips and suggestions for improving `BatchCount` mentioned above applies to `BatchCount` as well.
+When adding new counters for usage ping, the preferred way to count records is using the `Gitlab::Database::BatchCount` class. The iteration logic implemented in `BatchCount` has similar performance characteristics like `EachBatch`. Most of the tips and suggestions for improving `BatchCount` mentioned above applies to `BatchCount` as well.

@@ -233,13 +233,13 @@ class MergeRequest < ApplicationRecord
     cannot_be_merged_rechecking? ? 'checking' : merge_status
   end
 
-  validates :source_project, presence: true, unless: [:allow_broken, :importing?, :closed_without_fork?]
+  validates :source_project, presence: true, unless: [:allow_broken, :importing?, :closed_or_merged_without_fork?]
   validates :source_branch, presence: true
   validates :target_project, presence: true
   validates :target_branch, presence: true
   validates :merge_user, presence: true, if: :auto_merge_enabled?, unless: :importing?
-  validate :validate_branches, unless: [:allow_broken, :importing?, :closed_without_fork?]
-  validate :validate_fork, unless: :closed_without_fork?
+  validate :validate_branches, unless: [:allow_broken, :importing?, :closed_or_merged_without_fork?]
+  validate :validate_fork, unless: :closed_or_merged_without_fork?
   validate :validate_target_project, on: :create
 
   scope :by_source_or_target_branch, ->(branch_name) do
@@ -274,7 +274,7 @@ class MergeRequest < ApplicationRecord
   scope :with_api_entity_associations, -> {
     preload_routables
       .preload(:assignees, :author, :unresolved_notes, :labels, :milestone,
-               :timelogs, :latest_merge_request_diff,
+               :timelogs, :latest_merge_request_diff, :reviewers,
                target_project: :project_feature,
                metrics: [:latest_closed_by, :merged_by])
   }
@@ -883,8 +883,8 @@ class MergeRequest < ApplicationRecord
     !!merge_jid && !merged? && Gitlab::SidekiqStatus.running?(merge_jid)
   end
 
-  def closed_without_fork?
-    closed? && source_project_missing?
+  def closed_or_merged_without_fork?
+    (closed? || merged?) && source_project_missing?
   end
 
   def source_project_missing?
@@ -1461,6 +1461,20 @@ class MergeRequest < ApplicationRecord
     compare_reports(Ci::GenerateCoverageReportsService)
   end
 
+  def has_codequality_reports?
+    return false unless Feature.enabled?(:codequality_mr_diff, project)
+
+    actual_head_pipeline&.has_reports?(Ci::JobArtifact.codequality_reports)
+  end
+
+  def compare_codequality_reports
+    unless has_codequality_reports?
+      return { status: :error, status_reason: _('This merge request does not have codequality reports') }
+    end
+
+    compare_reports(Ci::CompareCodequalityReportsService)
+  end
+
   def find_terraform_reports
     unless has_terraform_reports?
       return { status: :error, status_reason: 'This merge request does not have terraform reports' }
@@ -1625,18 +1639,6 @@ class MergeRequest < ApplicationRecord
     !has_commits?
   end
 
-  def mergeable_with_quick_action?(current_user, autocomplete_precheck: false, last_diff_sha: nil)
-    return false unless can_be_merged_by?(current_user)
-
-    return true if autocomplete_precheck
-
-    return false unless mergeable?(skip_ci_check: true)
-    return false if actual_head_pipeline && !(actual_head_pipeline.success? || actual_head_pipeline.active?)
-    return false if last_diff_sha != diff_head_sha
-
-    true
-  end
-
   def pipeline_coverage_delta
     if base_pipeline&.coverage && head_pipeline&.coverage
       '%.2f' % (head_pipeline.coverage.to_f - base_pipeline.coverage.to_f)
@@ -1741,7 +1743,7 @@ class MergeRequest < ApplicationRecord
   end
 
   def allows_reviewers?
-    Feature.enabled?(:merge_request_reviewers, project)
+    Feature.enabled?(:merge_request_reviewers, project, default_enabled: true)
   end
 
   def allows_multiple_reviewers?

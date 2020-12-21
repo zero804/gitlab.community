@@ -1,12 +1,14 @@
 import { pick } from 'lodash';
-import Cookies from 'js-cookie';
 import axios from '~/lib/utils/axios_utils';
 import boardsStore from '~/boards/stores/boards_store';
-import { __ } from '~/locale';
-import { historyPushState, parseBoolean } from '~/lib/utils/common_utils';
+import {
+  historyPushState,
+  convertObjectPropsToCamelCase,
+  urlParamsToObject,
+} from '~/lib/utils/common_utils';
 import { mergeUrlParams, removeParams } from '~/lib/utils/url_utility';
 import actionsCE from '~/boards/stores/actions';
-import { BoardType, ListType } from '~/boards/constants';
+import { BoardType } from '~/boards/constants';
 import { EpicFilterType, IterationFilterType, GroupByParamType } from '../constants';
 import boardsStoreEE from './boards_store_ee';
 import * as types from './mutation_types';
@@ -98,12 +100,29 @@ export default {
 
     if (
       filters.iterationId === IterationFilterType.any ||
-      filters.iterationId === IterationFilterType.none
+      filters.iterationId === IterationFilterType.none ||
+      filters.iterationId === IterationFilterType.current
     ) {
       filterParams.iterationWildcardId = filters.iterationId.toUpperCase();
     }
 
     commit(types.SET_FILTERS, filterParams);
+  },
+
+  performSearch({ dispatch, getters }) {
+    dispatch(
+      'setFilters',
+      convertObjectPropsToCamelCase(urlParamsToObject(window.location.search)),
+    );
+
+    if (getters.isSwimlanesOn) {
+      dispatch('resetEpics');
+      dispatch('resetIssues');
+      dispatch('fetchEpicsSwimlanes', {});
+    } else if (gon.features.graphqlBoardLists) {
+      dispatch('fetchLists');
+      dispatch('resetIssues');
+    }
   },
 
   fetchEpicsSwimlanes({ state, commit, dispatch }, { withLists = true, endCursor = null }) {
@@ -213,7 +232,7 @@ export default {
             const list = data.boardListUpdateLimitMetrics?.list;
             commit(types.UPDATE_LIST_SUCCESS, {
               listId,
-              list: boardsStore.updateListPosition({ ...list, doNotFetchIssues: true }),
+              list,
             });
           }
         })
@@ -227,22 +246,6 @@ export default {
     });
   },
 
-  showPromotionList: ({ state, dispatch }) => {
-    if (
-      !state.showPromotion ||
-      parseBoolean(Cookies.get('promotion_issue_board_hidden')) ||
-      state.disabled
-    ) {
-      return;
-    }
-    dispatch('addList', {
-      id: 'promotion',
-      listType: ListType.promotion,
-      title: __('Improve Issue Boards'),
-      position: 0,
-    });
-  },
-
   fetchAllBoards: () => {
     notImplemented();
   },
@@ -251,19 +254,11 @@ export default {
     notImplemented();
   },
 
-  createBoard: () => {
-    notImplemented();
-  },
-
   deleteBoard: () => {
     notImplemented();
   },
 
   updateIssueWeight: () => {
-    notImplemented();
-  },
-
-  togglePromotionState: () => {
     notImplemented();
   },
 
@@ -316,14 +311,18 @@ export default {
     commit(types.TOGGLE_EPICS_SWIMLANES);
 
     if (state.isShowingEpicsSwimlanes) {
-      historyPushState(mergeUrlParams({ group_by: GroupByParamType.epic }, window.location.href));
+      historyPushState(
+        mergeUrlParams({ group_by: GroupByParamType.epic }, window.location.href, {
+          spreadArrays: true,
+        }),
+      );
       dispatch('fetchEpicsSwimlanes', {});
     } else if (!gon.features.graphqlBoardLists) {
-      historyPushState(removeParams(['group_by']));
+      historyPushState(removeParams(['group_by']), window.location.href, true);
       boardsStore.create();
       eventHub.$emit('initialBoardLoad');
     } else {
-      historyPushState(removeParams(['group_by']));
+      historyPushState(removeParams(['group_by']), window.location.href, true);
     }
   },
 

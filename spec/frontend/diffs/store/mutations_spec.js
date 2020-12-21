@@ -67,24 +67,24 @@ describe('DiffsStoreMutations', () => {
     });
   });
 
-  describe('SET_DIFF_DATA', () => {
-    it('should not modify the existing state', () => {
+  describe('SET_DIFF_METADATA', () => {
+    it('should overwrite state with the camelCased data that is passed in', () => {
       const state = {
-        diffFiles: [
-          {
-            content_sha: diffFileMockData.content_sha,
-            file_hash: diffFileMockData.file_hash,
-            [INLINE_DIFF_LINES_KEY]: [],
-          },
-        ],
+        diffFiles: [],
       };
       const diffMock = {
         diff_files: [diffFileMockData],
       };
+      const metaMock = {
+        other_key: 'value',
+      };
 
-      mutations[types.SET_DIFF_DATA](state, diffMock);
+      mutations[types.SET_DIFF_METADATA](state, diffMock);
+      expect(state.diffFiles[0]).toEqual(diffFileMockData);
 
-      expect(state.diffFiles[0][INLINE_DIFF_LINES_KEY]).toEqual([]);
+      mutations[types.SET_DIFF_METADATA](state, metaMock);
+      expect(state.diffFiles[0]).toEqual(diffFileMockData);
+      expect(state.otherKey).toEqual('value');
     });
   });
 
@@ -904,6 +904,21 @@ describe('DiffsStoreMutations', () => {
       mutations[types.SET_FILE_BY_FILE](state, value);
 
       expect(state.viewDiffsFileByFile).toBe(value);
+    });
+  });
+
+  describe('SET_MR_FILE_REVIEWS', () => {
+    it.each`
+      newReviews          | oldReviews
+      ${{ abc: ['123'] }} | ${{}}
+      ${{ abc: [] }}      | ${{ abc: ['123'] }}
+      ${{}}               | ${{ abc: ['123'] }}
+    `('sets mrReviews to $newReviews', ({ newReviews, oldReviews }) => {
+      const state = { mrReviews: oldReviews };
+
+      mutations[types.SET_MR_FILE_REVIEWS](state, newReviews);
+
+      expect(state.mrReviews).toStrictEqual(newReviews);
     });
   });
 });

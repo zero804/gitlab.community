@@ -1,4 +1,5 @@
 import { escape, last } from 'lodash';
+import * as Emoji from '~/emoji';
 import { spriteIcon } from '~/lib/utils/common_utils';
 
 const groupType = 'Group'; // eslint-disable-line @gitlab/require-i18n-strings
@@ -6,11 +7,13 @@ const groupType = 'Group'; // eslint-disable-line @gitlab/require-i18n-strings
 const nonWordOrInteger = /\W|^\d+$/;
 
 export const GfmAutocompleteType = {
+  Emojis: 'emojis',
   Issues: 'issues',
   Labels: 'labels',
   Members: 'members',
   MergeRequests: 'mergeRequests',
   Milestones: 'milestones',
+  QuickActions: 'commands',
   Snippets: 'snippets',
 };
 
@@ -21,6 +24,15 @@ function doesCurrentLineStartWith(searchString, fullText, selectionStart) {
 }
 
 export const tributeConfig = {
+  [GfmAutocompleteType.Emojis]: {
+    config: {
+      trigger: ':',
+      lookup: value => value,
+      menuItemTemplate: ({ original }) => `${original} ${Emoji.glEmojiTag(original)}`,
+      selectTemplate: ({ original }) => `:${original}:`,
+    },
+  },
+
   [GfmAutocompleteType.Issues]: {
     config: {
       trigger: '#',
@@ -128,6 +140,34 @@ export const tributeConfig = {
       lookup: 'title',
       menuItemTemplate: ({ original }) => escape(original.title),
       selectTemplate: ({ original }) => `%"${escape(original.title)}"`,
+    },
+  },
+
+  [GfmAutocompleteType.QuickActions]: {
+    config: {
+      trigger: '/',
+      fillAttr: 'name',
+      lookup: value => `${value.name}${value.aliases.join()}`,
+      menuItemTemplate: ({ original }) => {
+        const aliases = original.aliases.length
+          ? `<small>(or /${original.aliases.join(', /')})</small>`
+          : '';
+
+        const params = original.params.length ? `<small>${original.params.join(' ')}</small>` : '';
+
+        let description = '';
+
+        if (original.warning) {
+          const confidentialIcon =
+            original.icon === 'confidential' ? spriteIcon('eye-slash', 's16 gl-mr-2') : '';
+          description = `<small>${confidentialIcon}<em>${original.warning}</em></small>`;
+        } else if (original.description) {
+          description = `<small><em>${original.description}</em></small>`;
+        }
+
+        return `<div>/${original.name} ${aliases} ${params}</div>
+          <div>${description}</div>`;
+      },
     },
   },
 

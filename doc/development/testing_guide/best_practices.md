@@ -327,7 +327,7 @@ Use the coverage reports to ensure your tests cover 100% of your code.
 
 ### System / Feature tests
 
-NOTE: **Note:**
+NOTE:
 Before writing a new system test, [please consider **not**
 writing one](testing_levels.md#consider-not-writing-a-system-test)!
 
@@ -448,7 +448,7 @@ instead of 30+ seconds in case of a regular `spec_helper`.
 
 ### `subject` and `let` variables
 
-GitLab's RSpec suite has made extensive use of `let`(along with its strict, non-lazy
+The GitLab RSpec suite has made extensive use of `let`(along with its strict, non-lazy
 version `let!`) variables to reduce duplication. However, this sometimes [comes at the cost of clarity](https://thoughtbot.com/blog/lets-not),
 so we need to set some guidelines for their use going forward:
 

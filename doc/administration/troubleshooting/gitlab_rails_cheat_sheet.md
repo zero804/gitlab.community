@@ -374,6 +374,26 @@ Clear the cache:
 sudo gitlab-rake cache:clear
 ```
 
+### Export a repository
+
+It's typically recommended to export a project through [the web interface](../../user/project/settings/import_export.md#exporting-a-project-and-its-data) or through [the API](../../api/project_import_export.md). In situations where this is not working as expected, it may be preferable to export a project directly via the Rails console:
+
+```ruby
+user = User.find_by_username('USERNAME')
+project = Project.find_by_full_path('PROJECT_PATH')
+Projects::ImportExport::ExportService.new(project, user).execute
+```
+
+If the project you wish to export is available at `https://gitlab.example.com/baltig/pipeline-templates`, the value to use for `PROJECT_PATH` would be `baltig/pipeline-templates`. 
+
+If this all runs successfully, you will see output like the following before being returned to the Rails console prompt:
+
+```ruby
+=> nil
+```
+
+The exported project will be located within a `.tar.gz` file in `/var/opt/gitlab/gitlab-rails/uploads/-/system/import_export_upload/export_file/`. 
+
 ## Repository
 
 ### Search sequence of pushes to a repository
@@ -464,8 +484,9 @@ User.billable.count
 ::HistoricalData.max_historical_user_count
 ```
 
+Using cURL and jq (up to a max 100, see the [pagination docs](../../api/README.md#pagination)):
+
 ```shell
-# Using curl and jq (up to a max 100, see pagination docs https://docs.gitlab.com/ee/api/#pagination
 curl --silent --header "Private-Token: ********************" "https://gitlab.example.com/api/v4/users?per_page=100&active" | jq --compact-output '.[] | [.id,.name,.username]'
 ```
 
@@ -491,10 +512,22 @@ users.each do |user|
 end
 ```
 
+### Deactivate Users that have no recent activity
+
+```ruby
+days_inactive = 90
+inactive_users = User.active.where("last_activity_on <= ?", days_inactive.days.ago)
+
+inactive_users.each do |user|
+    puts "user '#{user.username}': #{user.last_activity_on}"
+    user.deactivate!
+end
+```
+
 ### Block Users that have no recent activity
 
 ```ruby
-days_inactive = 60
+days_inactive = 90
 inactive_users = User.active.where("last_activity_on <= ?", days_inactive.days.ago)
 
 inactive_users.each do |user|
@@ -563,6 +596,17 @@ GroupDestroyWorker.perform_async(group_id, user_id)
 # Project creation levels: 0 - No one, 1 - Maintainers, 2 - Developers + Maintainers
 group = Group.find_by_path_or_name('group-name')
 group.project_creation_level=0
+```
+
+### Modify group - disable 2FA requirement 
+
+WARNING:
+When disabling the 2FA Requirement on a subgroup, the whole parent group (including all subgroups) is affected by this change.
+
+```ruby
+group = Group.find_by_path_or_name('group-name')
+group.require_two_factor_authentication=false
+group.save
 ```
 
 ## SCIM

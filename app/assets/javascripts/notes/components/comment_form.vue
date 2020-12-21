@@ -20,6 +20,7 @@ import eventHub from '../event_hub';
 import NoteableWarning from '~/vue_shared/components/notes/noteable_warning.vue';
 import markdownField from '~/vue_shared/components/markdown/field.vue';
 import userAvatarLink from '~/vue_shared/components/user_avatar/user_avatar_link.vue';
+import glFeatureFlagsMixin from '~/vue_shared/mixins/gl_feature_flags_mixin';
 import noteSignedOutWidget from './note_signed_out_widget.vue';
 import discussionLockedWidget from './discussion_locked_widget.vue';
 import issuableStateMixin from '../mixins/issuable_state';
@@ -36,7 +37,7 @@ export default {
     TimelineEntryItem,
     GlIcon,
   },
-  mixins: [issuableStateMixin],
+  mixins: [glFeatureFlagsMixin(), issuableStateMixin],
   props: {
     noteableType: {
       type: String,
@@ -138,8 +139,8 @@ export default {
         ? __('merge request')
         : __('issue');
     },
-    isMergeRequest() {
-      return this.noteableType === constants.MERGE_REQUEST_NOTEABLE_TYPE;
+    isIssue() {
+      return this.noteableDisplayName === constants.ISSUE_NOTEABLE_TYPE;
     },
     trackingLabel() {
       return slugifyWithUnderscore(`${this.commentButtonTitle} button`);
@@ -167,8 +168,8 @@ export default {
       'stopPolling',
       'restartPolling',
       'removePlaceholderNotes',
-      'closeMergeRequest',
-      'reopenMergeRequest',
+      'closeIssuable',
+      'reopenIssuable',
       'toggleIssueLocalState',
     ]),
     setIsSubmitButtonDisabled(note, isSubmitting) {
@@ -229,22 +230,18 @@ export default {
       }
     },
     toggleIssueState() {
-      if (!this.isMergeRequest) {
+      if (this.isIssue) {
+        // We want to invoke the close/reopen logic in the issue header
+        // since that is where the blocked-by issues modal logic is also defined
         eventHub.$emit('toggle.issuable.state');
         return;
       }
 
-      const toggleMergeRequestState = this.isOpen
-        ? this.closeMergeRequest
-        : this.reopenMergeRequest;
+      const toggleState = this.isOpen ? this.closeIssuable : this.reopenIssuable;
 
-      const errorMessage = this.isOpen
-        ? __('Something went wrong while closing the merge request. Please try again later')
-        : __('Something went wrong while reopening the merge request. Please try again later');
-
-      toggleMergeRequestState()
+      toggleState()
         .then(refreshUserMergeRequestCounts)
-        .catch(() => Flash(errorMessage));
+        .catch(() => Flash(constants.toggleStateErrorMessage[this.noteableType][this.openState]));
     },
     discard(shouldClear = true) {
       // `blur` is needed to clear slash commands autocomplete cache if event fired.
@@ -343,7 +340,7 @@ export default {
                 class="note-textarea js-vue-comment-form js-note-text js-gfm-input js-autosize markdown-area"
                 data-qa-selector="comment_field"
                 data-testid="comment-field"
-                data-supports-quick-actions="true"
+                :data-supports-quick-actions="!glFeatures.tributeAutocomplete"
                 :aria-label="__('Description')"
                 :placeholder="__('Write a comment or drag your files here…')"
                 @keydown.up="editCurrentUserLastNote()"

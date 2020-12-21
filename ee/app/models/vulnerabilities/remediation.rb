@@ -9,6 +9,8 @@ module Vulnerabilities
 
     sha_attribute :checksum
 
+    belongs_to :project, optional: false
+
     has_many :finding_remediations, class_name: 'Vulnerabilities::FindingRemediation', inverse_of: :remediation, foreign_key: 'vulnerability_remediation_id'
     has_many :findings, through: :finding_remediations
 
@@ -19,6 +21,10 @@ module Vulnerabilities
     validates :checksum, presence: true
 
     scope :by_checksum, -> (checksum) { where(checksum: checksum) }
+
+    def diff
+      @diff ||= file.read
+    end
 
     def retrieve_upload(_identifier, paths)
       Upload.find_by(model: self, path: paths)

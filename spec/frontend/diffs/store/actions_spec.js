@@ -49,6 +49,7 @@ import {
   setCurrentDiffFileIdFromNote,
   navigateToDiffFileIndex,
   setFileByFile,
+  reviewFile,
 } from '~/diffs/store/actions';
 import eventHub from '~/notes/event_hub';
 import * as types from '~/diffs/store/mutation_types';
@@ -249,7 +250,7 @@ describe('DiffsStoreActions', () => {
           { type: types.SET_LOADING, payload: true },
           { type: types.SET_LOADING, payload: false },
           { type: types.SET_MERGE_REQUEST_DIFFS, payload: diffMetadata.merge_request_diffs },
-          { type: types.SET_DIFF_DATA, payload: noFilesData },
+          { type: types.SET_DIFF_METADATA, payload: noFilesData },
         ],
         [],
         () => {
@@ -1471,5 +1472,47 @@ describe('DiffsStoreActions', () => {
         [],
       );
     });
+  });
+
+  describe('reviewFile', () => {
+    const file = {
+      id: '123',
+      file_identifier_hash: 'abc',
+      load_collapsed_diff_url: 'gitlab-org/gitlab-test/-/merge_requests/1/diffs',
+    };
+    it.each`
+      reviews             | diffFile | reviewed
+      ${{ abc: ['123'] }} | ${file}  | ${true}
+      ${{}}               | ${file}  | ${false}
+    `(
+      'sets reviews ($reviews) to localStorage and state for file $file if it is marked reviewed=$reviewed',
+      ({ reviews, diffFile, reviewed }) => {
+        const commitSpy = jest.fn();
+        const getterSpy = jest.fn().mockReturnValue([]);
+
+        reviewFile(
+          {
+            commit: commitSpy,
+            getters: {
+              fileReviews: getterSpy,
+            },
+            state: {
+              mrReviews: { abc: ['123'] },
+            },
+          },
+          {
+            file: diffFile,
+            reviewed,
+          },
+        );
+
+        expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+        expect(localStorage.setItem).toHaveBeenCalledWith(
+          'gitlab-org/gitlab-test/-/merge_requests/1-file-reviews',
+          JSON.stringify(reviews),
+        );
+        expect(commitSpy).toHaveBeenCalledWith(types.SET_MR_FILE_REVIEWS, reviews);
+      },
+    );
   });
 });
