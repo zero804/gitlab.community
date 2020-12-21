@@ -18,21 +18,27 @@ RSpec.describe Elastic::ReindexingTask, type: :model do
   end
 
   describe '.drop_old_indices!' do
-    let(:task_1) { create(:elastic_reindexing_task, index_name_from: 'original_index_1', state: :reindexing, delete_original_index_at: 1.day.ago) }
-    let(:task_2) { create(:elastic_reindexing_task, index_name_from: 'original_index_2', state: :success, delete_original_index_at: nil) }
-    let(:task_3) { create(:elastic_reindexing_task, index_name_from: 'original_index_3', state: :success, delete_original_index_at: 1.day.ago) }
-    let(:task_4) { create(:elastic_reindexing_task, index_name_from: 'original_index_4', state: :success, delete_original_index_at: 5.days.ago) }
-    let(:task_5) { create(:elastic_reindexing_task, index_name_from: 'original_index_5', state: :success, delete_original_index_at: 14.days.from_now) }
+    let(:task_1) { create(:elastic_reindexing_task, state: :reindexing, delete_original_index_at: 1.day.ago) }
+    let(:task_2) { create(:elastic_reindexing_task, state: :success, delete_original_index_at: nil) }
+    let(:task_3) { create(:elastic_reindexing_task, state: :success, delete_original_index_at: 1.day.ago) }
+    let(:task_4) { create(:elastic_reindexing_task, state: :success, delete_original_index_at: 5.days.ago) }
+    let(:task_5) { create(:elastic_reindexing_task, state: :success, delete_original_index_at: 14.days.from_now) }
     let(:tasks_for_deletion) { [task_3, task_4] }
     let(:other_tasks) { [task_1, task_2, task_5] }
 
+    before do
+      [task_1, task_2, task_3, task_4, task_5].each_with_index do |task, i|
+        create(:elastic_reindexing_subtask, index_name_from: "index_#{i}", elastic_reindexing_task: task)
+      end
+    end
+
     it 'deletes the correct indices' do
       other_tasks.each do |task|
-        expect(Gitlab::Elastic::Helper.default).not_to receive(:delete_index).with(index_name: task.index_name_from)
+        expect(Gitlab::Elastic::Helper.default).not_to receive(:delete_index).with(index_name: task.subtasks.first.index_name_from)
       end
 
       tasks_for_deletion.each do |task|
-        expect(Gitlab::Elastic::Helper.default).to receive(:delete_index).with(index_name: task.index_name_from).and_return(true)
+        expect(Gitlab::Elastic::Helper.default).to receive(:delete_index).with(index_name: task.subtasks.first.index_name_from).and_return(true)
       end
 
       described_class.drop_old_indices!

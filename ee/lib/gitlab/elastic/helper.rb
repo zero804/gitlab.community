@@ -99,19 +99,21 @@ module Gitlab
         end
       end
 
-      def create_standalone_indices(options: {})
-        standalone_indices_proxies.map do |proxy|
+      def create_standalone_indices(with_alias: true, options: {})
+        hash = {}
+
+        standalone_indices_proxies.each do |proxy|
           alias_name = proxy.index_name
           new_index_name = "#{alias_name}-#{Time.now.strftime("%Y%m%d-%H%M")}"
 
-          if alias_exists?(name: alias_name)
-            raise "Index under '#{alias_name}' already exists"
+          if with_alias ? alias_exists?(name: alias_name) : index_exists?(index_name: new_index_name)
+            raise "Index under '#{with_alias ? alias_name : new_index_name}' already exists"
           end
 
-          settings = proxy.settings
+          settings = proxy.settings.to_hash
           settings = settings.merge(options[:settings]) if options[:settings]
 
-          mappings = proxy.mappings
+          mappings = proxy.mappings.to_hash
           mappings = mappings.merge(options[:mappings]) if options[:mappings]
 
           create_index_options = {
@@ -124,10 +126,12 @@ module Gitlab
 
           client.indices.create create_index_options
 
-          client.indices.put_alias(name: alias_name, index: new_index_name)
+          client.indices.put_alias(name: alias_name, index: new_index_name) if with_alias
 
-          new_index_name
+          hash[new_index_name] = alias_name
         end
+
+        hash
       end
 
       def create_empty_index(with_alias: true, options: {})
@@ -154,7 +158,9 @@ module Gitlab
         client.indices.create create_index_options
         client.indices.put_alias(name: target_name, index: new_index_name) if with_alias
 
-        new_index_name
+        {
+          new_index_name => target_name
+        }
       end
 
       def delete_index(index_name: nil)
@@ -190,7 +196,8 @@ module Gitlab
       end
 
       def index_size(index_name: nil)
-        client.indices.stats['indices'][index_name || target_index_name]['total']
+        index_name = target_index_name(target: index_name)
+        client.indices.stats['indices'][index_name]['total']
       end
 
       def documents_count(index_name: nil)
@@ -199,8 +206,8 @@ module Gitlab
         client.indices.stats.dig('indices', index, 'primaries', 'docs', 'count')
       end
 
-      def index_size_bytes
-        index_size['store']['size_in_bytes']
+      def index_size_bytes(index_name: nil)
+        index_size(index_name: index_name)['store']['size_in_bytes']
       end
 
       def cluster_free_size_bytes
@@ -236,13 +243,13 @@ module Gitlab
         client.indices.put_settings(index: index_name || target_index_name, body: settings)
       end
 
-      def switch_alias(from: target_index_name, to:)
+      def switch_alias(from: target_index_name, alias_name: target_name, to:)
         actions = [
           {
-            remove: { index: from, alias: target_name }
+            remove: { index: from, alias: alias_name }
           },
           {
-            add: { index: to, alias: target_name }
+            add: { index: to, alias: alias_name }
           }
         ]
 

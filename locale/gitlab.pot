@@ -29896,7 +29896,7 @@ msgstr ""
 msgid "Until"
 msgstr ""
 
-msgid "Unused, previous index '%{index_name}' will be deleted after %{time} automatically."
+msgid "Unused, previous indices: %{index_names} will be deleted after %{time} automatically."
 msgstr ""
 
 msgid "Unverified"

@@ -6,6 +6,10 @@ RSpec.describe 'admin/application_settings/general.html.haml' do
   let(:app_settings) { build(:application_setting) }
   let(:user) { create(:admin) }
 
+  before do
+    allow(Elastic::DataMigrationService).to receive(:pending_migrations?).and_return(false)
+  end
+
   describe 'sourcegraph integration' do
     let(:sourcegraph_flag) { true }
 

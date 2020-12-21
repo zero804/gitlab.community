@@ -7,13 +7,13 @@ RSpec.describe Gitlab::Elastic::Helper do
 
   shared_context 'with a legacy index' do
     before do
-      @index_name = helper.create_empty_index(with_alias: false, options: { index_name: helper.target_name })
+      @index_name = helper.create_empty_index(with_alias: false, options: { index_name: helper.target_name }).each_key.first
     end
   end
 
   shared_context 'with an existing index and alias' do
     before do
-      @index_name = helper.create_empty_index(with_alias: true)
+      @index_name = helper.create_empty_index(with_alias: true).each_key.first
     end
   end
 
@@ -77,7 +77,7 @@ RSpec.describe Gitlab::Elastic::Helper do
     end
 
     it 'creates standalone indices' do
-      @indices = helper.create_standalone_indices
+      @indices = helper.create_standalone_indices.keys
 
       @indices.each do |index|
         expect(helper.index_exists?(index_name: index)).to be_truthy
@@ -85,7 +85,7 @@ RSpec.describe Gitlab::Elastic::Helper do
     end
 
     it 'raises an exception when there is an existing index' do
-      @indices = helper.create_standalone_indices
+      @indices = helper.create_standalone_indices.keys
 
       expect { helper.create_standalone_indices }.to raise_error(/already exists/)
     end
