@@ -13,7 +13,6 @@ import { get } from 'lodash';
 import getContainerRepositoriesQuery from 'shared_queries/container_registry/get_container_repositories.query.graphql';
 import Tracking from '~/tracking';
 import createFlash from '~/flash';
-import * as Sentry from '~/sentry/wrapper';
 import RegistryHeader from '../components/list_page/registry_header.vue';
 
 import getContainerRepositoriesDetails from '../graphql/queries/get_container_repositories_details.query.graphql';
@@ -83,8 +82,7 @@ export default {
         this.pageInfo = data[this.graphqlResource]?.containerRepositories?.pageInfo;
         this.containerRepositoriesCount = data[this.graphqlResource]?.containerRepositoriesCount;
       },
-      error(e) {
-        Sentry.captureException(e);
+      error() {
         createFlash({ message: FETCH_IMAGES_LIST_ERROR_MESSAGE });
       },
     },
@@ -99,8 +97,7 @@ export default {
       update(data) {
         return data[this.graphqlResource]?.containerRepositories.nodes;
       },
-      error(e) {
-        Sentry.captureException(e);
+      error() {
         createFlash({ message: FETCH_IMAGES_LIST_ERROR_MESSAGE });
       },
     },
@@ -158,9 +155,11 @@ export default {
     },
   },
   mounted() {
+    // If the two graphql calls - which are not batched - resolve togheter we will have a race
+    //  condition when apollo sets the cache, whit this we give the 'base' call an headstart
     setTimeout(() => {
       this.fetchAdditionalDetails = true;
-    }, 100);
+    }, 200);
   },
   methods: {
     deleteImage(item) {

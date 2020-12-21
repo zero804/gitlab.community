@@ -32,6 +32,7 @@ import {
   graphQLEmptyGroupImageListMock,
   pageInfo,
   graphQLProjectImageRepositoriesDetailsMock,
+  dockerCommands,
 } from '../mock_data';
 import { GlModal, GlEmptyState } from '../stubs';
 import { $toast } from '../../shared/mocks';
@@ -59,6 +60,7 @@ describe('List Page', () => {
   const findEmptySearchMessage = () => wrapper.find('[data-testid="emptySearch"]');
 
   const waitForApolloRequestRender = async () => {
+    jest.runOnlyPendingTimers();
     await waitForPromises();
     await wrapper.vm.$nextTick();
   };
@@ -100,6 +102,7 @@ describe('List Page', () => {
       provide() {
         return {
           config,
+          ...dockerCommands,
         };
       },
     });
@@ -263,6 +266,9 @@ describe('List Page', () => {
             .mockResolvedValue(graphQLProjectImageRepositoriesDetailsMock);
           mountComponent({ detailsResolver });
 
+          jest.runOnlyPendingTimers();
+          await waitForPromises();
+
           expect(detailsResolver).toHaveBeenCalled();
         });
 
@@ -387,6 +393,8 @@ describe('List Page', () => {
           .fn()
           .mockResolvedValue(graphQLProjectImageRepositoriesDetailsMock);
         mountComponent({ resolver, detailsResolver });
+
+        await waitForApolloRequestRender();
 
         resolver.mockResolvedValue(graphQLEmptyImageListMock);
         detailsResolver.mockResolvedValue(graphQLEmptyImageListMock);

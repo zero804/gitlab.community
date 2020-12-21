@@ -8,7 +8,6 @@ export const imagesListResponse = [
     location: '0.0.0.0:5000/gitlab-org/gitlab-test/rails-12009',
     canDelete: true,
     createdAt: '2020-11-03T13:29:21Z',
-    tagsCount: 18,
     expirationPolicyStartedAt: null,
   },
   {
@@ -20,7 +19,6 @@ export const imagesListResponse = [
     location: '0.0.0.0:5000/gitlab-org/gitlab-test/rails-20572',
     canDelete: true,
     createdAt: '2020-09-21T06:57:43Z',
-    tagsCount: 1,
     expirationPolicyStartedAt: null,
   },
 ];
