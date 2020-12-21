@@ -115,6 +115,7 @@ export default class IntegrationSettingsForm {
         if (data.error) {
           toast(`${data.message} ${data.service_response}`);
         } else {
+          this.vue.$store.dispatch('receivedJiraIssueTypesSuccess', data.issuetypes);
           toast(s__('Integrations|Connection successful.'));
         }
       })

@@ -36,6 +36,11 @@ export default {
       required: false,
       default: null,
     },
+    initialEnableJiraVulnerabilities: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     initialProjectKey: {
       type: String,
       required: false,
@@ -113,7 +118,10 @@ export default {
             v-if="enableJiraIssues && glFeatures.jiraForVulnerabilities"
             data-testid="jiraForVulnerabilities"
           >
-            <jira-issue-creation-vulnerabilities :has-project-key="Boolean(projectKey)" />
+            <jira-issue-creation-vulnerabilities
+              :has-project-key="Boolean(projectKey)"
+              :initial-is-enabled="initialEnableJiraVulnerabilities"
+            />
           </div>
         </template>
         <gl-card v-else class="gl-mt-7">

@@ -23,6 +23,11 @@ export default {
     GlIcon,
   },
   props: {
+    initialIsEnabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     hasProjectKey: {
       type: Boolean,
       required: true,
@@ -32,12 +37,12 @@ export default {
     return {
       // @TODO: set the initial value to be passed in via a prop
       // @TODO: rename this
-      isEnabled: true,
+      isEnabled: this.initialIsEnabled,
       selectedIssueType: {},
     };
   },
   computed: {
-    ...mapState(['jiraIssueTypes', 'isLoadingJiraIssueTypes']),
+    ...mapState(['isTesting', 'jiraIssueTypes', 'isLoadingJiraIssueTypes']),
   },
   methods: {
     handleLoadJiraIssueTypesClick() {
@@ -59,6 +64,7 @@ export default {
         }}
       </template>
     </gl-form-checkbox>
+    <input name="service[vulnerabilities_enabled]" type="hidden" :value="isEnabled || false" />
     <gl-form-group
       v-show="isEnabled"
       :label="__('Jira issue type')"
@@ -69,7 +75,7 @@ export default {
         <gl-button-group class="gl-mr-3">
           <gl-dropdown
             :disabled="!hasProjectKey"
-            :loading="isLoadingJiraIssueTypes"
+            :loading="isLoadingJiraIssueTypes || isTesting"
             :text="selectedIssueType.name || __('Select issue type')"
           >
             <gl-dropdown-item
