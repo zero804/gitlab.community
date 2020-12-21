@@ -14,11 +14,6 @@ import getContainerRepositoriesQuery from 'shared_queries/container_registry/get
 import Tracking from '~/tracking';
 import createFlash from '~/flash';
 import * as Sentry from '~/sentry/wrapper';
-
-// import ProjectEmptyState from '../components/list_page/project_empty_state.vue';
-// import GroupEmptyState from '../components/list_page/group_empty_state.vue';
-// import ImageList from '../components/list_page/image_list.vue';
-// import CliCommands from '../components/list_page/cli_commands.vue';
 import RegistryHeader from '../components/list_page/registry_header.vue';
 
 import getContainerRepositoriesDetails from '../graphql/queries/get_container_repositories_details.query.graphql';
