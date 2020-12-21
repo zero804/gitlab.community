@@ -35,6 +35,8 @@ export default class IntegrationSettingsForm {
     eventHub.$on('getJiraIssueTypes', () => {
       this.getJiraIssueTypes();
     });
+
+    eventHub.$emit('formInitialized');
   }
 
   saveIntegration() {
@@ -86,6 +88,8 @@ export default class IntegrationSettingsForm {
     } = this.vue;
 
     dispatch('setIsLoadingJiraIssueTypes', true);
+
+    const formData = this.$form.serialize();
 
     // eslint-disable-next-line no-jquery/no-serialize
     this.fetchTestSettings(this.$form.serialize())

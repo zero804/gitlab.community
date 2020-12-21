@@ -44,6 +44,11 @@ export default {
   computed: {
     ...mapState(['isTesting', 'jiraIssueTypes', 'isLoadingJiraIssueTypes']),
   },
+  mounted() {
+    eventHub.$once('formInitialized', () => {
+      eventHub.$emit('getJiraIssueTypes');
+    });
+  },
   methods: {
     handleLoadJiraIssueTypesClick() {
       eventHub.$emit('getJiraIssueTypes');
@@ -71,17 +76,24 @@ export default {
       class="gl-mt-4 gl-pl-1 gl-ml-5"
     >
       <p>{{ __('Define the type of Jira issue to create from a vulnerability.') }}</p>
-      <div class="gl-display-flex gl-align-items-center">
-        <gl-button-group class="gl-mr-3">
+      <div class="row">
+        <gl-button-group class="col-md-4 gl-mr-3">
           <gl-dropdown
+            class="gl-w-full"
             :disabled="!hasProjectKey"
             :loading="isLoadingJiraIssueTypes || isTesting"
             :text="selectedIssueType.name || __('Select issue type')"
           >
+            <input
+              name="service[vulnerabilities_issuetype]"
+              type="hidden"
+              :value="selectedIssueType.id || '0'"
+            />
             <gl-dropdown-item
               v-for="jiraIssueType in jiraIssueTypes"
               :key="jiraIssueType.id"
               :is-checked="jiraIssueType === selectedIssueType"
+              is-check-item
               @click="selectedIssueType = jiraIssueType"
             >
               {{ jiraIssueType.name }}
