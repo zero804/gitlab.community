@@ -89,19 +89,20 @@ export default class IntegrationSettingsForm {
     dispatch('setIsLoadingJiraIssueTypes', true);
 
     // eslint-disable-next-line no-jquery/no-serialize
-    this.fetchTestSettings(this.$form.serialize())
+    return this.fetchTestSettings(this.$form.serialize())
       .then(({ data: { issuetypes, error, message } }) => {
         if (error || !issuetypes?.length) {
           eventHub.$emit('validateForm');
-          this.vue.$store.dispatch('setHasLoadingJiraIssueTypesError', message);
+          this.vue.$store.dispatch('setLoadingJiraIssueTypesErrorMessage', message);
         } else {
-          this.vue.$store.dispatch('setHasLoadingJiraIssueTypesError', '');
           this.vue.$store.dispatch('receivedJiraIssueTypesSuccess', issuetypes);
         }
       })
-      .catch(e => {
-        // dispatch action - receivedJiraIssueTypesError
-        debugger;
+      .catch(() => {
+        this.vue.$store.dispatch(
+          'setLoadingJiraIssueTypesErrorMessage',
+          __('Something went wrong on our end.'),
+        );
       })
       .finally(() => {
         dispatch('setIsLoadingJiraIssueTypes', false);
@@ -125,7 +126,7 @@ export default class IntegrationSettingsForm {
           toast(s__('Integrations|Connection successful.'));
         }
       })
-      .catch(() => {
+      .catch(e => {
         toast(__('Something went wrong on our end.'));
       })
       .finally(() => {

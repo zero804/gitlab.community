@@ -1,17 +1,31 @@
-import { mount } from '@vue/test-utils';
+import Vuex from 'vuex';
+import { createLocalVue, mount } from '@vue/test-utils';
 import { within } from '@testing-library/dom';
 
 import JiraIssueCreationVulnerabilities from '~/integrations/edit/components/jira_issue_creation_vulnerabilities.vue';
+
+const localVue = createLocalVue();
+localVue.use(Vuex);
 
 describe('JiraIssuesFields', () => {
   let wrapper;
 
   const defaultProps = {
     hasProjectKey: true,
+    initialIssueTypeId: '0',
   };
 
   const createComponent = props => {
     wrapper = mount(JiraIssueCreationVulnerabilities, {
+      localVue,
+      store: new Vuex.Store({
+        state: {
+          isTesting: false,
+          isLoadingJiraIssueTypes: false,
+          loadingJiraIssueTypesErrorMessage: '',
+          jiraIssueTypes: [],
+        },
+      }),
       propsData: { ...defaultProps, ...props },
     });
   };

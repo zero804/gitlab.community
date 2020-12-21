@@ -15,6 +15,7 @@ describe('JiraIssuesFields', () => {
   const createComponent = (props, options = {}) => {
     wrapper = mount(JiraIssuesFields, {
       propsData: { ...defaultProps, ...props },
+      stubs: ['jira-issue-creation-vulnerabilities'],
       ...options,
     });
   };

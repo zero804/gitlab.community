@@ -87,6 +87,7 @@ describe('IntegrationSettingsForm', () => {
 
       mock.onPut(integrationSettingsForm.testEndPoint).reply(200, {
         error: false,
+        issuetypes: [],
       });
 
       await integrationSettingsForm.testSettings(formData);

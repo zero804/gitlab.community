@@ -31,9 +31,10 @@ export const setIsLoadingJiraIssueTypes = ({ commit }, isLoadingJiraIssueTypes) 
   commit(types.SET_IS_LOADING_JIRA_ISSUE_TYPES, isLoadingJiraIssueTypes);
 };
 export const receivedJiraIssueTypesSuccess = ({ commit }, issueTypes) => {
+  commit(types.SET_LOADING_JIRA_ISSUE_TYPES_ERROR_MESSAGE, '');
   commit(types.SET_JIRA_ISSUE_TYPES, issueTypes);
 };
 
-export const setHasLoadingJiraIssueTypesError = ({ commit }, hasError) => {
-  commit(types.SET_HAS_LOADING_JIRA_ISSUE_TYPES_ERROR, hasError);
+export const setLoadingJiraIssueTypesErrorMessage = ({ commit }, errorMessage) => {
+  commit(types.SET_LOADING_JIRA_ISSUE_TYPES_ERROR_MESSAGE, errorMessage);
 };

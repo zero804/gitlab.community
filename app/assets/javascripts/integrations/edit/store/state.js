@@ -9,7 +9,7 @@ export default ({ defaultState = null, customState = {} } = {}) => {
     isTesting: false,
     isResetting: false,
     isLoadingJiraIssueTypes: false,
-    hasLoadingJiraIssueTypesError: '',
+    loadingJiraIssueTypesErrorMessage: '',
     jiraIssueTypes: [],
   };
 };

@@ -50,7 +50,7 @@ export default {
       'isTesting',
       'jiraIssueTypes',
       'isLoadingJiraIssueTypes',
-      'hasLoadingJiraIssueTypesError',
+      'loadingJiraIssueTypesErrorMessage',
     ]),
     initialJiraIssueType() {
       return this.jiraIssueTypes?.find(({ id }) => id === this.initialIssueTypeId) || {};
@@ -120,12 +120,12 @@ export default {
             @click="handleLoadJiraIssueTypesClick"
           />
         </gl-button-group>
-        <p v-if="!hasProjectKey || hasLoadingJiraIssueTypesError" class="gl-my-0">
+        <p v-if="!hasProjectKey || loadingJiraIssueTypesErrorMessage" class="gl-my-0">
           <gl-icon name="warning" class="gl-text-orange-500" />
           {{
             !hasProjectKey
               ? __('Project key is required to generate issue types')
-              : hasLoadingJiraIssueTypesError
+              : loadingJiraIssueTypesErrorMessage
           }}
         </p>
       </div>
