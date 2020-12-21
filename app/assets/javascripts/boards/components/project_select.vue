@@ -141,7 +141,7 @@ export default {
         v-show="isFetchResultEmpty && !isFetching"
         data-testid="empty-result-message"
       >
-        <span class="text-secondary">{{ $options.i18n.emptySearchResult }}</span>
+        <span class="gl-text-gray-500">{{ $options.i18n.emptySearchResult }}</span>
       </gl-dropdown-text>
     </gl-dropdown>
   </div>

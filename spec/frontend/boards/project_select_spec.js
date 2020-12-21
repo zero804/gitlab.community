@@ -77,19 +77,7 @@ describe('ProjectSelect component', () => {
     it('calls fetchProjects method and sets initialLoading on and off', async () => {
       const fetchProjectSpy = jest.fn();
 
-      mockGetRequest();
-
-      wrapper = mount(ProjectSelect, {
-        propsData: {
-          list: listObj,
-        },
-        provide: {
-          groupId: 1,
-        },
-        methods: {
-          fetchProjects: fetchProjectSpy,
-        },
-      });
+      createWrapper({ mockMethods: { fetchProjects: fetchProjectSpy } });
 
       expect(wrapper.vm.initialLoading).toBe(true);
       expect(fetchProjectSpy).toHaveBeenCalledTimes(1);
