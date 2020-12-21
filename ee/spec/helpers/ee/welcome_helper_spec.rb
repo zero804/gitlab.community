@@ -273,13 +273,13 @@ RSpec.describe EE::WelcomeHelper do
     it 'returns true if query param trial_flow is set to true' do
       allow(helper).to receive(:params).and_return({ trial_flow: 'true' })
 
-      is_expected.to be_truthy
+      is_expected.to eq(true)
     end
 
     it 'returns true if query param trial_flow is not set' do
       allow(helper).to receive(:params).and_return({})
 
-      is_expected.to be_falsey
+      is_expected.to eq(false)
     end
   end
 end

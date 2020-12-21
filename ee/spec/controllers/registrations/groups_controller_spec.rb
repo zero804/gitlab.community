@@ -189,7 +189,7 @@ RSpec.describe Registrations::GroupsController do
           expect_next_instance_of(GitlabSubscriptions::ApplyTrialService) do |service|
             expect(service).to receive(:execute).with(apply_trial_params).and_return({ success: true })
           end
-          is_expected.to redirect_to(new_users_sign_up_project_path(namespace_id: group.id, trial_flow: true))
+          is_expected.to redirect_to(new_users_sign_up_project_path(namespace_id: group.id, trial: false, trial_flow: true))
         end
       end
 

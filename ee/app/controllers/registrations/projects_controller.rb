@@ -57,7 +57,7 @@ module Registrations
     end
 
     def trial_onboarding_flow?
-      params[:trial_flow] == 'true' && experiment_enabled?(:trial_onboarding_issues)
+      helpers.in_trial_onboarding_flow? && experiment_enabled?(:trial_onboarding_issues)
     end
 
     def check_experiment_enabled

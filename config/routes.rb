@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   scope path: '/users/sign_up', module: :registrations, as: :users_sign_up do
     resource :welcome, only: [:show, :update], controller: 'welcome' do
       Gitlab.ee do
-        get 'trial_getting_started', on: :collection
+        get :trial_getting_started, on: :collection
       end
     end
 

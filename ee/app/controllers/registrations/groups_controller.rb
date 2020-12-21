@@ -26,7 +26,7 @@ module Registrations
         url_params = { namespace_id: @group.id, trial: trial }
         if trial_onboarding_flow?
           apply_trial
-          url_params[:trial_flow] = params[:trial_flow]
+          url_params[:trial_flow] = true
         else
           if experiment_enabled?(:trial_during_signup)
             if trial && create_lead && apply_trial
@@ -46,7 +46,7 @@ module Registrations
     private
 
     def trial_onboarding_flow?
-      params[:trial_flow] == 'true' && experiment_enabled?(:trial_onboarding_issues)
+      helpers.in_trial_onboarding_flow? && experiment_enabled?(:trial_onboarding_issues)
     end
 
     def authorize_create_group!
