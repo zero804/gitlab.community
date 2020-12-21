@@ -1,26 +1,29 @@
 # frozen_string_literal: true
 
-BATCH_SIZE = 100_000
-DELAY_INTERVAL = 2.minutes
-BACKGROUND_MIGRATION = 'MyBackgroudnMigration'
-
 class CopyIssuesServiceDeskReplyToToIssueEmailParticipants < ActiveRecord::Migration[6.0]
+  include Gitlab::Database::MigrationHelpers
+
   DOWNTIME = false
+  BATCH_SIZE = 100_000
+  DELAY_INTERVAL = 2.minutes
+  MIGRATION = Gitlab::BackgroundMigration::PopulateIssueEmailParticipants
+  MIGRATION_NAME = MIGRATION.to_s.demodulize
+
+  disable_ddl_transaction!
+
+  class Issue < ActiveRecord::Base
+    include EachBatch
+
+    self.table_name = 'issues'
+  end
 
   def up
-    execute <<~SQL.squish
-      INSERT INTO issue_email_participants (issue_id,
-        created_at,
-        updated_at,
-        email)
-      SELECT id,
-        created_at,
-        updated_at,
-        service_desk_reply_to
-      FROM issues
-      WHERE service_desk_reply_to IS NOT NULL
-      ON CONFLICT (issue_id, email) DO NOTHING
-    SQL
+    queue_background_migration_jobs_by_range_at_intervals(
+      Issue.where.not(service_desk_reply_to: nil),
+      MIGRATION_NAME,
+      DELAY_INTERVAL,
+      batch_size: BATCH_SIZE
+    )
   end
 
   def down
