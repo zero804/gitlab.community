@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+BATCH_SIZE = 100_000
+DELAY_INTERVAL = 2.minutes
+BACKGROUND_MIGRATION = 'MyBackgroudnMigration'
+
 class CopyIssuesServiceDeskReplyToToIssueEmailParticipants < ActiveRecord::Migration[6.0]
   DOWNTIME = false
 
