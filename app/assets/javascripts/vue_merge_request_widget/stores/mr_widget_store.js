@@ -240,6 +240,7 @@ export default class MergeRequestStore {
     const blobPath = data.blob_path || {};
     this.headBlobPath = blobPath.head_path || '';
     this.baseBlobPath = blobPath.base_path || '';
+    this.codequalityReportsPath = data.codequality_reports_path;
     this.codequalityHelpPath = data.codequality_help_path;
     this.codeclimate = data.codeclimate;
 
