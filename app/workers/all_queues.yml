@@ -1594,14 +1594,6 @@
   :idempotent:
   :tags:
   - :requires_disk_io
-- :name: export_csv
-  :feature_category: :issue_tracking
-  :has_external_dependencies:
-  :urgency: :low
-  :resource_boundary: :cpu
-  :weight: 1
-  :idempotent:
-  :tags: []
 - :name: external_service_reactive_caching
   :feature_category: :not_owned
   :has_external_dependencies: true
