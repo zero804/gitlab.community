@@ -23,6 +23,11 @@ export default {
     GlIcon,
   },
   props: {
+    initialIssueTypeId: {
+      type: String,
+      required: false,
+      default: '10001',
+    },
     initialIsEnabled: {
       type: Boolean,
       required: false,
@@ -38,11 +43,17 @@ export default {
       // @TODO: set the initial value to be passed in via a prop
       // @TODO: rename this
       isEnabled: this.initialIsEnabled,
-      selectedIssueType: {},
+      selectedIssueType: null,
     };
   },
   computed: {
     ...mapState(['isTesting', 'jiraIssueTypes', 'isLoadingJiraIssueTypes']),
+    initialJiraIssueType() {
+      return this.jiraIssueTypes?.find(({ id }) => id === this.initialIssueTypeId) || {};
+    },
+    checkedIssueType() {
+      return this.selectedIssueType || this.initialJiraIssueType;
+    },
   },
   mounted() {
     eventHub.$once('formInitialized', () => {
@@ -82,17 +93,17 @@ export default {
             class="gl-w-full"
             :disabled="!hasProjectKey"
             :loading="isLoadingJiraIssueTypes || isTesting"
-            :text="selectedIssueType.name || __('Select issue type')"
+            :text="checkedIssueType.name || __('Select issue type')"
           >
             <input
               name="service[vulnerabilities_issuetype]"
               type="hidden"
-              :value="selectedIssueType.id || '0'"
+              :value="checkedIssueType.id || initialIssueTypeId"
             />
             <gl-dropdown-item
               v-for="jiraIssueType in jiraIssueTypes"
               :key="jiraIssueType.id"
-              :is-checked="jiraIssueType === selectedIssueType"
+              :is-checked="checkedIssueType.id === jiraIssueType.id"
               is-check-item
               @click="selectedIssueType = jiraIssueType"
             >
