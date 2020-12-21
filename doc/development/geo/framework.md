@@ -859,7 +859,7 @@ For example, to add support for files referenced by a `Gizmos` model with a
    bin/feature-flag --ee geo_gizmo_replication --type development --group 'group::geo'
    ```
 
-1. Make sure Geo push events are created. Usualy it needs some
+1. Make sure Geo push events are created. Usually it needs some
    change in the `app/workers/post_receive.rb` file. Example:
 
    ```ruby
@@ -872,14 +872,12 @@ For example, to add support for files referenced by a `Gizmos` model with a
 
    See `app/workers/post_receive.rb` for more examples.
 
-1. Make sure the repository removal is also handled. Usualy you need to add something
-   like following:
+1. Make sure the repository removal is also handled. You may need to add something
+   like the following in the destroy service of the repository:
 
    ```ruby
    gizmo.replicator.handle_after_destroy if gizmo.repository
    ```
-
-   to the destroy service of the repository.
 
 1. Add this replicator class to the method `replicator_classes` in
    `ee/lib/gitlab/geo.rb`:
