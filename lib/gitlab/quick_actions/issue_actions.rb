@@ -257,8 +257,7 @@ module Gitlab
           if added_emails.any?
             message = _("added %{emails}") % { emails: added_emails.to_sentence }
             SystemNoteService.add_email_participants(quick_action_target, quick_action_target.project, current_user, message)
-            message[0] = message[0].capitalize
-            @execution_message[:invite_email] = message << "."
+            @execution_message[:invite_email] = message.upcase_first << "."
           else
             @execution_message[:invite_email] = _("No email participants were added. Either none were provided, or they already exist.")
           end
