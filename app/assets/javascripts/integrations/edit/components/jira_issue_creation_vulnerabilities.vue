@@ -25,8 +25,7 @@ export default {
   props: {
     initialIssueTypeId: {
       type: String,
-      required: false,
-      default: '10001',
+      required: true,
     },
     initialIsEnabled: {
       type: Boolean,
@@ -47,7 +46,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['isTesting', 'jiraIssueTypes', 'isLoadingJiraIssueTypes']),
+    ...mapState([
+      'isTesting',
+      'jiraIssueTypes',
+      'isLoadingJiraIssueTypes',
+      'hasLoadingJiraIssueTypesError',
+    ]),
     initialJiraIssueType() {
       return this.jiraIssueTypes?.find(({ id }) => id === this.initialIssueTypeId) || {};
     },
@@ -87,19 +91,19 @@ export default {
       class="gl-mt-4 gl-pl-1 gl-ml-5"
     >
       <p>{{ __('Define the type of Jira issue to create from a vulnerability.') }}</p>
-      <div class="row">
+      <div class="row gl-display-flex gl-align-items-center">
         <gl-button-group class="col-md-4 gl-mr-3">
+          <input
+            name="service[vulnerabilities_issuetype]"
+            type="hidden"
+            :value="checkedIssueType.id || initialIssueTypeId"
+          />
           <gl-dropdown
             class="gl-w-full"
-            :disabled="!hasProjectKey"
+            :disabled="!jiraIssueTypes.length"
             :loading="isLoadingJiraIssueTypes || isTesting"
             :text="checkedIssueType.name || __('Select issue type')"
           >
-            <input
-              name="service[vulnerabilities_issuetype]"
-              type="hidden"
-              :value="checkedIssueType.id || initialIssueTypeId"
-            />
             <gl-dropdown-item
               v-for="jiraIssueType in jiraIssueTypes"
               :key="jiraIssueType.id"
@@ -116,9 +120,13 @@ export default {
             @click="handleLoadJiraIssueTypesClick"
           />
         </gl-button-group>
-        <p v-if="!hasProjectKey" class="gl-my-0">
+        <p v-if="!hasProjectKey || hasLoadingJiraIssueTypesError" class="gl-my-0">
           <gl-icon name="warning" class="gl-text-orange-500" />
-          {{ __('Project key is required to generate issue types') }}
+          {{
+            !hasProjectKey
+              ? __('Project key is required to generate issue types')
+              : hasLoadingJiraIssueTypesError
+          }}
         </p>
       </div>
     </gl-form-group>

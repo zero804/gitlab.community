@@ -82,20 +82,22 @@ export default class IntegrationSettingsForm {
   }
 
   getJiraIssueTypes() {
-    // dispatch so loading state can be toggled
     const {
       $store: { dispatch },
     } = this.vue;
 
     dispatch('setIsLoadingJiraIssueTypes', true);
 
-    const formData = this.$form.serialize();
-
     // eslint-disable-next-line no-jquery/no-serialize
     this.fetchTestSettings(this.$form.serialize())
-      .then(({ data: { issuetypes } }) => {
-        // dispatch action - receivedJiraIssueTypesSuccess
-        this.vue.$store.dispatch('receivedJiraIssueTypesSuccess', issuetypes);
+      .then(({ data: { issuetypes, error, message } }) => {
+        if (error || !issuetypes?.length) {
+          eventHub.$emit('validateForm');
+          this.vue.$store.dispatch('setHasLoadingJiraIssueTypesError', message);
+        } else {
+          this.vue.$store.dispatch('setHasLoadingJiraIssueTypesError', '');
+          this.vue.$store.dispatch('receivedJiraIssueTypesSuccess', issuetypes);
+        }
       })
       .catch(e => {
         // dispatch action - receivedJiraIssueTypesError

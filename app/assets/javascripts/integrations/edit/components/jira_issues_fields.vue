@@ -126,7 +126,7 @@ export default {
             <jira-issue-creation-vulnerabilities
               :has-project-key="Boolean(projectKey)"
               :initial-is-enabled="initialEnableJiraVulnerabilities"
-              :initial-issue-type-id="initialvulnerabilitiesIssuetype"
+              :initial-issue-type-id="initialvulnerabilitiesIssuetype || '10001'"
             />
           </div>
         </template>

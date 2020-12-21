@@ -25,4 +25,7 @@ export default {
   [types.SET_IS_LOADING_JIRA_ISSUE_TYPES](state, isLoadingJiraIssueTypes) {
     state.isLoadingJiraIssueTypes = isLoadingJiraIssueTypes;
   },
+  [types.SET_HAS_LOADING_JIRA_ISSUE_TYPES_ERROR](state, hasError) {
+    state.hasLoadingJiraIssueTypesError = hasError;
+  },
 };
