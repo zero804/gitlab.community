@@ -30,7 +30,7 @@ export const fetchReports = ({ state, dispatch, commit }, diffFeatureFlagEnabled
           }),
         });
       })
-      .catch(() => dispatch('receiveReportsError'));
+      .catch(error => dispatch('receiveReportsError', error));
   }
   if (!state.basePath) {
     return dispatch('receiveReportsError');
@@ -50,6 +50,6 @@ export const receiveReportsSuccess = ({ commit }, data) => {
   commit(types.RECEIVE_REPORTS_SUCCESS, data);
 };
 
-export const receiveReportsError = ({ commit }) => {
-  commit(types.RECEIVE_REPORTS_ERROR);
+export const receiveReportsError = ({ commit }, error) => {
+  commit(types.RECEIVE_REPORTS_ERROR, error);
 };
