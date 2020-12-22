@@ -23007,7 +23007,7 @@ msgstr ""
 msgid "Registry setup"
 msgstr ""
 
-msgid "Reindexing status"
+msgid "Reindexing Status: %{status}"
 msgstr ""
 
 msgid "Rejected (closed)"
@@ -26484,9 +26484,6 @@ msgid "Starts on"
 msgstr ""
 
 msgid "State your message to activate"
-msgstr ""
-
-msgid "State: %{last_reindexing_task_state}"
 msgstr ""
 
 msgid "Static Application Security Testing (SAST)"

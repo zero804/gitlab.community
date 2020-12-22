@@ -30,7 +30,7 @@ class Elastic::ReindexingTask < ApplicationRecord
   def self.drop_old_indices!
     old_indices_to_be_deleted.find_each do |task|
       task.subtasks.each do |subtask|
-        next unless Gitlab::Elastic::Helper.default.delete_index(index_name: subtask.index_name_from)
+        Gitlab::Elastic::Helper.default.delete_index(index_name: subtask.index_name_from)
       end
       task.update!(state: :original_index_deleted)
     end

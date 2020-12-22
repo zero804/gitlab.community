@@ -102,7 +102,7 @@ RSpec.describe 'admin/application_settings/_elasticsearch_form' do
       it 'renders the task' do
         render
 
-        expect(rendered).to include("State: #{task.state}")
+        expect(rendered).to include("Reindexing Status: #{task.state}")
         expect(rendered).not_to include("Task ID:")
         expect(rendered).not_to include("Error:")
         expect(rendered).not_to include("Expected documents:")
@@ -117,7 +117,7 @@ RSpec.describe 'admin/application_settings/_elasticsearch_form' do
       it 'renders the task' do
         render
 
-        expect(rendered).to include("State: #{task.state}")
+        expect(rendered).to include("Reindexing Status: #{task.state}")
         expect(rendered).to include("Task ID: #{subtask.elastic_task}")
         expect(rendered).to include("Error: #{task.error_message}")
         expect(rendered).to include("Expected documents: #{subtask.documents_count}")
@@ -132,7 +132,7 @@ RSpec.describe 'admin/application_settings/_elasticsearch_form' do
       it 'renders the task' do
         render
 
-        expect(rendered).to include("State: #{task.state}")
+        expect(rendered).to include("Reindexing Status: #{task.state}")
         expect(rendered).to include("Task ID: #{subtask.elastic_task}")
         expect(rendered).to include("Expected documents: #{subtask.documents_count}")
         expect(rendered).not_to include("Error:")

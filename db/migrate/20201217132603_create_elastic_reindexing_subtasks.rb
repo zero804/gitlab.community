@@ -16,15 +16,17 @@ class CreateElasticReindexingSubtasks < ActiveRecord::Migration[6.0]
   end
 
   def up
-    create_table :elastic_reindexing_subtasks do |t|
-      t.references :elastic_reindexing_task, foreign_key: { on_delete: :cascade }, null: false
-      t.text :alias_name, null: false
-      t.text :index_name_from, null: false
-      t.text :index_name_to, null: false
-      t.text :elastic_task, null: false
-      t.integer :documents_count_target
-      t.integer :documents_count
-      t.timestamps_with_timezone null: false
+    unless table_exists?(:elastic_reindexing_subtasks)
+      create_table :elastic_reindexing_subtasks do |t|
+        t.references :elastic_reindexing_task, foreign_key: { on_delete: :cascade }, null: false
+        t.text :alias_name, null: false
+        t.text :index_name_from, null: false
+        t.text :index_name_to, null: false
+        t.text :elastic_task, null: false
+        t.integer :documents_count_target
+        t.integer :documents_count
+        t.timestamps_with_timezone null: false
+      end
     end
 
     add_text_limit :elastic_reindexing_subtasks, :index_name_from, 255

@@ -107,31 +107,33 @@
 
         .sub-section
           %h4= _('Elasticsearch zero-downtime reindexing')
-          = link_to _('Trigger cluster reindexing'), admin_elasticsearch_trigger_reindexing_path, class: 'gl-button btn btn-primary', data: { confirm: _('Are you sure you want to reindex?') }, method: :post, disabled: @elasticsearch_reindexing_task&.in_progress?
-          .form-text.text-muted
+          - btn_disabled = @elasticsearch_reindexing_task&.in_progress?
+          = link_to _('Trigger cluster reindexing'), admin_elasticsearch_trigger_reindexing_path, class: "gl-button btn btn-primary #{btn_disabled ? 'disabled' : ''}", data: { confirm: _('Are you sure you want to reindex?') }, method: :post
+          .form-text.gl-text-gray-600
             = _('This feature should be used with an index that was created after 13.0')
           - Elastic::ReindexingTask.old_indices_scheduled_for_deletion.each do |task|
             .form-text.text-danger
               = _("Unused, previous indices: %{index_names} will be deleted after %{time} automatically.") % { index_names: task.subtasks.map(&:index_name_from).join(', '), time: task.delete_original_index_at }
               = link_to _('Cancel index deletion'), admin_elasticsearch_cancel_index_deletion_path(task_id: task.id), method: :post
+            %br
           - if @elasticsearch_reindexing_task
-            %h5= _('Reindexing status')
-            %p= _('State: %{last_reindexing_task_state}') % { last_reindexing_task_state: @elasticsearch_reindexing_task.state }
+            %h5= _('Reindexing Status: %{status}') % { status: @elasticsearch_reindexing_task.state }
             - if @elasticsearch_reindexing_task.error_message
               %p= _('Error: %{error_message}') % { error_message: @elasticsearch_reindexing_task.error_message }
             - @elasticsearch_reindexing_task.subtasks.each do |subtask|
-              %h5= subtask.index_name_from
-              - expected_documents = subtask.documents_count
-              - if subtask.elastic_task
-                %p= _('Task ID: %{elastic_task}') % { elastic_task: subtask.elastic_task }
-              - if expected_documents
-                - processed_documents = subtask.documents_count_target
-                %p= _('Expected documents: %{expected_documents}') % { expected_documents: expected_documents }
-                - if processed_documents && expected_documents
-                  - percentage = ((processed_documents / expected_documents.to_f) * 100).round(2)
-                  %p= _('Documents reindexed: %{processed_documents} (%{percentage}%%)') % { processed_documents: processed_documents, percentage: percentage }
-                  .progress
-                    .progress-bar.progress-bar-striped.bg-primary{ "aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => percentage, :role => "progressbar", :style => "width: #{percentage}%" }
+              .card-body.form-group
+                %h5= subtask.alias_name
+                - expected_documents = subtask.documents_count
+                - if subtask.elastic_task
+                  %p= _('Task ID: %{elastic_task}') % { elastic_task: subtask.elastic_task }
+                - if expected_documents
+                  - processed_documents = subtask.documents_count_target
+                  %p= _('Expected documents: %{expected_documents}') % { expected_documents: expected_documents }
+                  - if processed_documents && expected_documents
+                    - percentage = ((processed_documents / expected_documents.to_f) * 100).round(2)
+                    %p= _('Documents reindexed: %{processed_documents} (%{percentage}%%)') % { processed_documents: processed_documents, percentage: percentage }
+                    .progress
+                      .progress-bar.progress-bar-striped.bg-primary{ "aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => percentage, :role => "progressbar", :style => "width: #{percentage}%" }
 
         .sub-section
           %h4= _('Elasticsearch indexing restrictions')
