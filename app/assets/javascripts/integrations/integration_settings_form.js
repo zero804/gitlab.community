@@ -62,8 +62,7 @@ export default class IntegrationSettingsForm {
     // If both conditions are true, we override form submission
     // and test the service using provided configuration.
     if (this.$form.get(0).checkValidity()) {
-      // eslint-disable-next-line no-jquery/no-serialize
-      this.testSettings(this.$form.serialize());
+      this.testSettings();
     } else {
       eventHub.$emit('validateForm');
       this.vue.$store.dispatch('setIsTesting', false);
@@ -81,6 +80,9 @@ export default class IntegrationSettingsForm {
     }
   }
 
+  /**
+   * Get a list of Jira issue types for the currently configured project
+   */
   getJiraIssueTypes() {
     const {
       $store: { dispatch },
@@ -88,12 +90,14 @@ export default class IntegrationSettingsForm {
 
     dispatch('setIsLoadingJiraIssueTypes', true);
 
-    // eslint-disable-next-line no-jquery/no-serialize
-    return this.fetchTestSettings(this.$form.serialize())
+    return this.fetchTestSettings()
       .then(({ data: { issuetypes, error, message } }) => {
         if (error || !issuetypes?.length) {
           eventHub.$emit('validateForm');
-          this.vue.$store.dispatch('setLoadingJiraIssueTypesErrorMessage', message);
+          this.vue.$store.dispatch(
+            'setLoadingJiraIssueTypesErrorMessage',
+            message || s__('Integrations|Connection failed. Please check your settings.'),
+          );
         } else {
           this.vue.$store.dispatch('receivedJiraIssueTypesSuccess', issuetypes);
         }
@@ -109,8 +113,12 @@ export default class IntegrationSettingsForm {
       });
   }
 
-  fetchTestSettings(formData) {
-    return axios.put(this.testEndPoint, formData);
+  /**
+   *  Send request to the test endpoint which checks if the current config is valid
+   */
+  fetchTestSettings() {
+    // eslint-disable-next-line no-jquery/no-serialize
+    return axios.put(this.testEndPoint, this.$form.serialize());
   }
 
   /**
@@ -126,7 +134,7 @@ export default class IntegrationSettingsForm {
           toast(s__('Integrations|Connection successful.'));
         }
       })
-      .catch(e => {
+      .catch(() => {
         toast(__('Something went wrong on our end.'));
       })
       .finally(() => {

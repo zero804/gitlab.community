@@ -15684,6 +15684,9 @@ msgstr ""
 msgid "Jira integration not configured."
 msgstr ""
 
+msgid "Jira issue type"
+msgstr ""
+
 msgid "Jira project key is not configured"
 msgstr ""
 
@@ -15708,10 +15711,16 @@ msgstr ""
 msgid "JiraService|%{user_link} mentioned this issue in %{entity_link} of %{project_link}%{branch}:{quote}%{entity_message}{quote}"
 msgstr ""
 
+msgid "JiraService|Define the type of Jira issue to create from a vulnerability."
+msgstr ""
+
 msgid "JiraService|Displaying Jira issues while leaving the GitLab issue functionality enabled might be confusing. Consider %{linkStart}disabling GitLab issues%{linkEnd} if they won’t otherwise be used."
 msgstr ""
 
 msgid "JiraService|Enable Jira issues"
+msgstr ""
+
+msgid "JiraService|Enable Jira issues creation from vulnerabilities"
 msgstr ""
 
 msgid "JiraService|Events for %{noteable_model_name} are disabled."
@@ -15724,6 +15733,9 @@ msgid "JiraService|If different from Web URL"
 msgstr ""
 
 msgid "JiraService|Issue List"
+msgstr ""
+
+msgid "JiraService|Issues created from vulnerabilities in this project will be Jira issues, even if GitLab issues are enabled."
 msgstr ""
 
 msgid "JiraService|Jira API URL"
@@ -15751,6 +15763,12 @@ msgid "JiraService|Open Jira"
 msgstr ""
 
 msgid "JiraService|Password or API token"
+msgstr ""
+
+msgid "JiraService|Project key is required to generate issue types"
+msgstr ""
+
+msgid "JiraService|Select issue type"
 msgstr ""
 
 msgid "JiraService|Set transition IDs for Jira workflow transitions. %{link_start}Learn more%{link_end}"

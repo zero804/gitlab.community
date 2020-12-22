@@ -70,7 +70,6 @@ export default {
       'setIsTesting',
       'setIsResetting',
       'fetchResetIntegration',
-      'fetchJiraIssueTypes',
     ]),
     onSaveClick() {
       this.setIsSaving(true);
@@ -82,9 +81,6 @@ export default {
     },
     onResetClick() {
       this.fetchResetIntegration();
-    },
-    onLoadJiraIssueTypesClick() {
-      this.fetchJiraIssueTypes();
     },
   },
 };

@@ -39,9 +39,7 @@ export default {
   },
   data() {
     return {
-      // @TODO: set the initial value to be passed in via a prop
-      // @TODO: rename this
-      isEnabled: this.initialIsEnabled,
+      isJiraVulnerabilitiesEnabled: this.initialIsEnabled,
       selectedIssueType: null,
     };
   },
@@ -74,7 +72,7 @@ export default {
 
 <template>
   <div>
-    <gl-form-checkbox v-model="isEnabled">
+    <gl-form-checkbox v-model="isJiraVulnerabilitiesEnabled">
       {{ s__('JiraService|Enable Jira issues creation from vulnerabilities') }}
       <template #help>
         {{
@@ -84,15 +82,19 @@ export default {
         }}
       </template>
     </gl-form-checkbox>
-    <input name="service[vulnerabilities_enabled]" type="hidden" :value="isEnabled || false" />
+    <input
+      name="service[vulnerabilities_enabled]"
+      type="hidden"
+      :value="isJiraVulnerabilitiesEnabled || false"
+    />
     <gl-form-group
-      v-show="isEnabled"
+      v-show="isJiraVulnerabilitiesEnabled"
       :label="__('Jira issue type')"
       class="gl-mt-4 gl-pl-1 gl-ml-5"
     >
-      <p>{{ __('Define the type of Jira issue to create from a vulnerability.') }}</p>
+      <p>{{ s__('JiraService|Define the type of Jira issue to create from a vulnerability.') }}</p>
       <div class="row gl-display-flex gl-align-items-center">
-        <gl-button-group class="col-md-4 gl-mr-3">
+        <gl-button-group class="col-md-5 gl-mr-3">
           <input
             name="service[vulnerabilities_issuetype]"
             type="hidden"
@@ -102,7 +104,7 @@ export default {
             class="gl-w-full"
             :disabled="!jiraIssueTypes.length"
             :loading="isLoadingJiraIssueTypes || isTesting"
-            :text="checkedIssueType.name || __('Select issue type')"
+            :text="checkedIssueType.name || s__('JiraService|Select issue type')"
           >
             <gl-dropdown-item
               v-for="jiraIssueType in jiraIssueTypes"
@@ -124,7 +126,7 @@ export default {
           <gl-icon name="warning" class="gl-text-orange-500" />
           {{
             !hasProjectKey
-              ? __('Project key is required to generate issue types')
+              ? s__('JiraService|Project key is required to generate issue types')
               : loadingJiraIssueTypesErrorMessage
           }}
         </p>

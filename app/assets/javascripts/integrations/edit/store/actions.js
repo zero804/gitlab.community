@@ -30,7 +30,7 @@ export const fetchResetIntegration = ({ dispatch, getters }) => {
 export const setIsLoadingJiraIssueTypes = ({ commit }, isLoadingJiraIssueTypes) => {
   commit(types.SET_IS_LOADING_JIRA_ISSUE_TYPES, isLoadingJiraIssueTypes);
 };
-export const receivedJiraIssueTypesSuccess = ({ commit }, issueTypes) => {
+export const receivedJiraIssueTypesSuccess = ({ commit }, issueTypes = []) => {
   commit(types.SET_LOADING_JIRA_ISSUE_TYPES_ERROR_MESSAGE, '');
   commit(types.SET_JIRA_ISSUE_TYPES, issueTypes);
 };
