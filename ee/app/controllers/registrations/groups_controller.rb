@@ -18,29 +18,31 @@ module Registrations
 
     def create
       @group = Groups::CreateService.new(current_user, group_params).execute
-      trial = params[:trial] == 'true'
 
-      if @group.persisted?
+      render_new && return unless @group.persisted?
+
+      trial = params[:trial] == 'true'
+      url_params = { namespace_id: @group.id, trial: trial }
+
+      if helpers.in_trial_onboarding_flow?
+        render_new && return unless apply_trial
+
+        url_params[:trial_onboarding_flow] = true
+      else
         record_experiment_user(:trial_during_signup, trial_chosen: trial)
 
-        url_params = { namespace_id: @group.id, trial: trial }
-        if helpers.in_trial_onboarding_flow?
-          apply_trial
-          url_params[:trial_onboarding_flow] = true
-        else
-          if experiment_enabled?(:trial_during_signup)
-            if trial && create_lead && apply_trial
-              record_experiment_conversion_event(:trial_during_signup)
-            end
-          else
-            invite_members(@group)
-          end
-        end
+        if experiment_enabled?(:trial_during_signup)
+          if trial
+            render_new && return unless create_lead && apply_trial
 
-        redirect_to new_users_sign_up_project_path(url_params)
-      else
-        render action: :new
+            record_experiment_conversion_event(:trial_during_signup)
+          end
+        else
+          invite_members(@group)
+        end
       end
+
+      redirect_to new_users_sign_up_project_path(url_params)
     end
 
     private
@@ -55,6 +57,10 @@ module Registrations
 
     def group_params
       params.require(:group).permit(:name, :path, :visibility_level)
+    end
+
+    def render_new
+      render action: :new
     end
 
     def create_lead
@@ -77,7 +83,9 @@ module Registrations
         )
       }
       result = GitlabSubscriptions::CreateLeadService.new.execute(trial_params)
-      result[:success]
+      flash[:alert] = result&.dig(:errors) unless result&.dig(:success)
+
+      result&.dig(:success)
     end
 
     def apply_trial
@@ -91,6 +99,8 @@ module Registrations
       }
 
       result = GitlabSubscriptions::ApplyTrialService.new.execute(apply_trial_params)
+      flash[:alert] = result&.dig(:errors) unless result&.dig(:success)
+
       result&.dig(:success)
     end
   end

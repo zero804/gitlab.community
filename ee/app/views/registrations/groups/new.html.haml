@@ -11,6 +11,7 @@
 
       = form_for @group, url: users_sign_up_groups_path(trial_onboarding_flow: params[:trial_onboarding_flow]), html: { class: 'gl-show-field-errors card gl-w-full gl-p-4' } do |f|
         = form_errors(@group)
+        = render 'layouts/flash'
         .row
           .form-group.group-name-holder.col-sm-12
             = f.label :name, class: 'label-bold' do
@@ -41,7 +42,7 @@
         .row
           .form-group.col-sm-12
             = render partial: 'shared/groups/visibility_level', locals: { f: f }
-        - if experiment_enabled?(:trial_during_signup)
+        - if !in_trial_onboarding_flow? && experiment_enabled?(:trial_during_signup)
           = render partial: 'shared/groups/trial_form'
         - else
           = render partial: 'shared/groups/invite_members'
