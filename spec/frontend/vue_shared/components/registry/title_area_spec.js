@@ -119,7 +119,7 @@ describe('title area', () => {
       expect(findSkeletonLoader().exists()).toBe(false);
     });
 
-    it('is hidden when metadata loading is true', () => {
+    it('is shown when metadata loading is true', () => {
       mountComponent({ propsData: { metadataLoading: true } });
 
       expect(findSkeletonLoader().exists()).toBe(true);
