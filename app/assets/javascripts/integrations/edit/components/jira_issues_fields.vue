@@ -124,7 +124,7 @@ export default {
             data-testid="jiraForVulnerabilities"
           >
             <jira-issue-creation-vulnerabilities
-              :has-project-key="Boolean(projectKey)"
+              :project-key="projectKey"
               :initial-is-enabled="initialEnableJiraVulnerabilities"
               :initial-issue-type-id="initialvulnerabilitiesIssuetype"
             />

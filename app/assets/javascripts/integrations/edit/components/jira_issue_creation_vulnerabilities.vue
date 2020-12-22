@@ -9,6 +9,7 @@ import {
   GlFormGroup,
   GlIcon,
 } from '@gitlab/ui';
+import { s__ } from '~/locale';
 import eventHub from '../event_hub';
 import { defaultJiraIssueTypeId } from '../constants';
 
@@ -23,15 +24,15 @@ export default {
     GlIcon,
   },
   props: {
+    projectKey: {
+      type: String,
+      required: false,
+      default: '',
+    },
     initialIssueTypeId: {
       type: String,
       required: false,
       default: defaultJiraIssueTypeId,
-    },
-    hasProjectKey: {
-      type: Boolean,
-      required: false,
-      default: false,
     },
     initialIsEnabled: {
       type: Boolean,
@@ -41,6 +42,7 @@ export default {
   },
   data() {
     return {
+      projectKeyForCurrentIssues: '',
       isJiraVulnerabilitiesEnabled: this.initialIsEnabled,
       selectedJiraIssueType: null,
     };
@@ -58,6 +60,18 @@ export default {
     checkedIssueType() {
       return this.selectedJiraIssueType || this.initialJiraIssueType;
     },
+    hasProjectKeyChanged() {
+      return this.projectKeyForCurrentIssues && this.projectKey !== this.projectKeyForCurrentIssues;
+    },
+    projectKeyWarning() {
+      if (!this.projectKey) {
+        return s__('JiraService|Project key is required to generate issue types');
+      }
+      if (this.hasProjectKeyChanged) {
+        return s__('JiraService|Project key changed, refresh list');
+      }
+      return '';
+    },
   },
   mounted() {
     eventHub.$once('formInitialized', () => {
@@ -66,6 +80,7 @@ export default {
   },
   methods: {
     handleLoadJiraIssueTypesClick() {
+      this.projectKeyForCurrentIssues = this.projectKey;
       eventHub.$emit('getJiraIssueTypes');
     },
   },
@@ -118,19 +133,11 @@ export default {
               {{ jiraIssueType.name }}
             </gl-dropdown-item>
           </gl-dropdown>
-          <gl-button
-            :disabled="!hasProjectKey"
-            icon="retry"
-            @click="handleLoadJiraIssueTypesClick"
-          />
+          <gl-button :disabled="!projectKey" icon="retry" @click="handleLoadJiraIssueTypesClick" />
         </gl-button-group>
-        <p v-if="!hasProjectKey || loadingJiraIssueTypesErrorMessage" class="gl-my-0">
+        <p v-if="projectKeyWarning" class="gl-my-0">
           <gl-icon name="warning" class="gl-text-orange-500" />
-          {{
-            !hasProjectKey
-              ? s__('JiraService|Project key is required to generate issue types')
-              : loadingJiraIssueTypesErrorMessage
-          }}
+          {{ projectKeyWarning }}
         </p>
       </div>
     </gl-form-group>
