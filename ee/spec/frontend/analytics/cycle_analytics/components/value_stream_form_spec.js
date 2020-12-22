@@ -92,12 +92,6 @@ describe('ValueStreamForm', () => {
       });
     });
 
-    it('renders the error', () => {
-      expect(findFormGroup().attributes('invalid-feedback')).toEqual(
-        createValueStreamErrors.name.join('\n'),
-      );
-    });
-
     it('submit button is disabled', () => {
       expect(createSubmitButtonDisabledState()).toBe(true);
     });
@@ -120,6 +114,7 @@ describe('ValueStreamForm', () => {
       it('calls the "createValueStream" event when submitted', () => {
         expect(createValueStreamMock).toHaveBeenCalledWith(expect.any(Object), {
           name: streamName,
+          stages: [],
         });
       });
 

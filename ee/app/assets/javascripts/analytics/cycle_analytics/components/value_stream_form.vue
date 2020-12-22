@@ -13,10 +13,12 @@ import { validateValueStreamName, validateStage } from './create_value_stream_fo
 import DefaultStageFields from './create_value_stream_form/default_stage_fields.vue';
 import { DATA_REFETCH_DELAY } from '../../shared/constants';
 
-const swapArrayItems = (arr, left, right) => {
-  // TODO: bounds checking
-  return [...arr.slice(0, left), arr[right], arr[left], ...arr.slice(right + 1, arr.length)];
-};
+const swapArrayItems = (arr, left, right) => [
+  ...arr.slice(0, left),
+  arr[right],
+  arr[left],
+  ...arr.slice(right + 1, arr.length),
+];
 
 export default {
   name: 'ValueStreamForm',
