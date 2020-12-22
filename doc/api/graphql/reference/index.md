@@ -1437,6 +1437,7 @@ Relationship between an epic and an issue.
 | `emailsDisabled` | Boolean! | Indicates if a project has email notifications disabled: `true` if email notifications are disabled |
 | `epic` | Epic | Epic to which this issue belongs. |
 | `epicIssueId` | ID! | ID of the epic-issue relation |
+| `forwardableEmail` | String | User specific email address for the issue |
 | `healthStatus` | HealthStatus | Current health status. |
 | `humanTimeEstimate` | String | Human-readable time estimate of the issue |
 | `humanTotalTimeSpent` | String | Human-readable total time reported as spent on the issue |
@@ -1779,6 +1780,7 @@ Represents a recorded measurement (object count) for the Admins.
 | `dueDate` | Time | Due date of the issue |
 | `emailsDisabled` | Boolean! | Indicates if a project has email notifications disabled: `true` if email notifications are disabled |
 | `epic` | Epic | Epic to which this issue belongs. |
+| `forwardableEmail` | String | User specific email address for the issue |
 | `healthStatus` | HealthStatus | Current health status. |
 | `humanTimeEstimate` | String | Human-readable time estimate of the issue |
 | `humanTotalTimeSpent` | String | Human-readable total time reported as spent on the issue |

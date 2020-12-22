@@ -24286,6 +24286,20 @@
               "deprecationReason": null
             },
             {
+              "name": "forwardableEmail",
+              "description": "User specific email address for the issue",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "healthStatus",
               "description": "Current health status.",
               "args": [
@@ -32083,6 +32097,20 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "Epic",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "forwardableEmail",
+              "description": "User specific email address for the issue",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,

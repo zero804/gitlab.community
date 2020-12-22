@@ -8753,6 +8753,11 @@ type EpicIssue implements CurrentUserTodos & Noteable {
   epicIssueId: ID!
 
   """
+  User specific email address for the issue
+  """
+  forwardableEmail: String
+
+  """
   Current health status.
   """
   healthStatus: HealthStatus
@@ -11712,6 +11717,11 @@ type Issue implements CurrentUserTodos & Noteable {
   Epic to which this issue belongs.
   """
   epic: Epic
+
+  """
+  User specific email address for the issue
+  """
+  forwardableEmail: String
 
   """
   Current health status.
