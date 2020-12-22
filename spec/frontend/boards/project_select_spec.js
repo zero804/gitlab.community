@@ -23,6 +23,13 @@ const dummyGon = {
 const mockGroupId = 1;
 const mockProjectsList1 = mockRawGroupProjects.slice(0, 1);
 const mockProjectsList2 = mockRawGroupProjects.slice(1);
+const mockDefaultFetchOptions = {
+  with_issues_enabled: true,
+  with_shared: false,
+  include_subgroups: true,
+  order_by: 'similarity',
+};
+
 const itemsPerPage = 20;
 
 describe('ProjectSelect component', () => {
@@ -122,9 +129,9 @@ describe('ProjectSelect component', () => {
         await createWrapper();
       });
 
-      it('shows GlSearchBoxByType with debounce attribute set to 250', () => {
+      it('shows GlSearchBoxByType with default attributes', () => {
         expect(findGlSearchBoxByType().exists()).toBe(true);
-        expect(findGlSearchBoxByType().vm.inputAttributes).toMatchObject({
+        expect(findGlSearchBoxByType().vm.$attrs).toMatchObject({
           placeholder: 'Search projects',
           debounce: '250',
         });
@@ -158,14 +165,12 @@ describe('ProjectSelect component', () => {
       });
 
       it('emits setSelectedProject with correct project metadata', () => {
-        expect(wrapper.vm.projects[0]).toMatchObject({
+        expect(eventHub.$emit).toHaveBeenCalledWith('setSelectedProject', {
           id: mockProjectsList1[0].id,
           path: mockProjectsList1[0].path_with_namespace,
           name: mockProjectsList1[0].name,
           namespacedName: mockProjectsList1[0].name_with_namespace,
         });
-
-        expect(eventHub.$emit).toHaveBeenCalledWith('setSelectedProject', wrapper.vm.projects[0]);
       });
 
       it('renders the name of the selected project', () => {
@@ -190,7 +195,7 @@ describe('ProjectSelect component', () => {
         const expectedApiParams = {
           search: 'foobar',
           per_page: itemsPerPage,
-          ...wrapper.vm.$options.defaultFetchOptions,
+          ...mockDefaultFetchOptions,
         };
 
         expect(axiosMock.history.get[1].params).toMatchObject(expectedApiParams);
@@ -207,14 +212,11 @@ describe('ProjectSelect component', () => {
 
           await searchForProject('foobar');
 
-          const expectedFetchOption = {
-            ...wrapper.vm.$options.defaultFetchOptions,
-            min_access_level: featureAccessLevel.EVERYONE,
-          };
           const expectedApiParams = {
             search: 'foobar',
             per_page: itemsPerPage,
-            ...expectedFetchOption,
+            ...mockDefaultFetchOptions,
+            min_access_level: featureAccessLevel.EVERYONE,
           };
 
           expect(axiosMock.history.get[1].params).toMatchObject(expectedApiParams);
