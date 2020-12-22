@@ -17,19 +17,17 @@ const defaultStage = {
 };
 
 describe('DefaultStageFields', () => {
-  function createComponent({ stage = defaultStage, errors = {}, stubs = {}, props = {} } = {}) {
+  function createComponent({ stage = defaultStage, errors = {} } = {}) {
     return shallowMount(DefaultStageFields, {
       propsData: {
         index: defaultStageIndex,
         totalStages,
         stage,
         errors,
-        ...props,
       },
       stubs: {
         'labels-selector': false,
         'gl-form-text': false,
-        ...stubs,
       },
     });
   }

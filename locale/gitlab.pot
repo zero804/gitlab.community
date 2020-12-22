@@ -8189,6 +8189,9 @@ msgstr ""
 msgid "CreateValueStreamForm|End event label"
 msgstr ""
 
+msgid "CreateValueStreamForm|End event: "
+msgstr ""
+
 msgid "CreateValueStreamForm|Enter a name for the stage"
 msgstr ""
 
@@ -8235,6 +8238,9 @@ msgid "CreateValueStreamForm|Start event changed, please select a valid end even
 msgstr ""
 
 msgid "CreateValueStreamForm|Start event label"
+msgstr ""
+
+msgid "CreateValueStreamForm|Start event: "
 msgstr ""
 
 msgid "CreateValueStreamForm|Update stage"
@@ -10651,9 +10657,6 @@ msgid "Encountered an error while rendering: %{err}"
 msgstr ""
 
 msgid "End Time"
-msgstr ""
-
-msgid "End event: "
 msgstr ""
 
 msgid "Ends at %{endsAt}"
@@ -15489,16 +15492,10 @@ msgstr ""
 msgid "Issue Boards"
 msgstr ""
 
-msgid "Issue Created"
-msgstr ""
-
 msgid "Issue already promoted to epic."
 msgstr ""
 
 msgid "Issue cannot be found."
-msgstr ""
-
-msgid "Issue closed"
 msgstr ""
 
 msgid "Issue created from vulnerability %{vulnerability_link}"
@@ -16110,22 +16107,10 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-msgid "Label a"
-msgstr ""
-
 msgid "Label actions dropdown"
 msgstr ""
 
-msgid "Label added"
-msgstr ""
-
-msgid "Label b"
-msgstr ""
-
 msgid "Label lists show all issues with the selected label."
-msgstr ""
-
-msgid "Label removed"
 msgstr ""
 
 msgid "Label was created"
@@ -26499,9 +26484,6 @@ msgid "Start cleanup"
 msgstr ""
 
 msgid "Start date"
-msgstr ""
-
-msgid "Start event: "
 msgstr ""
 
 msgid "Start merge train"
