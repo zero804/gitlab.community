@@ -278,6 +278,24 @@ RSpec.describe Projects::ContainerRepository::CleanupTagsService do
           expect(result).to match(a_hash_including({ status: status, chunked: chunked }.compact))
         end
 
+        it 'truncates the original tags list' do
+          original_method = service.method(:truncate)
+
+          expect(service).to receive(:truncate) do |tags|
+            truncated_tags = original_method.call(tags)
+
+            if chunked
+              expect(truncated_tags.size).to be < tags.size
+            else
+              expect(truncated_tags.size).to eq(tags.size)
+            end
+
+            truncated_tags
+          end
+
+          subject
+        end
+
         it 'logs a message when chunking a message' do
           if chunked
             expect(service).to receive(:log_message)
