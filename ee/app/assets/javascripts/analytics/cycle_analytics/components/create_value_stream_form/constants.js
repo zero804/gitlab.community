@@ -61,15 +61,14 @@ export const defaultFields = {
   endEventLabelId: null,
 };
 
-export const DEFAULT_STAGE_CONFIG = ['issue', 'plan', 'code', 'test', 'review', 'staging'].map(
-  (id, i) => ({
+export const DEFAULT_STAGE_CONFIG = ['ssue', 'plan', 'code', 'test', 'review', 'staging'].map(
+  id => ({
     id,
-    defaultName: capitalizeFirstCharacter(id),
     name: capitalizeFirstCharacter(id),
-    startEventIdentifier: i % 3 === 0 ? __('Label added') : __('Issue Created'),
-    endEventIdentifier: i % 3 === 0 ? __('Label removed') : __('Issue closed'),
-    startEventLabel: i % 3 === 0 ? __('Label a') : null,
-    endEventLabel: i % 3 === 0 ? __('Label b') : null,
+    startEventIdentifier: null,
+    endEventIdentifier: null,
+    startEventLabel: null,
+    endEventLabel: null,
     custom: false,
     hidden: false,
   }),

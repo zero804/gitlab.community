@@ -64,14 +64,14 @@ export default {
         @hide="$emit('hide', $event)"
       />
     </div>
-    <div class="gl-display-flex">
+    <div class="gl-display-flex" :data-testid="`stage-start-event-${index}`">
       <label class="gl-m-0 gl-vertical-align-middle gl-mr-3">{{ __('Start event: ') }}</label>
       <gl-form-text>{{ stage.startEventIdentifier }}</gl-form-text>
       <gl-form-text v-if="stage.startEventLabel"
         >&nbsp;-&nbsp;{{ stage.startEventLabel }}</gl-form-text
       >
     </div>
-    <div class="gl-display-flex">
+    <div class="gl-display-flex" :data-testid="`stage-end-event-${index}`">
       <label class="gl-m-0 gl-vertical-align-middle gl-mr-3">{{ __('End event: ') }}</label>
       <gl-form-text>{{ stage.endEventIdentifier }}</gl-form-text>
       <gl-form-text v-if="stage.endEventLabel">&nbsp;-&nbsp;{{ stage.endEventLabel }}</gl-form-text>
