@@ -42,7 +42,7 @@ export default {
   inject: ['groupId'],
   data() {
     return {
-      initialLoading: false,
+      initialLoading: true,
       isFetching: false,
       projects: [],
       selectedProject: {},
@@ -68,9 +68,12 @@ export default {
       return this.projects.length === 0;
     },
   },
+  watch: {
+    searchTerm() {
+      this.fetchProjects();
+    },
+  },
   async mounted() {
-    this.initialLoading = true;
-
     await this.fetchProjects();
 
     this.initialLoading = false;
@@ -110,20 +113,21 @@ export default {
 
 <template>
   <div>
-    <label class="gl-font-weight-bold gl-mt-3">{{ $options.i18n.headerTitle }}</label>
+    <label class="gl-font-weight-bold gl-mt-3" data-testid="header-label">{{
+      $options.i18n.headerTitle
+    }}</label>
     <gl-dropdown
       data-testid="project-select-dropdown"
       :text="selectedProjectName"
       :header-text="$options.i18n.headerTitle"
       block
-      menu-class="w-100"
+      menu-class="gl-w-full!"
       :loading="initialLoading"
     >
       <gl-search-box-by-type
         v-model.trim="searchTerm"
         debounce="250"
         :placeholder="$options.i18n.searchPlaceholder"
-        @input="fetchProjects"
       />
       <gl-dropdown-item
         v-for="project in projects"
@@ -134,13 +138,10 @@ export default {
       >
         {{ project.namespacedName }}
       </gl-dropdown-item>
-      <gl-dropdown-text v-show="isFetching">
+      <gl-dropdown-text v-show="isFetching" data-testid="dropdown-text-loading-icon">
         <gl-loading-icon class="gl-mx-auto" />
       </gl-dropdown-text>
-      <gl-dropdown-text
-        v-show="isFetchResultEmpty && !isFetching"
-        data-testid="empty-result-message"
-      >
+      <gl-dropdown-text v-if="isFetchResultEmpty && !isFetching" data-testid="empty-result-message">
         <span class="gl-text-gray-500">{{ $options.i18n.emptySearchResult }}</span>
       </gl-dropdown-text>
     </gl-dropdown>
