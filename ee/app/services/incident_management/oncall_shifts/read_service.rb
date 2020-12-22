@@ -9,12 +9,13 @@ module IncidentManagement
       # @option params - starts_at [Time]
       # @option params - ends_at [Time]
       # @option params - include_persisted [Bool]
-      def initialize(rotation, current_user, starts_at:, ends_at:, include_persisted: true)
+      def initialize(rotation, current_user, starts_at:, ends_at:, include_persisted: true, skip_user_check: false)
         @rotation = rotation
         @current_user = current_user
         @starts_at = starts_at
         @ends_at = ends_at
         @include_persisted = include_persisted
+        @skip_user_check = skip_user_check
       end
 
       def execute
@@ -39,7 +40,7 @@ module IncidentManagement
 
       private
 
-      attr_reader :rotation, :current_user, :starts_at, :ends_at, :include_persisted, :generated_shifts, :persisted_shifts
+      attr_reader :rotation, :current_user, :starts_at, :ends_at, :include_persisted, :skip_user_check, :generated_shifts, :persisted_shifts
 
       def generate_shifts
         ::IncidentManagement::OncallShiftGenerator
@@ -62,6 +63,8 @@ module IncidentManagement
       end
 
       def allowed?
+        return true if skip_user_check
+
         Ability.allowed?(current_user, :read_incident_management_oncall_schedule, rotation)
       end
 

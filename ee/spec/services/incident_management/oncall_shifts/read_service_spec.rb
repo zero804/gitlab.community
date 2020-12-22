@@ -12,6 +12,8 @@ RSpec.describe ::IncidentManagement::OncallShifts::ReadService do
   let(:params) { { starts_at: 15.minutes.since(rotation.starts_at), ends_at: 3.weeks.since(rotation.starts_at) } }
   let(:service) { described_class.new(rotation, current_user, params) }
 
+  let(:total_shifts_in_time_period) { ((params[:ends_at] - params[:starts_at]) / rotation.shift_duration).ceil }
+
   before_all do
     project.add_reporter(user_with_permissions)
   end
@@ -59,16 +61,60 @@ RSpec.describe ::IncidentManagement::OncallShifts::ReadService do
     end
 
     context 'with valid params' do
-      it 'successfully returns a sorted collection of IncidentManagement::OncallShifts' do
-        expect(execute).to be_success
+      shared_examples 'generates the correct shifts' do
+        it 'successfully returns a sorted collection of IncidentManagement::OncallShifts' do
+          expect(execute).to be_success
 
-        shifts = execute.payload[:shifts]
+          shifts = execute.payload[:shifts]
 
-        expect(shifts).to all(be_a(::IncidentManagement::OncallShift))
-        expect(shifts).to all(be_valid)
-        expect(shifts.sort_by(&:starts_at)).to eq(shifts)
-        expect(shifts.first.starts_at).to be <= params[:starts_at]
-        expect(shifts.last.ends_at).to be >= params[:ends_at]
+          expect(shifts.count).to eq(total_shifts_in_time_period)
+          expect(shifts).to all(be_a(::IncidentManagement::OncallShift))
+          expect(shifts).to all(be_valid)
+          expect(shifts.sort_by(&:starts_at)).to eq(shifts)
+          expect(shifts.first.starts_at).to be <= params[:starts_at]
+          expect(shifts.last.ends_at).to be >= params[:ends_at]
+        end
+      end
+
+      include_examples 'generates the correct shifts'
+
+      context 'existing shifts' do
+        # Create shifts
+        let_it_be(:existing_shift) do
+          participant = create(:incident_management_oncall_participant, :with_developer_access, rotation: rotation)
+          create(:incident_management_oncall_shift, rotation: rotation, participant: participant, starts_at: rotation.starts_at, ends_at: rotation.shift_duration.since(rotation.starts_at))
+        end
+
+        context 'include persisted' do
+          include_examples 'generates the correct shifts'
+
+          it 'returns shifts including the persisted ones' do
+            expect(execute).to be_success
+
+            shifts = execute.payload[:shifts]
+
+            expect(shifts).to include(existing_shift)
+          end
+        end
+
+        context 'does not include persisted' do
+          before do
+            params[:include_persisted] = false
+          end
+
+          it 'returns shifts excluding the persisted ones' do
+            expect(execute).to be_success
+
+            shifts = execute.payload[:shifts]
+
+            expect(shifts.count).to eq(total_shifts_in_time_period - 1)
+            expect(shifts).to all(be_a(::IncidentManagement::OncallShift))
+            expect(shifts).to all(be_valid)
+            expect(shifts.sort_by(&:starts_at)).to eq(shifts)
+            expect(shifts).not_to include(existing_shift)
+            expect(shifts.last.ends_at).to be >= params[:ends_at]
+          end
+        end
       end
     end
   end
