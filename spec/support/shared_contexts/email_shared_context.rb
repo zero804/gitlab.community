@@ -177,6 +177,7 @@ RSpec.shared_examples :note_handler_shared_examples do |forwardable|
 
       note = noteable.notes.last
       expect(note.note).to include(markdown)
+      expect(note.note).to include('Jake out')
     end
   end
 

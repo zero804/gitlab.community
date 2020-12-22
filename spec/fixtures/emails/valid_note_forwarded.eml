@@ -21,3 +21,5 @@ The reply by email functionality should be extended to allow creating a new issu
 
 * Allow an admin to specify which project the issue should be created under by checking the sender domain.
 * Possibly allow the use of regular expression matches within the subject/body to specify which project the issue should be created under.
+
+- Jake out
