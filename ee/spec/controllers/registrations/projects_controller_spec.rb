@@ -82,7 +82,10 @@ RSpec.describe Registrations::ProjectsController do
         let_it_be(:trial_onboarding_flow_params) { { trial_onboarding_flow: true } }
         let_it_be(:trial_onboarding_issues_enabled) { true }
         let_it_be(:project) { create(:project) }
-        let_it_be(:trial_onboarding_context) { { learn_gitlab_project_id: project.id, namespace_id: project.namespace_id } }
+        let_it_be(:first_project) { create(:project) }
+        let_it_be(:trial_onboarding_context) do
+          { learn_gitlab_project_id: project.id, namespace_id: project.namespace_id, project_id: first_project.id }
+        end
 
         it 'creates a new project, a "Learn GitLab - Gold trial" project, does not set a cookie' do
           expect { subject }.to change { namespace.projects.pluck(:name) }.from([]).to(['New project', s_('Learn GitLab - Gold trial')])
@@ -94,6 +97,9 @@ RSpec.describe Registrations::ProjectsController do
         end
 
         it 'records context and redirects to the trial getting started page' do
+          expect_next_instance_of(::Projects::CreateService) do |service|
+            expect(service).to receive(:execute).and_return(first_project)
+          end
           expect_next_instance_of(::Projects::GitlabProjectsImportService) do |service|
             expect(service).to receive(:execute).and_return(project)
           end

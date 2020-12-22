@@ -20,7 +20,12 @@ module Registrations
         learn_gitlab_project = create_learn_gitlab_project
 
         if helpers.in_trial_onboarding_flow?
-          trial_onboarding_context = { learn_gitlab_project_id: learn_gitlab_project.id, namespace_id: learn_gitlab_project.namespace_id }
+          trial_onboarding_context = {
+            namespace_id: learn_gitlab_project.namespace_id,
+            project_id: @project.id,
+            learn_gitlab_project_id: learn_gitlab_project.id
+          }
+
           record_experiment_user(:trial_onboarding_issues, trial_onboarding_context)
           redirect_to trial_getting_started_users_sign_up_welcome_path(learn_gitlab_project_id: learn_gitlab_project.id)
         else
