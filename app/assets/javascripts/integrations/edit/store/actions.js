@@ -36,5 +36,6 @@ export const receivedJiraIssueTypesSuccess = ({ commit }, issueTypes = []) => {
 };
 
 export const setLoadingJiraIssueTypesErrorMessage = ({ commit }, errorMessage) => {
+  commit(types.SET_JIRA_ISSUE_TYPES, []);
   commit(types.SET_LOADING_JIRA_ISSUE_TYPES_ERROR_MESSAGE, errorMessage);
 };

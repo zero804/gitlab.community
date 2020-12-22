@@ -9,8 +9,8 @@ import {
   GlFormGroup,
   GlIcon,
 } from '@gitlab/ui';
-
 import eventHub from '../event_hub';
+import { defaultJiraIssueTypeId } from '../constants';
 
 export default {
   components: {
@@ -25,22 +25,24 @@ export default {
   props: {
     initialIssueTypeId: {
       type: String,
-      required: true,
+      required: false,
+      default: defaultJiraIssueTypeId,
+    },
+    hasProjectKey: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     initialIsEnabled: {
       type: Boolean,
       required: false,
       default: false,
     },
-    hasProjectKey: {
-      type: Boolean,
-      required: true,
-    },
   },
   data() {
     return {
       isJiraVulnerabilitiesEnabled: this.initialIsEnabled,
-      selectedIssueType: null,
+      selectedJiraIssueType: null,
     };
   },
   computed: {
@@ -54,7 +56,7 @@ export default {
       return this.jiraIssueTypes?.find(({ id }) => id === this.initialIssueTypeId) || {};
     },
     checkedIssueType() {
-      return this.selectedIssueType || this.initialJiraIssueType;
+      return this.selectedJiraIssueType || this.initialJiraIssueType;
     },
   },
   mounted() {
@@ -89,7 +91,7 @@ export default {
     />
     <gl-form-group
       v-show="isJiraVulnerabilitiesEnabled"
-      :label="__('Jira issue type')"
+      :label="s__('JiraService|Jira issue type')"
       class="gl-mt-4 gl-pl-1 gl-ml-5"
     >
       <p>{{ s__('JiraService|Define the type of Jira issue to create from a vulnerability.') }}</p>
@@ -111,7 +113,7 @@ export default {
               :key="jiraIssueType.id"
               :is-checked="checkedIssueType.id === jiraIssueType.id"
               is-check-item
-              @click="selectedIssueType = jiraIssueType"
+              @click="selectedJiraIssueType = jiraIssueType"
             >
               {{ jiraIssueType.name }}
             </gl-dropdown-item>

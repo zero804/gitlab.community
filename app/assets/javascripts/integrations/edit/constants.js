@@ -15,3 +15,5 @@ export const overrideDropdownDescriptions = {
     'Integrations|Default settings are inherited from the instance level.',
   ),
 };
+
+export const defaultJiraIssueTypeId = '10001';
