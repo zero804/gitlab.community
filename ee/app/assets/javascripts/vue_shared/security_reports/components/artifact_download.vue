@@ -20,13 +20,11 @@ export default {
     },
     targetProjectFullPath: {
       type: String,
-      required: false,
-      default: '',
+      required: true,
     },
     mrIid: {
       type: Number,
-      required: false,
-      default: 0,
+      required: true,
     },
   },
   data() {
