@@ -36,6 +36,7 @@ module Gitlab
 
           return false unless saml_provider
           return false if group.root_ancestor.owned_by?(user)
+          return false if user&.auditor?
 
           new(saml_provider).access_restricted?
         end

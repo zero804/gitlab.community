@@ -143,6 +143,26 @@ RSpec.describe Gitlab::Auth::GroupSaml::SsoEnforcer do
 
         expect(described_class).not_to be_group_access_restricted(project, user: user)
       end
+
+      context 'for an auditor user' do
+        let(:user) { create(:user, :auditor) }
+
+        it 'for a group owner' do
+          expect(described_class).not_to be_group_access_restricted(root_group, user: user)
+        end
+
+        it 'for a subgroup' do
+          sub_group = create(:group, parent: root_group)
+
+          expect(described_class).not_to be_group_access_restricted(sub_group, user: user)
+        end
+
+        it 'for a project' do
+          project = create(:project, group: root_group)
+
+          expect(described_class).not_to be_group_access_restricted(project, user: user)
+        end
+      end
     end
 
     context 'for a group without a saml_provider configured' do

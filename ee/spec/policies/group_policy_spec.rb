@@ -448,6 +448,14 @@ RSpec.describe GroupPolicy do
             end
           end
 
+          context 'as an auditor' do
+            let(:current_user) { create(:user, :auditor) }
+
+            it 'allows access without a SAML session' do
+              is_expected.to allow_action(:read_group)
+            end
+          end
+
           it 'allows access with a SAML session' do
             Gitlab::Auth::GroupSaml::SsoEnforcer.new(saml_provider).update_session
 
