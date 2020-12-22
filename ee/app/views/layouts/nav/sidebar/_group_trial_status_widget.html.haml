@@ -2,12 +2,11 @@
 
 = nav_link do
   = link_to group_billings_path(group), title: trial_days_remaining_in_words(group) do
-    // TODO: find the gl-flex-* classes to see if I can figure out how to make this item be exactly 100% the width of its parent, no bigger, no smaller, and to allow its contents (i.e. the "Gold Trial – 23 days left" text) to wrap to multiple lines.
-    .gl-display-flex.gl-flex-direction-column.gl-align-items-stretch.gl-flex-1
+    .gl-display-flex.gl-flex-direction-column.gl-align-items-stretch.gl-w-full
       %span.gl-display-flex.gl-align-items-center
         %span.nav-icon-container.svg-container
           = image_tag 'illustrations/golden_tanuki.svg', class: 'svg', size: 16
-        %span.nav-item-name
+        %span.nav-item-name.gl-white-space-normal
           = trial_days_remaining_in_words(group)
       %span.gl-display-flex.gl-align-items-stretch.gl-mt-4
         .progress.gl-flex-grow-1{ value: trial_percentage_complete(group) }
