@@ -135,7 +135,8 @@ describe('~/boards/components/sidebar/board_sidebar_issue_title.vue', () => {
       createWrapper();
     });
 
-    it('expands item and shows alert', async () => {
+    it('sets title, expands item and shows alert', async () => {
+      expect(wrapper.vm.title).toBe(TEST_TITLE);
       expect(findCollapsed().isVisible()).toBe(false);
       expect(findAlert().exists()).toBe(true);
     });
