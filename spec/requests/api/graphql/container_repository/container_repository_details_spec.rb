@@ -18,7 +18,7 @@ RSpec.describe 'container repository details' do
 
   let(:user) { project.owner }
   let(:variables) { {} }
-  let(:tags) { %w(latest tag1 tag2 tag3 tag4 tag5) }
+  let(:tags) { %w[latest tag1 tag2 tag3 tag4 tag5] }
   let(:container_repository_global_id) { container_repository.to_global_id.to_s }
   let(:container_repository_details_response) { graphql_data.dig('containerRepository') }
 
@@ -73,6 +73,39 @@ RSpec.describe 'container repository details' do
           expect(container_repository_details_response).to eq(nil)
         end
       end
+    end
+  end
+
+  context 'with a giant size tag' do
+    let(:tags) { %w[latest] }
+    let(:giant_size) { 1.terabyte }
+    let(:tag_sizes_response) { graphql_data_at('containerRepository', 'tags', 'nodes', 'totalSize') }
+    let(:fields) do
+      <<~GQL
+        tags {
+          nodes {
+            totalSize
+          }
+        }
+      GQL
+    end
+
+    let(:query) do
+      graphql_query_for(
+        'containerRepository',
+        { id: container_repository_global_id },
+        fields
+      )
+    end
+
+    it 'returns it' do
+      expect_next_instance_of(ContainerRegistry::Tag) do |tag|
+        expect(tag).to receive(:total_size).and_return(giant_size)
+      end
+
+      subject
+
+      expect(tag_sizes_response.first).to eq(giant_size.to_s)
     end
   end
 
