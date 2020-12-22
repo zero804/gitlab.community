@@ -31,19 +31,24 @@ export default {
 </script>
 <template>
   <div>
-    <!-- TODO: inroduce actions in a separate MR if the diff is too big -->
     <gl-button-group class="gl-px-2">
       <gl-button
+        :data-testid="`stage-action-move-down-${index}`"
         :disabled="isLastActiveStage"
         icon="arrow-down"
         @click="$emit('move', { index, direction: $options.STAGE_SORT_DIRECTION.DOWN })"
       />
       <gl-button
+        :data-testid="`stage-action-move-up-${index}`"
         :disabled="isFirstActiveStage"
         icon="arrow-up"
         @click="$emit('move', { index, direction: $options.STAGE_SORT_DIRECTION.UP })"
       />
     </gl-button-group>
-    <gl-button icon="archive" @click="$emit('hide', index)" />
+    <gl-button
+      :data-testid="`stage-action-hide-${index}`"
+      icon="archive"
+      @click="$emit('hide', index)"
+    />
   </div>
 </template>

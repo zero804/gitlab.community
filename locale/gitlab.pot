@@ -11451,6 +11451,9 @@ msgstr ""
 msgid "Example: @sub\\.company\\.com$"
 msgstr ""
 
+msgid "Example: My Value Stream"
+msgstr ""
+
 msgid "Example: Usage = single query. (Requested) / (Capacity) = multiple queries combined into a formula."
 msgstr ""
 
@@ -15477,10 +15480,16 @@ msgstr ""
 msgid "Issue Boards"
 msgstr ""
 
+msgid "Issue Created"
+msgstr ""
+
 msgid "Issue already promoted to epic."
 msgstr ""
 
 msgid "Issue cannot be found."
+msgstr ""
+
+msgid "Issue closed"
 msgstr ""
 
 msgid "Issue created from vulnerability %{vulnerability_link}"
@@ -16092,10 +16101,22 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
+msgid "Label a"
+msgstr ""
+
 msgid "Label actions dropdown"
 msgstr ""
 
+msgid "Label added"
+msgstr ""
+
+msgid "Label b"
+msgstr ""
+
 msgid "Label lists show all issues with the selected label."
+msgstr ""
+
+msgid "Label removed"
 msgstr ""
 
 msgid "Label was created"
@@ -17096,6 +17117,9 @@ msgid "Maximum job timeout"
 msgstr ""
 
 msgid "Maximum job timeout has a value which could not be accepted"
+msgstr ""
+
+msgid "Maximum length 100 characters"
 msgstr ""
 
 msgid "Maximum lifetime allowable for Personal Access Tokens is active, your expire date must be set before %{maximum_allowable_date}."
@@ -18324,6 +18348,9 @@ msgid "Name"
 msgstr ""
 
 msgid "Name has already been taken"
+msgstr ""
+
+msgid "Name is required"
 msgstr ""
 
 msgid "Name new label"
@@ -23851,9 +23878,6 @@ msgid "Restart Terminal"
 msgstr ""
 
 msgid "Restore"
-msgstr ""
-
-msgid "Restore defaults"
 msgstr ""
 
 msgid "Restore group"
@@ -30596,6 +30620,9 @@ msgid "Value Stream Analytics can help you determine your team’s velocity"
 msgstr ""
 
 msgid "Value Stream Analytics gives an overview of how much time it takes to go from idea to production in your project."
+msgstr ""
+
+msgid "Value Stream Name"
 msgstr ""
 
 msgid "ValueStreamAnalyticsStage|We don't have enough data to show this stage."
