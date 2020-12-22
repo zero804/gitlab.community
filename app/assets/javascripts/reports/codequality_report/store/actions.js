@@ -12,8 +12,22 @@ export const fetchReports = ({ state, dispatch, commit }, diffFeatureFlagEnabled
       .get(state.reportsPath)
       .then(({ data }) => {
         return dispatch('receiveReportsSuccess', {
-          newIssues: parseCodeclimateMetrics(data.new_errors),
-          resolvedIssues: parseCodeclimateMetrics(data.resolved_errors),
+          newIssues: data.new_errors.map(issue => {
+            return {
+              name: issue.description,
+              path: issue.file_path,
+              urlPath: `${state.headBlobPath}/${issue.file_path}#L${issue.line}`,
+              ...issue,
+            };
+          }),
+          resolvedIssues: data.new_errors.map(issue => {
+            return {
+              name: issue.description,
+              path: issue.file_path,
+              urlPath: `${state.baseBlobPath}/${issue.file_path}#L${issue.line}`,
+              ...issue,
+            };
+          }),
         });
       })
       .catch(() => dispatch('receiveReportsError'));
