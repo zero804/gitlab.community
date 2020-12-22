@@ -34,7 +34,7 @@ module ResolvesMergeRequests
   end
 
   def unconditional_includes
-    [{ target_project: [:project_feature] }]
+    [:target_project]
   end
 
   def preloads
