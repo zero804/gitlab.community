@@ -4,6 +4,16 @@ import {
   reportFileTypes,
 } from 'ee_else_ce/vue_shared/security_reports/constants';
 
+const addReportTypeIfExists = (acc, reportTypes, reportType, getName, downloadPath) => {
+  if (reportTypes && reportTypes.includes(reportType)) {
+    acc.push({
+      reportType,
+      name: getName(reportType),
+      path: downloadPath,
+    });
+  }
+};
+
 export const extractSecurityReportArtifacts = (reportTypes, data) => {
   const jobs = data.project?.mergeRequest?.headPipeline?.jobs?.nodes ?? [];
 
@@ -11,24 +21,21 @@ export const extractSecurityReportArtifacts = (reportTypes, data) => {
     const artifacts = job.artifacts?.nodes ?? [];
 
     artifacts.forEach(({ downloadPath, fileType }) => {
-      let reportType = securityReportTypeEnumToReportType[fileType];
-      if (reportType && reportTypes.includes(reportType)) {
-        acc.push({
-          name: job.name,
-          reportType,
-          path: downloadPath,
-        });
-      }
+      addReportTypeIfExists(
+        acc,
+        reportTypes,
+        securityReportTypeEnumToReportType[fileType],
+        () => job.name,
+        downloadPath,
+      );
 
-      reportType = reportFileTypes[fileType];
-
-      if (reportType && reportTypes.includes(reportType)) {
-        acc.push({
-          name: `${job.name} ${capitalize(reportType)}`,
-          reportType,
-          path: downloadPath,
-        });
-      }
+      addReportTypeIfExists(
+        acc,
+        reportTypes,
+        reportFileTypes[fileType],
+        reportType => `${job.name} ${capitalize(reportType)}`,
+        downloadPath,
+      );
     });
 
     return acc;
