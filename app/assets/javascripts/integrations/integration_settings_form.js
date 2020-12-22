@@ -62,7 +62,8 @@ export default class IntegrationSettingsForm {
     // If both conditions are true, we override form submission
     // and test the service using provided configuration.
     if (this.$form.get(0).checkValidity()) {
-      this.testSettings();
+      // eslint-disable-next-line no-jquery/no-serialize
+      this.testSettings(this.$form.serialize());
     } else {
       eventHub.$emit('validateForm');
       this.vue.$store.dispatch('setIsTesting', false);
@@ -88,37 +89,36 @@ export default class IntegrationSettingsForm {
       $store: { dispatch },
     } = this.vue;
 
-    dispatch('setIsLoadingJiraIssueTypes', true);
+    dispatch('requestJiraIssueTypes');
 
-    return this.fetchTestSettings()
-      .then(({ data: { issuetypes, error, message } }) => {
-        if (error || !issuetypes?.length) {
-          eventHub.$emit('validateForm');
-          this.vue.$store.dispatch(
-            'setLoadingJiraIssueTypesErrorMessage',
-            message || s__('Integrations|Connection failed. Please check your settings.'),
-          );
-        } else {
-          this.vue.$store.dispatch('receivedJiraIssueTypesSuccess', issuetypes);
-        }
-      })
-      .catch(() => {
-        this.vue.$store.dispatch(
-          'setLoadingJiraIssueTypesErrorMessage',
-          __('Something went wrong on our end.'),
-        );
-      })
-      .finally(() => {
-        dispatch('setIsLoadingJiraIssueTypes', false);
+    // eslint-disable-next-line no-jquery/no-serialize
+    return this.fetchTestSettings(this.$form.serialize())
+      .then(
+        ({
+          data: {
+            issuetypes,
+            error,
+            message = s__('Integrations|Connection failed. Please check your settings.'),
+          },
+        }) => {
+          if (error || !issuetypes?.length) {
+            eventHub.$emit('validateForm');
+            throw new Error(message);
+          }
+
+          dispatch('receivedJiraIssueTypesSuccess', issuetypes);
+        },
+      )
+      .catch(({ message = __('Something went wrong on our end.') }) => {
+        dispatch('receiveJiraIssueTypesError', message);
       });
   }
 
   /**
    *  Send request to the test endpoint which checks if the current config is valid
    */
-  fetchTestSettings() {
-    // eslint-disable-next-line no-jquery/no-serialize
-    return axios.put(this.testEndPoint, this.$form.serialize());
+  fetchTestSettings(formData) {
+    return axios.put(this.testEndPoint, formData);
   }
 
   /**
