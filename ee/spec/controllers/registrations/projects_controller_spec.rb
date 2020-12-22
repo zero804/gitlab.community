@@ -48,9 +48,9 @@ RSpec.describe Registrations::ProjectsController do
   end
 
   describe 'POST #create' do
-    subject { post :create, params: { project: params }.merge(trial_flow_params) }
+    subject { post :create, params: { project: params }.merge(trial_onboarding_flow_params) }
 
-    let_it_be(:trial_flow_params) { {} }
+    let_it_be(:trial_onboarding_flow_params) { {} }
     let(:params) { { namespace_id: namespace.id, name: 'New project', path: 'project-path', visibility_level: Gitlab::VisibilityLevel::PRIVATE } }
 
     context 'with an unauthenticated user' do
@@ -79,7 +79,7 @@ RSpec.describe Registrations::ProjectsController do
       end
 
       context 'when the trial onboarding is active' do
-        let_it_be(:trial_flow_params) { { trial_flow: true } }
+        let_it_be(:trial_onboarding_flow_params) { { trial_onboarding_flow: true } }
         let_it_be(:trial_onboarding_issues_enabled) { true }
         let_it_be(:project) { create(:project) }
         let_it_be(:trial_onboarding_context) { { learn_gitlab_project_id: project.id, namespace_id: project.namespace_id } }

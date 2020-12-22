@@ -9,7 +9,7 @@
       %p
         %div= _('A group represents your organization in GitLab. Groups allow you to manage users and collaborate across multiple projects.')
 
-      = form_for @group, url: users_sign_up_groups_path(trial_flow: params[:trial_flow]), html: { class: 'gl-show-field-errors card gl-w-full gl-p-4' } do |f|
+      = form_for @group, url: users_sign_up_groups_path(trial_onboarding_flow: params[:trial_onboarding_flow]), html: { class: 'gl-show-field-errors card gl-w-full gl-p-4' } do |f|
         = form_errors(@group)
         .row
           .form-group.group-name-holder.col-sm-12

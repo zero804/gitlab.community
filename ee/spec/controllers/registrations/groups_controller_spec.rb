@@ -57,9 +57,9 @@ RSpec.describe Registrations::GroupsController do
     end
     let_it_be(:trial_form_params) { { trial: 'false' } }
     let_it_be(:trial_onboarding_issues_enabled) { false }
-    let_it_be(:trial_flow_params) { {} }
+    let_it_be(:trial_onboarding_flow_params) { {} }
 
-    subject { post :create, params: { group: group_params }.merge(trial_form_params).merge(trial_flow_params) }
+    subject { post :create, params: { group: group_params }.merge(trial_form_params).merge(trial_onboarding_flow_params) }
 
     context 'with an unauthenticated user' do
       it { is_expected.to have_gitlab_http_status(:redirect) }
@@ -169,7 +169,7 @@ RSpec.describe Registrations::GroupsController do
 
       context 'when the trial onboarding is active' do
         let_it_be(:group) { create(:group) }
-        let_it_be(:trial_flow_params) { { trial_flow: true } }
+        let_it_be(:trial_onboarding_flow_params) { { trial_onboarding_flow: true } }
         let_it_be(:trial_onboarding_issues_enabled) { true }
         let_it_be(:apply_trial_params) do
           {
@@ -189,7 +189,7 @@ RSpec.describe Registrations::GroupsController do
           expect_next_instance_of(GitlabSubscriptions::ApplyTrialService) do |service|
             expect(service).to receive(:execute).with(apply_trial_params).and_return({ success: true })
           end
-          is_expected.to redirect_to(new_users_sign_up_project_path(namespace_id: group.id, trial: false, trial_flow: true))
+          is_expected.to redirect_to(new_users_sign_up_project_path(namespace_id: group.id, trial: false, trial_onboarding_flow: true))
         end
       end
 
@@ -213,7 +213,7 @@ RSpec.describe Registrations::GroupsController do
 
         context 'when the trial onboarding is active' do
           let_it_be(:group) { create(:group) }
-          let_it_be(:trial_flow_params) { { trial_flow: true } }
+          let_it_be(:trial_onboarding_flow_params) { { trial_onboarding_flow: true } }
           let_it_be(:trial_onboarding_issues_enabled) { true }
 
           it { is_expected.not_to receive(:apply_trial) }

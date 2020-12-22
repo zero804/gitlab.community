@@ -13,7 +13,7 @@ module EE
     end
 
     def in_trial_onboarding_flow?
-      params[:trial_flow] == 'true'
+      params[:trial_onboarding_flow] == 'true'
     end
 
     def in_invitation_flow?

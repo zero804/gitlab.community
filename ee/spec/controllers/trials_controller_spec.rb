@@ -103,7 +103,7 @@ RSpec.describe TrialsController do
 
         it 'records trial_onboarding_issues experiment users' do
           expect(controller).to receive(:record_experiment_user).with(:trial_onboarding_issues)
-          is_expected.to redirect_to(new_users_sign_up_group_path(trial_flow: true))
+          is_expected.to redirect_to(new_users_sign_up_group_path(trial_onboarding_flow: true))
         end
       end
     end

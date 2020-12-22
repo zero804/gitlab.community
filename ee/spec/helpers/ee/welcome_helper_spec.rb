@@ -271,7 +271,7 @@ RSpec.describe EE::WelcomeHelper do
     subject { helper.in_trial_onboarding_flow? }
 
     it 'returns true if query param trial_flow is set to true' do
-      allow(helper).to receive(:params).and_return({ trial_flow: 'true' })
+      allow(helper).to receive(:params).and_return({ trial_onboarding_flow: 'true' })
 
       is_expected.to eq(true)
     end

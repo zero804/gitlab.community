@@ -19,12 +19,12 @@ module Registrations
       if @project.saved?
         learn_gitlab_project = create_learn_gitlab_project
 
-        if trial_onboarding_flow?
+        if helpers.in_trial_onboarding_flow?
           trial_onboarding_context = { learn_gitlab_project_id: learn_gitlab_project.id, namespace_id: learn_gitlab_project.namespace_id }
           record_experiment_user(:trial_onboarding_issues, trial_onboarding_context)
           redirect_to trial_getting_started_users_sign_up_welcome_path(learn_gitlab_project_id: learn_gitlab_project.id)
         else
-          redirect_to users_sign_up_experience_level_path(namespace_path: @project.namespace, trial_flow: params[:trial_flow])
+          redirect_to users_sign_up_experience_level_path(namespace_path: @project.namespace, trial_onboarding_flow: params[:trial_onboarding_flow])
         end
       else
         render :new
@@ -34,7 +34,7 @@ module Registrations
     private
 
     def create_learn_gitlab_project
-      title, filename = if trial_onboarding_flow?
+      title, filename = if helpers.in_trial_onboarding_flow?
                           [s_('Learn GitLab - Gold trial'), 'learn_gitlab_gold_trial.tar.gz']
                         else
                           [s_('Learn GitLab'), 'learn_gitlab.tar.gz']
@@ -51,13 +51,9 @@ module Registrations
         ).execute
       end
 
-      cookies[:onboarding_issues_settings] = { 'groups#show' => true, 'projects#show' => true, 'issues#index' => true }.to_json if learn_gitlab_project.saved? && !trial_onboarding_flow?
+      cookies[:onboarding_issues_settings] = { 'groups#show' => true, 'projects#show' => true, 'issues#index' => true }.to_json if learn_gitlab_project.saved? && !helpers.in_trial_onboarding_flow?
 
       learn_gitlab_project
-    end
-
-    def trial_onboarding_flow?
-      helpers.in_trial_onboarding_flow? && experiment_enabled?(:trial_onboarding_issues)
     end
 
     def check_experiment_enabled

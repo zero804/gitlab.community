@@ -24,9 +24,9 @@ module Registrations
         record_experiment_user(:trial_during_signup, trial_chosen: trial)
 
         url_params = { namespace_id: @group.id, trial: trial }
-        if trial_onboarding_flow?
+        if helpers.in_trial_onboarding_flow?
           apply_trial
-          url_params[:trial_flow] = true
+          url_params[:trial_onboarding_flow] = true
         else
           if experiment_enabled?(:trial_during_signup)
             if trial && create_lead && apply_trial
@@ -44,10 +44,6 @@ module Registrations
     end
 
     private
-
-    def trial_onboarding_flow?
-      helpers.in_trial_onboarding_flow? && experiment_enabled?(:trial_onboarding_issues)
-    end
 
     def authorize_create_group!
       access_denied! unless can?(current_user, :create_group)

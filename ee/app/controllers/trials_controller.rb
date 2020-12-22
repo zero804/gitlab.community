@@ -29,7 +29,7 @@ class TrialsController < ApplicationController
       record_experiment_user(:trial_onboarding_issues)
 
       if experiment_enabled?(:trial_onboarding_issues)
-        redirect_to new_users_sign_up_group_path(url_params.merge(trial_flow: true))
+        redirect_to new_users_sign_up_group_path(url_params.merge(trial_onboarding_flow: true))
       else
         redirect_to select_trials_url(url_params)
       end
