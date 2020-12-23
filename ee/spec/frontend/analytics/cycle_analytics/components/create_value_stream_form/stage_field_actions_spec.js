@@ -61,7 +61,7 @@ describe('StageFieldActions', () => {
 
   describe('when the current index is the same as the total number of stages', () => {
     beforeEach(() => {
-      wrapper = createComponent({ index: 3 });
+      wrapper = createComponent({ index: 2 });
     });
 
     it('disables the move down button', () => {

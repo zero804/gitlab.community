@@ -19,11 +19,14 @@ export default {
     },
   },
   computed: {
+    lastStageIndex() {
+      return this.stageCount - 1;
+    },
     isFirstActiveStage() {
       return this.index === 0;
     },
     isLastActiveStage() {
-      return this.index === this.stageCount;
+      return this.index === this.lastStageIndex;
     },
   },
   STAGE_SORT_DIRECTION,

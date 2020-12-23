@@ -63,7 +63,7 @@ export const defaultFields = {
   endEventLabelId: null,
 };
 
-export const DEFAULT_STAGE_CONFIG = ['ssue', 'plan', 'code', 'test', 'review', 'staging'].map(
+export const DEFAULT_STAGE_CONFIG = ['issue', 'plan', 'code', 'test', 'review', 'staging'].map(
   id => ({
     id,
     name: capitalizeFirstCharacter(id),
