@@ -28,11 +28,11 @@ export const fetchResetIntegration = ({ dispatch, getters }) => {
 };
 
 export const requestJiraIssueTypes = ({ commit }) => {
+  commit(types.SET_LOADING_JIRA_ISSUE_TYPES_ERROR_MESSAGE, '');
   commit(types.SET_IS_LOADING_JIRA_ISSUE_TYPES, true);
 };
 export const receivedJiraIssueTypesSuccess = ({ commit }, issueTypes = []) => {
   commit(types.SET_IS_LOADING_JIRA_ISSUE_TYPES, false);
-  commit(types.SET_LOADING_JIRA_ISSUE_TYPES_ERROR_MESSAGE, '');
   commit(types.SET_JIRA_ISSUE_TYPES, issueTypes);
 };
 

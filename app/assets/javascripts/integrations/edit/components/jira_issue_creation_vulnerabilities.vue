@@ -1,6 +1,7 @@
 <script>
 import { mapState } from 'vuex';
 import {
+  GlAlert,
   GlButton,
   GlButtonGroup,
   GlDropdown,
@@ -15,6 +16,7 @@ import { defaultJiraIssueTypeId } from '../constants';
 
 export default {
   components: {
+    GlAlert,
     GlButton,
     GlButtonGroup,
     GlDropdown,
@@ -42,6 +44,7 @@ export default {
   },
   data() {
     return {
+      isLoadingErrorAlertDimissed: false,
       projectKeyForCurrentIssues: '',
       isJiraVulnerabilitiesEnabled: this.initialIsEnabled,
       selectedJiraIssueType: null,
@@ -63,6 +66,9 @@ export default {
     hasProjectKeyChanged() {
       return this.projectKeyForCurrentIssues && this.projectKey !== this.projectKeyForCurrentIssues;
     },
+    shouldShowLoadingErrorAlert() {
+      return !this.isLoadingErrorAlertDimissed && this.loadingJiraIssueTypesErrorMessage;
+    },
     projectKeyWarning() {
       if (!this.projectKey) {
         return s__('JiraService|Project key is required to generate issue types');
@@ -82,6 +88,7 @@ export default {
     handleLoadJiraIssueTypesClick() {
       this.projectKeyForCurrentIssues = this.projectKey;
       eventHub.$emit('getJiraIssueTypes');
+      this.isLoadingErrorAlertDimissed = false;
     },
   },
 };
@@ -102,7 +109,7 @@ export default {
     <input
       name="service[vulnerabilities_enabled]"
       type="hidden"
-      :value="isJiraVulnerabilitiesEnabled || false"
+      :value="isJiraVulnerabilitiesEnabled"
     />
     <gl-form-group
       v-show="isJiraVulnerabilitiesEnabled"
@@ -110,6 +117,15 @@ export default {
       class="gl-mt-4 gl-pl-1 gl-ml-5"
     >
       <p>{{ s__('JiraService|Define the type of Jira issue to create from a vulnerability.') }}</p>
+      <gl-alert
+        v-if="shouldShowLoadingErrorAlert"
+        class="gl-mb-5"
+        variant="danger"
+        :title="s__('JiraService|An error occured while fetching issue list')"
+        @dismiss="isLoadingErrorAlertDimissed = true"
+      >
+        {{ loadingJiraIssueTypesErrorMessage }}
+      </gl-alert>
       <div class="row gl-display-flex gl-align-items-center">
         <gl-button-group class="col-md-5 gl-mr-3">
           <input
