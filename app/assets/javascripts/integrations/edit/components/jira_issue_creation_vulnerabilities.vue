@@ -9,6 +9,7 @@ import {
   GlFormCheckbox,
   GlFormGroup,
   GlIcon,
+  GlTooltipDirective,
 } from '@gitlab/ui';
 import { s__ } from '~/locale';
 import eventHub from '../event_hub';
@@ -24,6 +25,9 @@ export default {
     GlFormCheckbox,
     GlFormGroup,
     GlIcon,
+  },
+  directives: {
+    GlTooltip: GlTooltipDirective,
   },
   props: {
     projectKey: {
@@ -149,7 +153,13 @@ export default {
               {{ jiraIssueType.name }}
             </gl-dropdown-item>
           </gl-dropdown>
-          <gl-button :disabled="!projectKey" icon="retry" @click="handleLoadJiraIssueTypesClick" />
+          <gl-button
+            v-gl-tooltip
+            :title="s__('JiraService|Fetch issue types for this jira project')"
+            :disabled="!projectKey"
+            icon="retry"
+            @click="handleLoadJiraIssueTypesClick"
+          />
         </gl-button-group>
         <p v-if="projectKeyWarning" class="gl-my-0">
           <gl-icon name="warning" class="gl-text-orange-500" />
